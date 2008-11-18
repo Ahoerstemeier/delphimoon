@@ -3,3 +3,7 @@ History of the TMoon
 1997-04-03  1.0  first published version, collection of functions and a
                  TImage-like component which shows the phase at a given date
                  Moontool clone as a demo application
+1997-05-21  1.1  setting Align to anything else then alNone cause wild
+                 flickers, fixed
+                 made the demo application runnable in 16 bit, too
+                 small bug in demo application with daylight saving fixed

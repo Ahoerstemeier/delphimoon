@@ -1,4 +1,4 @@
-TMoon  (Version 1.0 of 1997-04-03)
+TMoon  (Version 1.1 of 1997-05-21)
 
 This is a collection of some functions to calculate the phases of the moon and
 some connected data. To make this a nice Delphi component there's also a
@@ -45,16 +45,22 @@ the German edition in this chapter.
 If you don't need the component and just want to use the functions (e.g. for a
 command line version) you can remove the (*$define component*) in the header.
 
-The component can be used with both Delphi 16 and 32, but as the Resource
-files are different you have to use the moon.res and moon.dcr in the 16 or 32
+The component can be used with Delphi 1 and 2 (and Delphi 3, too, at least
+with the January beta), but as the Resource files are different you have to
+use the moon.res and moon.dcr in the 16 (for D1) or 32 (for D2 and D3)
 subdirectory.
 
-As a demo application there's a moontool clone in the demo subdirectory, but
-this one is 32bits only. The original Moontool program by John Walker can be
-found e.g. at "http://www.fourmilab.ch/moontoolw". Some values displayed are
-different due to the different set of algorithms used, and some few features
-are not yet implemented - especially the modifying of the applications icon
-(which doesn't work in the original Moontool on NT4 anyway).
+As a demo application there's a moontool clone in the demo subdirectory;
+both compilable as a 16 or 32 bit application - just move the moontool.res out
+of 16/32 subdirectory in the demo directory. As for the conversion from system
+date to GMT there's a windows 32bit API routine, in case of the 16 bit program
+(but only in Win3.11 or earlier) you have to set the environment variable TZ.
+
+The original Moontool program by John Walker can be found e.g. at
+"http://www.fourmilab.ch/moontoolw". Some values displayed are different due
+to the different set of algorithms used, and some few features are not yet
+implemented - especially the modifying of the applications icon (which
+doesn't work in the original Moontool on NT4 anyway).
 
 
 If you spot any bug, have any idea how to improve, want to let me know what a

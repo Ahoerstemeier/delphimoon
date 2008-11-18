@@ -7,3 +7,10 @@ History of the TMoon
                  flickers, fixed
                  made the demo application runnable in 16 bit, too
                  small bug in demo application with daylight saving fixed
+1997-12-07  1.2  added calculation of start of the seasons
+                 added calculation of Sun/Moon Rise and Set
+                 added calculation of Perigee and Apogee
+                 added calculation of eclipse
+                 added property Icon parallel to bitmap
+                 added 16x16 bitmap
+                 added a new window in the demo to display all these new data

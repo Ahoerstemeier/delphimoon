@@ -2,8 +2,9 @@ program moontool;
 
 uses
   Forms,
-  main in 'main.pas' {MainForm},
-  about in 'about.pas' {AboutForm};
+  main in 'MAIN.PAS' {MainForm},
+  about in 'ABOUT.PAS' {AboutForm},
+  More in 'MORE.PAS' {frm_more};
 
 {$R *.RES}
 
@@ -14,5 +15,6 @@ begin
   Application.Title := 'Moontool';
   Application.CreateForm(TMainForm, MainForm);
   Application.CreateForm(TAboutForm, AboutForm);
+  Application.CreateForm(Tfrm_more, frm_more);
   Application.Run;
   end.

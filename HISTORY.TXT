@@ -1,0 +1,5 @@
+History of the TMoon
+
+1997-04-03  1.0  first published version, collection of functions and a
+                 TImage-like component which shows the phase at a given date
+                 Moontool clone as a demo application

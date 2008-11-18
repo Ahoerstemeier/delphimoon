@@ -2,17 +2,26 @@ unit moon;
 
 (*$define component *)
 
-{ Copyright 1997 Andreas Hörstemeier                 Version 1.0 1997-04-03  }
+{ Copyright 1997 Andreas Hörstemeier                 Version 1.2  1997-12-07 }
 { this component is public domain - please check the file readme.txt for     }
 { more detailed info on usage and distributing                               }
 
 { Algorithms taken from the book "Astronomical Algorithms" by Jean Meeus     }
 
+
+{ if the unit math is missing in your D2/D3 you can set this switch, too }
+(*$ifdef ver80 *)
+ (*$define nomath *)
+(*$endif *)
+
 (*@/// interface *)
 interface
 
+(*$undef correction_low *)
+
+(*@/// uses *)
 uses
-(*$ifdef ver90 *)
+(*$ifndef nomath *)
   math,
 (*$endif *)
 (*$ifdef component *)
@@ -29,6 +38,7 @@ uses
   extctrls,
 (*$endif *)
   sysutils;
+(*@\\\*)
 
 (*$ifdef component *)
   {$r *.res }            { The File containing the bitmaps }
@@ -36,7 +46,10 @@ uses
 
 type
   TMoonPhase=(Newmoon,FirstQuarter,Fullmoon,LastQuarter);
-
+  TSeason=(Winter,Spring,Summer,Autumn);
+  TEclipse=(none, partial, noncentral, circular, circulartotal, total, halfshadow);
+  E_NoRiseSet=class(Exception);
+  E_OutOfAlgorithRange=class(Exception);
 
 { Functions as needed for a MoonTool clone }
 
@@ -55,9 +68,25 @@ function lunation(date:TDateTime):integer;
 function sun_diameter(date:TDateTime):extended;
 function moon_diameter(date:TDateTime):extended;
 
+{ Further useful functions }
+function star_time(date:TDateTime):extended;
+function StartSeason(year: integer; season:TSeason):TDateTime;
+
+function Sun_Rise(date:TDateTime; latitude, longitude:extended):TDateTime;
+function Sun_Set(date:TDateTime; latitude, longitude:extended):TDateTime;
+function Sun_Transit(date:TDateTime; latitude, longitude:extended):TDateTime;
+function Moon_Rise(date:TDateTime; latitude, longitude:extended):TDateTime;
+function Moon_Set(date:TDateTime; latitude, longitude:extended):TDateTime;
+function Moon_Transit(date:TDateTime; latitude, longitude:extended):TDateTime;
+
+function nextperigee(date:TDateTime):TDateTime;
+function nextapogee(date:TDateTime):TDateTime;
+
+function NextEclipse(var date:TDateTime; sun:boolean):TEclipse;
+
 (*$ifdef component *)
 type
-  TMoonSize=(ms64,ms32);
+  TMoonSize=(ms64,ms32,ms16);
 (*@///   TMoon=class(TImage) *)
 TMoon=class(TImage)   (* Borland, why no TCustomImage??? *)
 private
@@ -68,43 +97,47 @@ private
   FAngle: extended;
   FDate: TDateTime;
   FDateChanged: boolean;
-{   FIcon: TIcon; }
+  FIcon: TIcon;
   procedure Set_Size(Value:TMoonSize);
   procedure SetDate(value:TDateTime);
   procedure DoNothing(value:TPicture);
 protected
   procedure SetBitmap;
-  procedure Draw_Moon;
+  procedure Draw_Moon(canvas:TCanvas; offset_x,offset_y,radius:integer);
   procedure WMSize (var Message: TWMSize); message wm_paint;
+  function GetIcon:TIcon;
 public
   constructor Create(AOwner:TComponent); override;
   destructor Destroy; override;
-{   property Icon: TIcon read ficon; }
 published
   property Align: TAlign read F_Align default alNone;
   property MoonSize:TMoonSize read FMoonSize write Set_Size;
   property Date: TDateTime read FDate write SetDate stored FDateChanged;
   property Picture write donothing stored false;
+  property Icon:TIcon read GetIcon;
   end;
-(*@\\\003C00170100170100030C000312001401*)
+(*@\\\*)
 
 procedure Register;
 (*$endif *)
-(*@\\\0000003210*)
+(*@\\\0000000E01*)
 (*@/// implementation *)
 implementation
 
 const
   AU=149597869;             (* astronomical unit in km *)
   mean_lunation=29.530589;  (* Mean length of a month *)
+  earth_radius=6378.15;     (* Radius of the earth *)
 
 type
 (*@///   t_coord = record *)
 t_coord = record
   longitude, latitude, radius: extended;
   rektaszension, declination: extended;
+  parallax: extended;
   end;
-(*@\\\0000000201*)
+(*@\\\0000000203*)
+  T_RiseSet=(_rise,_set,_transit);
 
 (*@/// function put_in_360(x:extended):extended; *)
 function put_in_360(x:extended):extended;
@@ -114,8 +147,14 @@ begin
   end;
 (*@\\\0000000401*)
 
-(*$ifndef ver90 *)
+(*$ifdef nomath *)
 { D1 has no unit math, so here are the needed functions }
+(*@/// function tan(x:extended):extended; *)
+function tan(x:extended):extended;
+begin
+  result:=sin(x)/cos(x);
+  end;
+(*@\\\0000000301*)
 (*@/// function arctan2(a,b:extended):extended; *)
 function arctan2(a,b:extended):extended;
 begin
@@ -150,18 +189,36 @@ begin
   cos_d:=cos(put_in_360(x)*pi/180);
   end;
 (*@\\\0000000301*)
+(*@/// function tan_d(x:extended):extended; *)
+function tan_d(x:extended):extended;
+begin
+  tan_d:=tan(put_in_360(x)*pi/180);
+  end;
+(*@\\\000000030D*)
 (*@/// function arctan2_d(a,b:extended):extended; *)
 function arctan2_d(a,b:extended):extended;
 begin
   result:=arctan2(a,b)*180/pi;
   end;
-(*@\\\*)
+(*@\\\000000030B*)
 (*@/// function arcsin_d(x:extended):extended; *)
 function arcsin_d(x:extended):extended;
 begin
   result:=arcsin(x)*180/pi;
   end;
 (*@\\\0000000301*)
+(*@/// function arccos_d(x:extended):extended; *)
+function arccos_d(x:extended):extended;
+begin
+  result:=arccos(x)*180/pi;
+  end;
+(*@\\\0000000301*)
+(*@/// function arctan_d(x:extended):extended; *)
+function arctan_d(x:extended):extended;
+begin
+  result:=arctan(x)*180/pi
+  end;
+(*@\\\0000000310*)
 
 { Julian date }
 (*@/// function julian_date(date:TDateTime):extended; *)
@@ -184,46 +241,212 @@ begin
   end;
 (*@\\\0000000701*)
 
+(*@/// function star_time(date:TDateTime):extended;            // degrees *)
+function star_time(date:TDateTime):extended;
+var
+  jd, t: extended;
+begin
+  jd:=julian_date(date);
+  t:=(jd-2451545.0)/36525;
+  result:=put_in_360(280.46061837+360.98564736629*(jd-2451545.0)+
+                     t*t*(0.000387933-t/38710000));
+  end;
+(*@\\\0000000901*)
+
 { Coordinate functions }
 (*@/// procedure calc_geocentric(var coord:t_coord; date:TDateTime); *)
-{ Based upon Chapter 21 of Meeus }
+{ Based upon Chapter 12 and 21 of Meeus }
 
 procedure calc_geocentric(var coord:t_coord; date:TDateTime);
+(*$ifndef correction_low *)
+const
+(*@///   arg_mul:array[0..30,0..4] of shortint = (..); *)
+arg_mul:array[0..30,0..4] of shortint = (
+   ( 0, 0, 0, 0, 1),
+   (-2, 0, 0, 2, 2),
+   ( 0, 0, 0, 2, 2),
+   ( 0, 0, 0, 0, 2),
+   ( 0, 1, 0, 0, 0),
+   ( 0, 0, 1, 0, 0),
+   (-2, 1, 0, 2, 2),
+   ( 0, 0, 0, 2, 1),
+   ( 0, 0, 1, 2, 2),
+   (-2,-1, 0, 2, 2),
+   (-2, 0, 1, 0, 0),
+   (-2, 0, 0, 2, 1),
+   ( 0, 0,-1, 2, 2),
+   ( 2, 0, 0, 0, 0),
+   ( 0, 0, 1, 0, 1),
+   ( 2, 0,-1, 2, 2),
+   ( 0, 0,-1, 0, 1),
+   ( 0, 0, 1, 2, 1),
+   (-2, 0, 2, 0, 0),
+   ( 0, 0,-2, 2, 1),
+   ( 2, 0, 0, 2, 2),
+   ( 0, 0, 2, 2, 2),
+   ( 0, 0, 2, 0, 0),
+   (-2, 0, 1, 2, 2),
+   ( 0, 0, 0, 2, 0),
+   (-2, 0, 0, 2, 0),
+   ( 0, 0,-1, 2, 1),
+   ( 0, 2, 0, 0, 0),
+   ( 2, 0,-1, 0, 1),
+   (-2, 2, 0, 2, 2),
+   ( 0, 1, 0, 0, 1)
+                 );
+(*@\\\0000000109*)
+(*@///   arg_phi:array[0..30,0..1] of longint = (); *)
+arg_phi:array[0..30,0..1] of longint = (
+   (-171996,-1742),
+   ( -13187,  -16),
+   (  -2274,   -2),
+   (   2062,    2),
+   (   1426,  -34),
+   (    712,    1),
+   (   -517,   12),
+   (   -386,   -4),
+   (   -301,    0),
+   (    217,   -5),
+   (   -158,    0),
+   (    129,    1),
+   (    123,    0),
+   (     63,    0),
+   (     63,    1),
+   (    -59,    0),
+   (    -58,   -1),
+   (    -51,    0),
+   (     48,    0),
+   (     46,    0),
+   (    -38,    0),
+   (    -31,    0),
+   (     29,    0),
+   (     29,    0),
+   (     26,    0),
+   (    -22,    0),
+   (     21,    0),
+   (     17,   -1),
+   (     16,    0),
+   (    -16,    1),
+   (    -15,    0)
+  );
+(*@\\\*)
+(*@///   arg_eps:array[0..30,0..1] of longint = (); *)
+arg_eps:array[0..30,0..1] of longint = (
+   ( 92025,   89),
+   (  5736,  -31),
+   (   977,   -5),
+   (  -895,    5),
+   (    54,   -1),
+   (    -7,    0),
+   (   224,   -6),
+   (   200,    0),
+   (   129,   -1),
+   (   -95,    3),
+   (     0,    0),
+   (   -70,    0),
+   (   -53,    0),
+   (     0,    0),
+   (   -33,    0),
+   (    26,    0),
+   (    32,    0),
+   (    27,    0),
+   (     0,    0),
+   (   -24,    0),
+   (    16,    0),
+   (    13,    0),
+   (     0,    0),
+   (   -12,    0),
+   (     0,    0),
+   (     0,    0),
+   (   -10,    0),
+   (     0,    0),
+   (    -8,    0),
+   (     7,    0),
+   (     9,    0)
+  );
+(*@\\\*)
+(*$endif *)
 var
-  t,o,omega,l,ls,
-  epsilon,epsilon_0,delta_epsilon,
-{   delta_phi, }
+  t,omega: extended;
+(*$ifdef correction_low *)
+  l,ls: extended;
+(*$else *)
+  d,m,ms,f,s: extended;
+  i: integer;
+(*$endif *)
+  epsilon,epsilon_0,delta_epsilon: extended;
+  delta_phi: extended;
   alpha,delta: extended;
 begin
   t:=(julian_date(date)-2451545.0)/36525;
 
-  o:=coord.longitude;
-
-  (* mean longitude of sun (l) and moon (ls) *)
-  l:=280.4665+36000.7698*t;
-  ls:=218.3165+481267.8813*t;
-
   (* longitude of rising knot *)
-  omega:=125.04452+(-1934.136261+(0.0020708+1/450000*t)*t)*t;
+  omega:=put_in_360(125.04452+(-1934.136261+(0.0020708+1/450000*t)*t)*t);
+
+(*$ifdef correction_low *)
+(*@///   delta_phi and delta_epsilon - low accuracy *)
+(* mean longitude of sun (l) and moon (ls) *)
+l:=280.4665+36000.7698*t;
+ls:=218.3165+481267.8813*t;
+
+(* correction due to nutation *)
+delta_epsilon:=9.20*cos_d(omega)+0.57*cos_d(2*l)+0.10*cos_d(2*ls)-0.09*cos_d(2*omega);
+
+(* longitude correction due to nutation *)
+delta_phi:=(-17.20*sin_d(omega)-1.32*sin_d(2*l)-0.23*sin_d(2*ls)+0.21*sin_d(2*omega))/3600;
+(*@\\\0000000401*)
+(*$else *)
+(*@///   delta_phi and delta_epsilon - higher accuracy *)
+(* mean elongation of moon to sun *)
+d:=put_in_360(297.85036+(445267.111480+(-0.0019142+t/189474)*t)*t);
+
+(* mean anomaly of the sun *)
+m:=put_in_360(357.52772+(35999.050340+(-0.0001603-t/300000)*t)*t);
+
+(* mean anomly of the moon *)
+ms:=put_in_360(134.96298+(477198.867398+(0.0086972+t/56250)*t)*t);
+
+(* argument of the latitude of the moon *)
+f:=put_in_360(93.27191+(483202.017538+(-0.0036825+t/327270)*t)*t);
+
+delta_phi:=0;
+delta_epsilon:=0;
+
+for i:=0 to 30 do begin
+  s:= arg_mul[i,0]*d
+     +arg_mul[i,1]*m
+     +arg_mul[i,2]*ms
+     +arg_mul[i,3]*f
+     +arg_mul[i,4]*omega;
+  delta_phi:=delta_phi+(arg_phi[i,0]+arg_phi[i,1]*t*0.1)*sin_d(s);
+  delta_epsilon:=delta_epsilon+(arg_eps[i,0]+arg_eps[i,1]*t*0.1)*cos_d(s);
+  end;
+
+delta_phi:=delta_phi*0.0001/3600;
+delta_epsilon:=delta_epsilon*0.0001/3600;
+(*@\\\0000001B01*)
+(*$endif *)
 
   (* angle of ecliptic *)
   epsilon_0:=84381.448+(-46.8150+(-0.00059+0.001813*t)*t)*t;
 
-  (* correction due to nutation *)
-  delta_epsilon:=9.20*cos_d(omega)+0.57*cos_d(2*l)+0.10*cos_d(2*ls)-0.09*cos_d(2*omega);
   epsilon:=(epsilon_0+delta_epsilon)/3600;
 
-  (* longitude correction due to nutation *)
-{   delta_phi:=(-17.20*sin_d(omega)-1.32*sin_d(2*l)-0.23*sin_d(2*ls)+0.21*sin_d(2*omega))/3600; }
+  coord.longitude:=put_in_360(coord.longitude+delta_phi);
 
   (* geocentric coordinates *)
-  alpha:=arctan2_d(cos_d(epsilon)*sin_d(o),cos_d(o));
-  delta:=arcsin_d(sin_d(epsilon)*sin_d(o));
+{   alpha:=arctan2_d(cos_d(epsilon)*sin_d(o),cos_d(o)); }
+{   delta:=arcsin_d(sin_d(epsilon)*sin_d(o)); }
+  alpha:=arctan2_d( sin_d(coord.longitude)*cos_d(epsilon)
+                   -tan_d(coord.latitude)*sin_d(epsilon)
+                  ,cos_d(coord.longitude));
+  delta:=arcsin_d( sin_d(coord.latitude)*cos_d(epsilon)
+                  +cos_d(coord.latitude)*sin_d(epsilon)*sin_d(coord.longitude));
 
   coord.rektaszension:=alpha;
   coord.declination:=delta;
   end;
-(*@\\\0000000801*)
+(*@\\\0000000501*)
 
 (*@/// function sun_coordinate(date:TDateTime):t_coord; *)
 { Based upon Chapter 24 of Meeus }
@@ -260,21 +483,22 @@ begin
 
   (* apparent longitude of the sun *)
   omega:=125.04452+(-1934.136261+(0.0020708+1/450000*t)*t)*t;
-  lambda:=put_in_360(o-0.00569-0.00478*sin_d(omega));
+  lambda:=put_in_360(o-0.00569-0.00478*sin_d(omega)
+                     -20.4898/3600/(result.radius/AU));
 
-  result.longitude:=o;
-  result.latitude:=lambda;
+  result.longitude:=lambda;
+  result.latitude:=0;
 
   calc_geocentric(result,date);
   end;
-(*@\\\0000000301*)
+(*@\\\0000002715*)
 (*@/// function moon_coordinate(date:TDateTime):t_coord; *)
 { Based upon Chapter 45 of Meeus }
 
 function moon_coordinate(date:TDateTime):t_coord;
 const
-(*@///   arg_lr:array[0..59,0..3] of integer = (..); *)
-arg_lr:array[0..59,0..3] of integer = (
+(*@///   arg_lr:array[0..59,0..3] of shortint = (..); *)
+arg_lr:array[0..59,0..3] of shortint = (
    ( 0, 0, 1, 0),
    ( 2, 0,-1, 0),
    ( 2, 0, 0, 0),
@@ -336,9 +560,9 @@ arg_lr:array[0..59,0..3] of integer = (
    ( 2, 0, 3, 0),
    ( 2, 0,-1,-2)
                  );
-(*@\\\*)
-(*@///   arg_b:array[0..59,0..3] of integer = (); *)
-arg_b:array[0..59,0..3] of integer = (
+(*@\\\0000000701*)
+(*@///   arg_b:array[0..59,0..3] of shortint = (); *)
+arg_b:array[0..59,0..3] of shortint = (
    ( 0, 0, 0, 1),
    ( 0, 0, 1, 1),
    ( 0, 0, 1,-1),
@@ -400,7 +624,7 @@ arg_b:array[0..59,0..3] of integer = (
    ( 4,-1, 0,-1),
    ( 2,-2, 0, 1)
   );
-(*@\\\*)
+(*@\\\0000001224*)
 (*@///   sigma_r: array[0..59] of longint = (..); *)
 sigma_r: array[0..59] of longint = (
  -20905355,
@@ -464,7 +688,7 @@ sigma_r: array[0..59] of longint = (
          0,
       8752
             );
-(*@\\\0000003301*)
+(*@\\\*)
 (*@///   sigma_l: array[0..59] of longint = (..); *)
 sigma_l: array[0..59] of longint = (
   6288774,
@@ -592,7 +816,7 @@ sigma_b: array[0..59] of longint = (
       115,
       107
   );
-(*@\\\0000003E05*)
+(*@\\\*)
 var
   t,d,m,ms,f,e,ls : extended;
   sr,sl,sb,temp: extended;
@@ -636,7 +860,7 @@ for i:=0 to 59 do begin
   if abs(arg_lr[i,1])=2 then temp:=temp*e;
   sr:=sr+temp;
   end;
-(*@\\\0000000201*)
+(*@\\\0000000301*)
 (*@///   sl := ä l_i sin(d,m,ms,f); *)
 sl:=0;
 for i:=0 to 59 do begin
@@ -680,27 +904,53 @@ sb:=sb -2235*sin_d(ls)
   delta:=385000.56+sr/1000;
 
   result.radius:=delta;
-  result.longitude:=lambda;  (* I ignore the correction delta_phi *)
+  result.longitude:=lambda;
   result.latitude:=beta;
 
   calc_geocentric(result,date);
   end;
-(*@\\\0000000701*)
+(*@\\\0000003601*)
+
+(*@/// procedure correct_position(var position:t_coord; date:TDateTime; ...); *)
+{ Based upon chapter 39 of Meeus }
+
+procedure correct_position(var position:t_coord; date:TDateTime;
+                           latitude,longitude,height:extended);
+var
+  u,h,delta_alpha: extended;
+  rho_sin, rho_cos: extended;
+const
+  b_a=0.99664719;
+begin
+  u:=arctan_d(b_a*b_a*tan_d(longitude));
+  rho_sin:=b_a*sin_d(u)+height/6378140*sin_d(longitude);
+  rho_cos:=cos_d(u)+height/6378140*cos_d(longitude);
+
+  position.parallax:=arcsin_d(sin_d(8.794/3600)/(moon_distance(date)/AU));
+  h:=star_time(date)-longitude-position.rektaszension;
+  delta_alpha:=arctan_d(
+                (-rho_cos*sin_d(position.parallax)*sin_d(h))/
+                (cos_d(position.declination)-
+                  rho_cos*sin_d(position.parallax)*cos_d(h)));
+  position.rektaszension:=position.rektaszension+delta_alpha;
+  position.declination:=arctan_d(
+      (( sin_d(position.declination)
+        -rho_sin*sin_d(position.parallax))*cos_d(delta_alpha))/
+      ( cos_d(position.declination)
+       -rho_cos*sin_d(position.parallax)*cos_d(h)));
+  end;
+(*@\\\0000001501*)
 
 { Moon phases and age of the moon }
-(*@/// function nextphase(date:TDateTime; phase:TMoonPhase):TDateTime; *)
+(*@/// procedure calc_phase_data(date:TDateTime; phase:TMoonPhase; var jde,kk,m,ms,f,o,e: extended); *)
 { Based upon Chapter 47 of Meeus }
+{ Both used for moon phases and moon and sun eclipses }
 
-function nextphase(date:TDateTime; phase:TMoonPhase):TDateTime;
+procedure calc_phase_data(date:TDateTime; phase:TMoonPhase; var jde,kk,m,ms,f,o,e: extended);
 var
   t: extended;
   k: longint;
-  kk: extended;
-  jde: extended;
   ts: extended;
-  m,ms,f,o,e: extended;
-  korr,w,akorr: extended;
-  a:array[1..14] of extended;
 begin
   k:=round((date-encodedate(2000,1,1))/36525.0*1236.85);
   ts:=(date-encodedate(2000,1,1))/36525.0;
@@ -713,6 +963,30 @@ begin
   f:= 160.7108+390.67050274*kk-t*t*(0.0016341+t*(0.00000227-t*0.000000011));
   o:=124.7746-1.56375580*kk+t*t*(0.0020691+t*0.00000215);
   e:=1-ts*(0.002516+ts*0.0000074);
+  end;
+(*@\\\0000000447*)
+(*@/// function nextphase(date:TDateTime; phase:TMoonPhase):TDateTime; *)
+{ Based upon Chapter 47 of Meeus }
+
+function nextphase(date:TDateTime; phase:TMoonPhase):TDateTime;
+var
+  t: extended;
+  kk: extended;
+  jde: extended;
+  m,ms,f,o,e: extended;
+  korr,w,akorr: extended;
+  a:array[1..14] of extended;
+begin
+  calc_phase_data(date,phase,jde,kk,m,ms,f,o,e);
+{   k:=round((date-encodedate(2000,1,1))/36525.0*1236.85); }
+{   ts:=(date-encodedate(2000,1,1))/36525.0; }
+{   kk:=int(k)+ord(phase)/4.0; }
+  t:=kk/1236.85;
+{   m:=2.5534+29.10535669*kk-t*t*(0.0000218+0.00000011*t); }
+{   ms:=201.5643+385.81693528*kk+t*t*(0.1017438+t*(0.00001239-t*0.000000058)); }
+{   f:= 160.7108+390.67050274*kk-t*t*(0.0016341+t*(0.00000227-t*0.000000011)); }
+{   o:=124.7746-1.56375580*kk+t*t*(0.0020691+t*0.00000215); }
+{   e:=1-ts*(0.002516+ts*0.0000074); }
   case phase of
 (*@///     Newmoon: *)
 Newmoon:
@@ -722,7 +996,7 @@ begin
          +0.01608*sin_d(2*ms)
          +0.01039*sin_d(2*f)
          +0.00739*e*sin_d(ms-m)
-         -0.00512*e*sin_d(ms+m)
+         -0.00514*e*sin_d(ms+m)
          +0.00208*e*e*sin_d(2*m)
          -0.00111*sin_d(ms-2*f)
          -0.00057*sin_d(ms+2*f)
@@ -740,9 +1014,10 @@ begin
          -0.00003*sin_d(ms+m+2*f)
          +0.00003*sin_d(ms-m+2*f)
          -0.00002*sin_d(ms-m-2*f)
+         -0.00002*sin_d(3*ms+m)
          +0.00002*sin_d(4*ms);
   end;
-(*@\\\0000000307*)
+(*@\\\0000001701*)
 (*@///     FirstQuarter,LastQuarter: *)
 FirstQuarter,LastQuarter:
 begin
@@ -810,6 +1085,7 @@ begin
          -0.00003*sin_d(ms+m+2*f)
          +0.00003*sin_d(ms-m+2*f)
          -0.00002*sin_d(ms-m-2*f)
+         -0.00002*sin_d(3*ms+m)
          +0.00002*sin_d(4*ms);
   end;
 (*@\\\*)
@@ -851,7 +1127,7 @@ korr:=korr+akorr;
 (*@\\\*)
   nextphase:=delphi_date(jde+korr);
   end;
-(*@\\\*)
+(*@\\\0000001D0E*)
 (*@/// function last_phase(date:TDateTime; phase:TMoonPhase):TDateTime; *)
 function last_phase(date:TDateTime; phase:TMoonPhase):TDateTime;
 var
@@ -877,7 +1153,7 @@ begin
     temp_date:=temp_date+28;
     end;
   end;
-(*@\\\0000000919*)
+(*@\\\0000000201*)
 
 (*@/// function moon_phase_angle(date: TDateTime):extended; *)
 { Based upon Chapter 46 of Meeus }
@@ -953,12 +1229,616 @@ begin
   end;
 (*@\\\0000000334*)
 
+{ Perigee and Apogee }
+(*@/// function nextXXXgee(date:TDateTime; apo: boolean):TDateTime; *)
+function nextXXXgee(date:TDateTime; apo: boolean):TDateTime;
+const
+(*@///   arg_apo:array[0..31,0..2] of shortint = (..); *)
+arg_apo:array[0..31,0..2] of shortint = (
+   { D  F  M }
+   ( 2, 0, 0),
+   ( 4, 0, 0),
+   ( 0, 0, 1),
+   ( 2, 0,-1),
+   ( 0, 2, 0),
+   ( 1, 0, 0),
+   ( 6, 0, 0),
+   ( 4, 0,-1),
+   ( 2, 2, 0),
+   ( 1, 0, 1),
+   ( 8, 0, 0),
+   ( 6, 0,-1),
+   ( 2,-2, 0),
+   ( 2, 0,-2),
+   ( 3, 0, 0),
+   ( 4, 2, 0),
+   ( 8, 0,-1),
+   ( 4, 0,-2),
+   (10, 0, 0),
+   ( 3, 0, 1),
+   ( 0, 0, 2),
+   ( 2, 0, 1),
+   ( 2, 0, 2),
+   ( 6, 2, 0),
+   ( 6, 0,-2),
+   (10, 0,-1),
+   ( 5, 0, 0),
+   ( 4,-2, 0),
+   ( 0, 2, 1),
+   (12, 0, 0),
+   ( 2, 2,-1),
+   ( 1, 0,-1)
+             );
+(*@\\\0000002201*)
+(*@///   arg_per:array[0..59,0..2] of shortint = (..); *)
+arg_per:array[0..59,0..2] of shortint = (
+   { D  F  M }
+   ( 2, 0, 0),
+   ( 4, 0, 0),
+   ( 6, 0, 0),
+   ( 8, 0, 0),
+   ( 2, 0,-1),
+   ( 0, 0, 1),
+   (10, 0, 0),
+   ( 4, 0,-1),
+   ( 6, 0,-1),
+   (12, 0, 0),
+   ( 1, 0, 0),
+   ( 8, 0,-1),
+   (14, 0, 0),
+   ( 0, 2, 0),
+   ( 3, 0, 0),
+   (10, 0,-1),
+   (16, 0, 0),
+   (12, 0,-1),
+   ( 5, 0, 0),
+   ( 2, 2, 0),
+   (18, 0, 0),
+   (14, 0,-1),
+   ( 7, 0, 0),
+   ( 2, 1, 0),
+   (20, 0, 0),
+   ( 1, 0, 1),
+   (16, 0,-1),
+   ( 4, 0, 1),
+   ( 2, 0,-2),
+   ( 4, 0,-2),
+   ( 6, 0,-2),
+   (22, 0, 0),
+   (18, 0,-1),
+   ( 6, 0, 1),
+   (11, 0, 0),
+   ( 8, 0, 1),
+   ( 4,-2, 0),
+   ( 6, 2, 0),
+   ( 3, 0, 1),
+   ( 5, 0, 1),
+   (13, 0, 0),
+   (20, 0,-1),
+   ( 3, 0, 2),
+   ( 4, 2,-2),
+   ( 1, 0, 2),
+   (22, 0,-1),
+   ( 0, 4, 0),
+   ( 6,-2, 0),
+   ( 2,-2, 1),
+   ( 0, 0, 2),
+   ( 0, 2,-1),
+   ( 2, 4, 0),
+   ( 0, 2,-2),
+   ( 2,-2, 2),
+   (24, 0, 0),
+   ( 4,-4, 0),
+   ( 9, 0, 0),
+   ( 4, 2, 0),
+   ( 2, 0, 2),
+   ( 1, 0,-1)
+             );
+(*@\\\*)
+(*@///   koe_apo:array[0..31,0..1] of longint = (..); *)
+koe_apo:array[0..31,0..1] of longint = (
+   {    1   T }
+   ( 4392,  0),
+   (  684,  0),
+   (  456,-11),
+   (  426,-11),
+   (  212,  0),
+   ( -189,  0),
+   (  144,  0),
+   (  113,  0),
+   (   47,  0),
+   (   36,  0),
+   (   35,  0),
+   (   34,  0),
+   (  -34,  0),
+   (   22,  0),
+   (  -17,  0),
+   (   13,  0),
+   (   11,  0),
+   (   10,  0),
+   (    9,  0),
+   (    7,  0),
+   (    6,  0),
+   (    5,  0),
+   (    5,  0),
+   (    4,  0),
+   (    4,  0),
+   (    4,  0),
+   (   -4,  0),
+   (   -4,  0),
+   (    3,  0),
+   (    3,  0),
+   (    3,  0),
+   (   -3,  0)
+               );
+(*@\\\0000001501*)
+(*@///   koe_per:array[0..59,0..1] of longint = (..); *)
+koe_per:array[0..59,0..1] of longint = (
+   {     1   T }
+   (-16769,  0),
+   (  4589,  0),
+   ( -1856,  0),
+   (   883,  0),
+   (  -773, 19),
+   (   502,-13),
+   (  -460,  0),
+   (   422,-11),
+   (  -256,  0),
+   (   253,  0),
+   (   237,  0),
+   (   162,  0),
+   (  -145,  0),
+   (   129,  0),
+   (  -112,  0),
+   (  -104,  0),
+   (    86,  0),
+   (    69,  0),
+   (    66,  0),
+   (   -53,  0),
+   (   -52,  0),
+   (   -46,  0),
+   (   -41,  0),
+   (    40,  0),
+   (    32,  0),
+   (   -32,  0),
+   (    31,  0),
+   (   -29,  0),
+   (   -27,  0),
+   (    24,  0),
+   (   -21,  0),
+   (   -21,  0),
+   (   -21,  0),
+   (    19,  0),
+   (   -18,  0),
+   (   -14,  0),
+   (   -14,  0),
+   (   -14,  0),
+   (    14,  0),
+   (   -14,  0),
+   (    13,  0),
+   (    13,  0),
+   (    11,  0),
+   (   -11,  0),
+   (   -10,  0),
+   (    -9,  0),
+   (    -8,  0),
+   (     8,  0),
+   (     8,  0),
+   (     7,  0),
+   (     7,  0),
+   (     7,  0),
+   (    -6,  0),
+   (    -6,  0),
+   (     6,  0),
+   (     5,  0),
+   (    27,  0),
+   (    27,  0),
+   (     5,  0),
+   (    -4,  0)
+               );
+(*@\\\0000000410*)
+var
+  k, jde, t: extended;
+  d,m,f,v: extended;
+  i: integer;
+begin
+  k:=round(((date-encodedate(1999,1,1))/365.25-0.97)*13.2555);
+  if apo then k:=k+0.5;
+  t:=k/1325.55;
+  jde:=2451534.6698+27.55454988*k+(-0.0006886+
+       (-0.000001098+0.0000000052*t)*t)*t*t;
+  d:=171.9179+335.9106046*k+(-0.0100250+(-0.00001156+0.000000055*t)*t)*t*t;
+  m:=347.3477+27.1577721*k+(-0.0008323-0.0000010*t)*t*t;
+  f:=316.6109+364.5287911*k+(-0.0125131-0.0000148*t)*t*t;
+  v:=0;
+  if apo then
+    for i:=0 to 31 do
+      v:=v+sin_d(arg_apo[i,0]*d+arg_apo[i,1]*f+arg_apo[i,2]*m)*
+         (koe_apo[i,0]*0.0001+koe_apo[i,1]*0.00001*t)
+  else
+    for i:=0 to 59 do
+      v:=v+sin_d(arg_per[i,0]*d+arg_per[i,1]*f+arg_per[i,2]*m)*
+         (koe_per[i,0]*0.0001+koe_per[i,1]*0.00001*t);
+  result:=delphi_date(jde+v);
+  end;
+(*@\\\0000001836*)
+(*@/// function nextperigee(date:TDateTime):TDateTime; *)
+function nextperigee(date:TDateTime):TDateTime;
+var
+  temp_date: TDateTime;
+begin
+  temp_date:=date-28;
+  result:=temp_date;
+  while result<date do begin
+    result:=nextXXXgee(temp_date,false);
+    temp_date:=temp_date+28;
+    end;
+  end;
+(*@\\\*)
+(*@/// function nextapogee(date:TDateTime):TDateTime; *)
+function nextapogee(date:TDateTime):TDateTime;
+var
+  temp_date: TDateTime;
+begin
+  temp_date:=date-28;
+  result:=temp_date;
+  while result<date do begin
+    result:=nextXXXgee(temp_date,true);
+    temp_date:=temp_date+28;
+    end;
+  end;
+(*@\\\0000000801*)
+
+{ The seasons }
+(*@/// function StartSeason(year: integer; season:TSeason):TDateTime;  // maximum error 51 seconds *)
+{ Based upon chapter 26 of Meeus }
+
+function StartSeason(year: integer; season:TSeason):TDateTime;
+var
+  y: extended;
+  jde0: extended;
+  t, w, dl, s: extended;
+  i: integer;
+const
+(*@///   a: array[0..23] of integer = (..); *)
+a: array[0..23] of integer = (
+  485, 203, 199, 182, 156, 136, 77, 74, 70, 58, 52, 50,
+  45, 44, 29, 18, 17, 16, 14, 12, 12, 12, 9, 8 );
+(*@\\\000000010F*)
+(*@///   bc:array[0..23,1..2] of extended = (..); *)
+bc:array[0..23,1..2] of extended = (
+   ( 324.96,   1934.136 ),
+   ( 337.23,  32964.467 ),
+   ( 342.08,     20.186 ),
+   (  27.85, 445267.112 ),
+   (  73.14,  45036.886 ),
+   ( 171.52,  22518.443 ),
+   ( 222.54,  65928.934 ),
+   ( 296.72,   3034.906 ),
+   ( 243.58,   9037.513 ),
+   ( 119.81,  33718.147 ),
+   ( 297.17,    150.678 ),
+   (  21.02,   2281.226 ),
+   ( 247.54,  29929.562 ),
+   ( 325.15,  31555.956 ),
+   (  60.93,   4443.417 ),
+   ( 155.12,  67555.328 ),
+   ( 288.79,   4562.452 ),
+   ( 198.04,  62894.029 ),
+   ( 199.76,  31436.921 ),
+   (  95.39,  14577.848 ),
+   ( 287.11,  31931.756 ),
+   ( 320.81,  34777.259 ),
+   ( 227.73,   1222.114 ),
+   (  15.45,  16859.074 )
+                           );
+(*@\\\0000001901*)
+begin
+  case year of
+(*@///     -1000..+999: *)
+-1000..+999: begin
+  y:=year/1000;
+  case season of
+    spring: jde0:=1721139.29189+(365242.13740+( 0.06134+( 0.00111-0.00071*y)*y)*y)*y;
+    summer: jde0:=1721223.25401+(365241.72562+(-0.05323+( 0.00907+0.00025*y)*y)*y)*y;
+    autumn: jde0:=1721325.70455+(365242.49558+(-0.11677+(-0.00297+0.00074*y)*y)*y)*y;
+    winter: jde0:=1721414.39987+(365242.88257+(-0.00769+(-0.00933-0.00006*y)*y)*y)*y;
+    else    jde0:=0;   (* this can't happen *)
+    end;
+  end;
+(*@\\\0000000801*)
+(*@///     +1000..+3000: *)
++1000..+3000: begin
+  y:=(year-2000)/1000;
+  case season of
+    spring: jde0:=2451623.80984+(365242.37404+( 0.05169+(-0.00411-0.00057*y)*y)*y)*y;
+    summer: jde0:=2451716.56767+(365241.62603+( 0.00325+( 0.00888-0.00030*y)*y)*y)*y;
+    autumn: jde0:=2451810.21715+(365242.01767+(-0.11575+( 0.00337+0.00078*y)*y)*y)*y;
+    winter: jde0:=2451900.05952+(365242.74049+(-0.06223+(-0.00823+0.00032*y)*y)*y)*y;
+    else    jde0:=0;   (* this can't happen *)
+    end;
+  end;
+(*@\\\0000000901*)
+    else raise E_OutOfAlgorithRange.Create('Out of range of the algorithm');
+    end;
+  t:=(jde0-2451545.0)/36525;
+  w:=35999.373*t-2.47;
+  dl:=1+0.0334*cos_d(w)+0.0007*cos_d(2*w);
+(*@///   s := ä a cos(b+c*t) *)
+s:=0;
+for i:=0 to 23 do
+  s:=s+a[i]*cos_d(bc[i,1]+bc[i,2]*t);
+(*@\\\0000000301*)
+  result:=delphi_date(jde0+(0.00001*s)/dl);
+  end;
+(*@\\\0000001001*)
+
+{ Rising and setting of moon and sun }
+(*@/// function Calc_Set_Rise(date:TDateTime; latitude, longitude:extended; *)
+{ Based upon chapter 14 of Meeus }
+
+function Calc_Set_Rise(date:TDateTime; latitude, longitude:extended;
+                       sun: boolean; kind: T_RiseSet):TDateTime;
+var
+  h: Extended;
+  pos1, pos2, pos3: t_coord;
+  h0, theta0, cos_h0, cap_h0: extended;
+  m0,m1,m2: extended;
+(*@/// function interpolation(y1,y2,y3,n: extended):extended; *)
+function interpolation(y1,y2,y3,n: extended):extended;
+var
+  a,b,c: extended;
+begin
+  a:=y2-y1;
+  b:=y3-y2;
+  if a>100 then  a:=a-360;
+  if a<-100 then  a:=a+360;
+  if b>100 then  b:=b-360;
+  if b<-100 then  b:=b+360;
+  c:=b-a;
+  result:=y2+0.5*n*(a+b+n*c);
+  end;
+(*@\\\0000000A09*)
+(*@/// function correction(m:extended; kind:integer):extended; *)
+function correction(m:extended; kind:integer):extended;
+var
+  alpha,delta,h, height: extended;
+begin
+  alpha:=interpolation(pos1.rektaszension,
+                       pos2.rektaszension,
+                       pos3.rektaszension,
+                       m);
+  delta:=interpolation(pos1.declination,
+                       pos2.declination,
+                       pos3.declination,
+                       m);
+  h:=put_in_360((theta0+360.985647*m)-longitude-alpha);
+  if h>180 then h:=h-360;
+
+  height:=arcsin_d(sin_d(latitude)*sin_d(delta)
+                   +cos_d(latitude)*cos_d(delta)*cos_d(h));
+
+  case kind of
+    0:   result:=-h/360;
+    1,2: result:=(height-h0)/(360*cos_d(delta)*cos_d(latitude)*sin_d(h));
+    else result:=0;   (* this cannot happen *)
+    end;
+  end;
+(*@\\\0000001501*)
+begin
+  if sun then
+    h0:=-0.8333
+  else begin
+    pos1:=moon_coordinate(date);
+    correct_position(pos1,date,latitude,longitude,0);
+    h0:=0.7275*pos1.parallax-34/60;
+    end;
+
+  h:=int(date);
+  theta0:=star_time(h);
+  if sun then begin
+    pos1:=sun_coordinate(h-1);
+    pos2:=sun_coordinate(h);
+    pos3:=sun_coordinate(h+1);
+    end
+  else begin
+    pos1:=moon_coordinate(h-1);
+    correct_position(pos1,h-1,latitude,longitude,0);
+    pos2:=moon_coordinate(h);
+    correct_position(pos2,h,latitude,longitude,0);
+    pos3:=moon_coordinate(h+1);
+    correct_position(pos3,h+1,latitude,longitude,0);
+    end;
+
+  cos_h0:=(sin_d(h0)-sin_d(latitude)*sin_d(pos2.declination))/
+          (cos_d(latitude)*cos_d(pos2.declination));
+  if (cos_h0<-1) or (cos_h0>1) then
+    raise E_NoRiseSet.Create('No rises or sets calculable');
+  cap_h0:=arccos_d(cos_h0);
+
+  m0:=(pos2.rektaszension+longitude-theta0)/360;
+  m1:=m0-cap_h0/360;
+  m2:=m0+cap_h0/360;
+
+  m0:=frac(m0);
+  if m0<0 then m0:=m0+1;
+  m1:=frac(m1);
+  if m1<0 then m1:=m1+1;
+  m2:=frac(m2);
+  if m2<0 then m2:=m2+1;
+
+  m0:=m0+correction(m0,0);
+  m1:=m1+correction(m1,1);
+  m2:=m2+correction(m2,2);
+
+  case kind of
+    _rise:    result:=h+m1;
+    _set:     result:=h+m2;
+    _transit: result:=h+m0;
+    else      result:=0;    (* this can't happen *)
+    end;
+
+  end;
+(*@\\\0000000701*)
+
+(*@/// function Sun_Rise(date:TDateTime; latitude, longitude:extended):TDateTime; *)
+function Sun_Rise(date:TDateTime; latitude, longitude:extended):TDateTime;
+begin
+  result:=Calc_Set_Rise(date,latitude,longitude,true,_rise);
+  end;
+(*@\\\000000033B*)
+(*@/// function Sun_Set(date:TDateTime; latitude, longitude:extended):TDateTime; *)
+function Sun_Set(date:TDateTime; latitude, longitude:extended):TDateTime;
+begin
+  result:=Calc_Set_Rise(date,latitude,longitude,true,_set);
+  end;
+(*@\\\000000033A*)
+(*@/// function Sun_Transit(date:TDateTime; latitude, longitude:extended):TDateTime; *)
+function Sun_Transit(date:TDateTime; latitude, longitude:extended):TDateTime;
+begin
+  result:=Calc_Set_Rise(date,latitude,longitude,true,_transit);
+  end;
+(*@\\\0000000301*)
+(*@/// function Moon_Rise(date:TDateTime; latitude, longitude:extended):TDateTime; *)
+function Moon_Rise(date:TDateTime; latitude, longitude:extended):TDateTime;
+begin
+  result:=Calc_Set_Rise(date,latitude,longitude,false,_rise);
+  end;
+(*@\\\000000033C*)
+(*@/// function Moon_Set(date:TDateTime; latitude, longitude:extended):TDateTime; *)
+function Moon_Set(date:TDateTime; latitude, longitude:extended):TDateTime;
+begin
+  result:=Calc_Set_Rise(date,latitude,longitude,false,_set);
+  end;
+(*@\\\000000033B*)
+(*@/// function Moon_Transit(date:TDateTime; latitude, longitude:extended):TDateTime; *)
+function Moon_Transit(date:TDateTime; latitude, longitude:extended):TDateTime;
+begin
+  result:=Calc_Set_Rise(date,latitude,longitude,false,_transit);
+  end;
+(*@\\\000000033F*)
+
+{ Checking for eclipses }
+(*@/// function Eclipse(var date:TDateTime; sun:boolean):TEclipse; *)
+function Eclipse(var date:TDateTime; sun:boolean):TEclipse;
+var
+  jde,kk,m,ms,f,o,e: extended;
+  t,f1,a1: extended;
+  p,q,w,gamma,u: extended;
+begin
+  if sun then
+    calc_phase_data(date,NewMoon,jde,kk,m,ms,f,o,e)
+  else
+    calc_phase_data(date,FullMoon,jde,kk,m,ms,f,o,e);
+  t:=kk/1236.85;
+  if abs(sin_d(f))>0.36 then
+    result:=none
+(*@///   else *)
+else begin
+  f1:=f-0.02665*sin_d(o);
+  a1:=299.77+0.107408*kk-0.009173*t*t;
+  if sun then
+    jde:=jde - 0.4075     * sin_d(ms)
+             + 0.1721 * e * sin_d(m)
+  else
+    jde:=jde - 0.4065     * sin_d(ms)
+             + 0.1727 * e * sin_d(m);
+  jde:=jde   + 0.0161     * sin_d(2*ms)
+             - 0.0097     * sin_d(2*f1)
+             + 0.0073 * e * sin_d(ms-m)
+             - 0.0050 * e * sin_d(ms+m)
+             - 0.0023     * sin_d(ms-2*f1)
+             + 0.0021 * e * sin_d(2*m)
+             + 0.0012     * sin_d(ms+2*f1)
+             + 0.0006 * e * sin_d(2*ms+m)
+             - 0.0004     * sin_d(3*ms)
+             - 0.0003 * e * sin_d(m+2*f1)
+             + 0.0003     * sin_d(a1)
+             - 0.0002 * e * sin_d(m-2*f1)
+             - 0.0002 * e * sin_d(2*ms-m)
+             - 0.0002     * sin_d(o);
+  p:=        + 0.2070 * e * sin_d(m)
+             + 0.0024 * e * sin_d(2*m)
+             - 0.0392     * sin_d(ms)
+             + 0.0116     * sin_d(2*ms)
+             - 0.0073 * e * sin_d(ms+m)
+             + 0.0067 * e * sin_d(ms-m)
+             + 0.0118     * sin_d(2*f1);
+  q:=        + 5.2207
+             - 0.0048 * e * cos_d(m)
+             + 0.0020 * e * cos_d(2*m)
+             - 0.3299     * cos_d(ms)
+             - 0.0060 * e * cos_d(ms+m)
+             + 0.0041 * e * cos_d(ms-m);
+  w:=abs(cos_d(f1));
+  gamma:=(p*cos_d(f1)+q*sin_d(f1))*(1-0.0048*w);
+  u:= + 0.0059
+      + 0.0046 * e * cos_d(m)
+      - 0.0182     * cos_d(ms)
+      + 0.0004     * cos_d(2*ms)
+      - 0.0005     * cos_d(m+ms);
+(*@///   if sun then *)
+if sun then begin
+  if abs(gamma)<0.9972 then begin
+    if u<0 then
+      result:=total
+    else if u>0.0047 then
+      result:=circular
+    else if u<0.00464*sqrt(1-gamma*gamma) then
+      result:=circulartotal
+    else
+      result:=circular;
+    end
+  else if abs(gamma)>1.5433+u then
+    result:=none
+  else if abs(gamma)<0.9972+abs(u) then
+    result:=noncentral
+  else
+    result:=partial;
+  end
+(*@\\\*)
+(*@///   else *)
+else begin
+  if (1.0128 - u - abs(gamma)) / 0.5450 > 0 then
+    result:=total
+  else if (1.5573 + u - abs(gamma)) / 0.5450 > 0 then
+    result:=halfshadow
+  else
+    result:=none;
+  end;
+(*@\\\0000000801*)
+  end;
+(*@\\\*)
+  date:=delphi_date(jde);
+  end;
+(*@\\\0000000E01*)
+(*@/// function NextEclipse(var date:TDateTime; sun:boolean):TEclipse; *)
+function NextEclipse(var date:TDateTime; sun:boolean):TEclipse;
+var
+  temp_date: TDateTime;
+begin
+  result:=none;    (* just to make Delphi 2/3 shut up, not needed really *)
+  temp_date:=date-28*2;
+  while temp_date<date do begin
+    temp_date:=temp_date+28;
+    result:=Eclipse(temp_date,sun);
+    end;
+  date:=temp_date;
+  end;
+(*@\\\003C000501000501000503000509000B01*)
+
+(*@/// The component itself *)
+
 (*$ifdef component *)
 const
-  ResString:array[TMoonSize] of string=('MOON_LARGE'#0,'MOON_SMALL'#0);
+  ResString:array[TMoonSize] of string=('MOON_LARGE'#0,'MOON_SMALL'#0,
+                                        'MOON_TINY'#0);
+  ResStringBW:array[TMoonSize] of string=('MOON_BW_LARGE'#0,'MOON_BW_SMALL'#0,
+                                        'MOON_BW_TINY'#0);
   size_moon:array[TMoonSize,0..4] of integer=
     ((64,64,28,31,28),
-     (32,32,14,15,14));   { max_x,max_y,offset_y,offset_x,radius }
+     (32,32,14,15,14),
+     (16,16,7,7,7));   { max_x,max_y,offset_y,offset_x,radius }
 (*@/// constructor TMoon.Create(AOwner: TComponent); *)
 constructor TMoon.Create(AOwner: TComponent);
 begin
@@ -966,19 +1846,20 @@ begin
   FBMP := TBitmap.Create;  {Note dynamic allocation of the pointer}
   SetDate(now);
   FDateChanged:=false;
-{   ficon:=TIcon.Create; }
+  ficon:=TIcon.Create;
   Set_Size(ms64);
   f_align:=alNone;
   end;
-(*@\\\0000000901*)
+(*@\\\0000000801*)
 (*@/// procedure TMoon.SetBitmap; *)
 procedure TMoon.SetBitmap;
 begin
   FBMP.Handle := LoadBitmap(hInstance, @ResString[FMoonSize][1]);
   Self.Picture.Graphic := FBMP as TGraphic;
-  draw_moon;
+  draw_moon(self.canvas,size_moon[FMoonSize,3]
+    ,size_moon[FMoonSize,2],size_moon[FMoonSize,4]);
   end;
-(*@\\\0000000201*)
+(*@\\\0000000501*)
 (*@/// procedure TMoon.WMSize(var Message: TWMSize); *)
 procedure TMoon.WMSize(var Message: TWMSize);
 begin
@@ -1000,10 +1881,9 @@ begin
   setbitmap;
   end;
 (*@\\\0000000501*)
-(*@/// procedure TMoon.Draw_Moon; *)
-procedure TMoon.Draw_Moon;
+(*@/// procedure TMoon.Draw_Moon(canvas:TCanvas; offset_x,offset_y,radius:integer); *)
+procedure TMoon.Draw_Moon(canvas:TCanvas; offset_x,offset_y,radius:integer);
 var
-  Offset_x,offset_y,radius:integer;
   y,radius2: integer;
   xm,scale: extended;
   xmax,xmin:integer;
@@ -1014,10 +1894,7 @@ begin
    FAngle = 180 -> Full Moon
    FAngle = 270 -> Last Quarter *)
 
-  Offset_y:=size_moon[FMoonSize,2];
-  Offset_x:=size_moon[FMoonSize,3];
-  Radius:=size_moon[FMoonSize,4];
-  self.canvas.brush.color:=clBlack;
+  canvas.brush.color:=clBlack;
   radius2:=radius*radius;
   scale:=cos_d(fangle);
   for y:=0 to radius do begin
@@ -1032,23 +1909,24 @@ begin
       xmax:=offset_x+xmax+1;
       xmin:=offset_x+xmin;
       end;
-    self.canvas.moveto(xmin,y+offset_y);
-    self.canvas.lineto(xmax,y+offset_y);
-    self.canvas.moveto(xmin,-y+offset_y);
-    self.canvas.lineto(xmax,-y+offset_y);
+    canvas.moveto(xmin,y+offset_y);
+    canvas.lineto(xmax,y+offset_y);
+    canvas.moveto(xmin,-y+offset_y);
+    canvas.lineto(xmax,-y+offset_y);
     end;
   end;
-(*@\\\*)
+(*@\\\0000000D01*)
 (*@/// procedure TMoon.SetDate(Value: TDateTime); *)
 procedure TMoon.SetDate(Value: TDateTime);
 begin
   FDate:=Value;
   FAngle:=put_in_360(moon_phase_angle(Value));
   setbitmap;
-  draw_moon;
+  draw_moon(self.canvas,size_moon[FMoonSize,3]
+    ,size_moon[FMoonSize,2],size_moon[FMoonSize,4]);
   FDateChanged:=true;
   end;
-(*@\\\0000000701*)
+(*@\\\0000000503*)
 (*@/// procedure TMoon.DoNothing(value:TPicture); *)
 procedure TMoon.DoNothing(value:TPicture);
 begin
@@ -1058,10 +1936,105 @@ begin
 destructor TMoon.Destroy;
 begin
   FBMP.free;
-{   ficon.free; }
+  ficon.free;
   inherited destroy;
   end;
-(*@\\\0002000401000401*)
+(*@\\\0000000501*)
+(*@/// function TMoon.GetIcon:TIcon; *)
+function TMoon.GetIcon:TIcon;
+var
+  IconSizeX : integer;
+  IconSizeY : integer;
+  AndMask : TBitmap;
+  XOrMask : TBitmap;
+(*$ifdef ver80 *)
+  BitmapX,BitmapA: wintypes.TBitmap;
+  AndData, XOrData: pointer;
+  AndLen, XorLen: integer;
+(*$else *)
+  IconInfo : TIconInfo;
+(*$endif *)
+  Size: TMoonSize;
+begin
+  AndMask:=NIL;
+  XOrMask:=NIL;
+  try
+    {Get the icon size}
+    IconSizeX := GetSystemMetrics(SM_CXICON);
+    IconSizeY := GetSystemMetrics(SM_CYICON);
+
+    Size:=ms32;
+    if false then
+    else if (IconSizeX=16) and (IconSizeY=16) then
+      Size:=ms16
+    else if (IconSizeX=32) and (IconSizeY=32) then
+      Size:=ms32
+    else if (IconSizeX=64) and (IconSizeY=64) then
+      size:=ms64
+    else
+      (* ??? *);
+
+    {Create the "And" mask}
+    AndMask := TBitmap.Create;
+    AndMask.Monochrome := true;
+    AndMask.Width := IconSizeX;
+    AndMask.Height := IconSizeY;
+
+    FBMP.Handle := LoadBitmap(hInstance, @ResStringBW[Size][1]);
+    AndMask.canvas.copyrect(Rect(0,0,size_moon[Size,0],size_moon[Size,1]),
+                         FBMP.canvas,
+                         Rect(0,0,size_moon[Size,0],size_moon[Size,1]));
+
+    {Create the "XOr" mask}
+    XOrMask := TBitmap.Create;
+    XOrMask.Width := IconSizeX;
+    XOrMask.Height := IconSizeY;
+
+    {Draw on the "XOr" mask}
+    FBMP.Handle := LoadBitmap(hInstance, @ResString[Size][1]);
+    XOrMask.canvas.copyrect(Rect(0,0,size_moon[Size,0],size_moon[Size,1]),
+                         FBMP.canvas,
+                         Rect(0,0,size_moon[Size,0],size_moon[Size,1]));
+
+    draw_moon(XOrMask.Canvas,size_moon[Size,3],size_moon[Size,2],size_moon[Size,4]);
+
+(*@///     Create a icon *)
+(*$ifdef ver80 *)
+AndData:=NIL;
+XorData:=NIL;
+try
+  GetObject(AndMask.handle, SizeOf(BitmapA), @BitmapA);
+  AndLen := BitmapA.bmWidthBytes * BitmapA.bmHeight * BitmapA.bmPlanes;
+  AndData := MemAlloc(AndLen);
+  GetBitmapBits(AndMask.handle, AndLen, AndData);
+  GetObject(XOrMask.handle, SizeOf(BitmapX), @BitmapX);
+  XorLen := BitmapX.bmWidthBytes * BitmapX.bmHeight * BitmapX.bmPlanes;
+  XorData := MemAlloc(XorLen);
+  GetBitmapBits(XorMask.handle, XorLen, XorData);
+
+  FIcon.Handle := CreateIcon(hinstance,IconSizeX,IconSizeY,
+    BitmapX.bmPlanes,BitmapX.bmBitsPixel, AndData, XOrData);
+finally
+  if AndData<>NIL then  FreeMem(AndData, AndLen);
+  if XorData<>NIL then  FreeMem(XorData, XorLen);
+  end;
+(*$else *)
+IconInfo.fIcon := true;
+IconInfo.xHotspot := 0;
+IconInfo.yHotspot := 0;
+IconInfo.hbmMask := AndMask.Handle;
+IconInfo.hbmColor := XOrMask.Handle;
+FIcon.Handle := CreateIconIndirect(IconInfo);
+(*$endif *)
+(*@\\\*)
+
+    result := FIcon;
+  finally
+    AndMask.Free;
+    XOrMask.Free;
+    end;
+  end;
+(*@\\\0000003A07*)
 
 (*@/// procedure Register; *)
 procedure Register;
@@ -1070,6 +2043,7 @@ begin
   end;
 (*@\\\000000040F*)
 (*$endif *)
-(*@\\\000000430C*)
+(*@\\\000000170C*)
+(*@\\\0002005402005402*)
 end.
-(*@\\\0001000011000C01*)
+(*@\\\0001000011001201*)

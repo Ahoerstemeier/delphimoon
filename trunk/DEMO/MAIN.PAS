@@ -22,6 +22,7 @@ uses
   moon,
   Menus;
 (*@\\\0000000801*)
+
 type
 (*@///   TForm1 = class(TForm) *)
 TMainForm = class(TForm)
@@ -74,26 +75,32 @@ TMainForm = class(TForm)
     mnu_about: TMenuItem;
     mnu_line2: TMenuItem;
     mnu_timezone: TMenuItem;
+    N1: TMenuItem;
+    mnu_more: TMenuItem;
   procedure TimerTimer(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure mnu_stopClick(Sender: TObject);
     procedure mnu_exitClick(Sender: TObject);
     procedure mnu_fastClick(Sender: TObject);
     procedure mnu_aboutClick(Sender: TObject);
+    procedure mnu_moreClick(Sender: TObject);
 private
-  { Private-Deklarationen }
+  last_phase_value: integer;
 public
-  { Public-Deklarationen }
 end;
-(*@\\\0000001301*)
+(*@\\\0030003D03003D13003F05*)
+
+function datestring(x:TDateTime):string;
+function date2string(x:TDateTime):string;
+function TimeZoneBias:longint;
 
 var
   MainForm: TMainForm;
-(*@\\\0000000301*)
+(*@\\\0000000601*)
 (*@/// implementation *)
 implementation
 
-uses about;
+uses about, more;
 
 {$R *.DFM}
 
@@ -329,9 +336,11 @@ procedure TMainForm.FormCreate(Sender: TObject);
 begin
   first_now:=now;
   Timer.OnTimer(NIL);
-{   Application.Icon:=Moon.Icon; }
+  Application.Icon:=Moon.Icon;
+  InvalidateRect(Application.Handle, nil, true);
+  last_phase_value:=199;
   end;
-(*@\\\0000000601*)
+(*@\\\0000000501*)
 
 (*@/// procedure TForm1.Timer1Timer(Sender: TObject); *)
 procedure TMainForm.TimerTimer(Sender: TObject);
@@ -342,6 +351,7 @@ var
   s:string;
   h,m,sec,ms: word;
   bias: integer;
+  new_phase: integer;
 begin
   bias:=TimeZoneBias;
   if mnu_fast.checked then begin
@@ -358,7 +368,6 @@ begin
   str(julian_date(jetzt):12:5,s);
   val_julian.caption:=s;
 
-  moon.date:=jetzt;
 
   temp:=last_phase(jetzt,Newmoon);
   val_newmoon.caption:=datestring(temp);
@@ -380,15 +389,23 @@ begin
   decodetime(age,h,m,sec,ms);
   s:=inttostr(trunc(age))+' days, '+inttostr(h)+' hours, '+inttostr(m)+' minutes.';
   val_age.caption:=s;
-  val_phase.caption:=inttostr(round(current_phase(jetzt)*100))+'% (0% = New, 100% = Full)';
+  new_phase:=round(current_phase(jetzt)*100);
+  val_phase.caption:=inttostr(new_phase)+'% (0% = New, 100% = Full)';
 
   str(moon_diameter(jetzt)/3600:6:4,s);
   val_moon_subtend.caption:=s;
   str(sun_diameter(jetzt)/3600:6:4,s);
   val_sun_subtend.caption:=s;
 
+  if new_phase<>last_phase_value then begin
+    moon.date:=jetzt;
+    Application.Icon:=Moon.Icon;
+    InvalidateRect(Application.Handle, nil, true);
+    last_phase_value:=new_phase;
+    end;
+
   end;
-(*@\\\000E000A09000A15000A15000A15*)
+(*@\\\0000000B01*)
 (*@/// procedure TMainForm.mnu_stopClick(Sender: TObject); *)
 procedure TMainForm.mnu_stopClick(Sender: TObject);
 begin
@@ -417,7 +434,13 @@ procedure TMainForm.mnu_aboutClick(Sender: TObject);
 begin
   aboutform.showmodal;
   end;
-(*@\\\*)
-(*@\\\0030000F0A000F16000F0A*)
+(*@\\\0000000301*)
+(*@/// procedure TMainForm.mnu_moreClick(Sender: TObject); *)
+procedure TMainForm.mnu_moreClick(Sender: TObject);
+begin
+  frm_more.show;
+  end;
+(*@\\\0000000301*)
+(*@\\\0002000311000311*)
 end.
-(*@\\\0001000011000301*)
+(*@\\\0000000305*)

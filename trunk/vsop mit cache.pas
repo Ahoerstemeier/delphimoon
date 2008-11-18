@@ -5,7 +5,7 @@ unit vsop;
 {  Calculates the planetary heliocentric coordinates according to the
    VSOP87 theory. Calculations according to chapter 32 (31) of Meeus. }
 
-(*$define meeus *)   { Only use the accuracy as in the Meeus book }
+(* $define meeus *)   { Only use the accuracy as in the Meeus book }
 
 (*$ifdef delphi_1 *)
   (*$define meeus *) { Otherwise the code segment will be too small }
@@ -17,11 +17,10 @@ interface
 (*@/// uses *)
 uses
   ah_math,
-  moon_aux,
   sysutils,
   classes,
   windows;
-(*@\\\000000030C*)
+(*@\\\000000040A*)
 
 type
   (*@/// TVSOPEntry=record *)
@@ -30,20 +29,40 @@ type
     end;
   (*@\\\*)
   TVSOPCalcFunc = function (nr,index: integer):TVSOPEntry of object;
-  (*@/// TVSOP=class(TCoordinateCalc) *)
-  TVSOP=class(TCoordinateCalc)
+  (*@/// TVSOPCacheEntry=class(TObject) *)
+  TVSOPCacheEntry = class(TObject)
+    date: Tdatetime;
+    longitude, latitude, radius: extended;
+    has_longitude, has_latitude, has_radius: boolean;
+    end;
+  (*@\\\*)
+  (*@/// TVSOP=class(TObject) *)
+  TVSOP=class(TObject)
   protected
+    FDate: TDateTime;
+    FCacheFIFO: TList;
+    FCacheDate: TList;
+    function FindCacheEntry(Date: TdateTime):TVSOPCacheEntry;
+    function CreateCacheEntry(Date: TdateTime):TVSOPCacheEntry;
     function LongitudeFactor(nr,index: integer):TVSOPEntry;  VIRTUAL; abstract;
     function LatitudeFactor(nr,index: integer):TVSOPEntry;  VIRTUAL; abstract;
     function RadiusFactor(nr,index: integer):TVSOPEntry;  VIRTUAL; abstract;
-    function CalcLongitude:extended; override;
-    function CalcLatitude:extended;  override;
-    function CalcRadius:extended;    override;
+    function CalcLongitude:extended;
+    function CalcLatitude:extended;
+    function CalcRadius:extended;
     function Calc(factor: TVSOPCalcFunc):extended;
+    procedure SetDate(value: TDateTime);
     function Tau:extended;
-    procedure FinishCalculation(var v:TVector);  override;
+    class procedure calc_coord(date: TDateTime; var l,b,r: extended);
+  public
+    procedure DynamicToFK5(var longitude,latitude: extended);
+    property Longitude:extended read CalcLongitude;
+    property Latitude:extended read CalcLatitude;
+    property Radius:extended read CalcRadius;
+    property Date:TDateTime write SetDate;
+    Destructor Destroy; override;
     end;
-  (*@\\\0000000B1F*)
+  (*@\\\0000001101*)
   TCVSOP=class of TVSOP;
   (*@/// TVSOPEarth=class(TVSOP) *)
   TVSOPEarth=class(TVSOP)
@@ -54,43 +73,96 @@ type
     end;
   (*@\\\0000000607*)
 
-function earth_coord(date:TdateTime):TVector;
-(*@\\\0000000D01*)
+procedure earth_coord(date:TdateTime; var l,b,r: extended);
+(*@\\\0030000801000901000801*)
 (*@/// implementation *)
 implementation
 
-(*@/// function earth_coord(date:TdateTime):TVector; *)
-function earth_coord(date:TdateTime):TVector;
+uses
+  moon;
+
+(*$ifdef delphi_ge_3 *)
+var
+(*$else *)
+const
+(*$endif *)
+  datetime_2000_01_01: extended = 0;
+const
+  MaxCacheCount = 256;
+
+(*@/// procedure earth_coord(date:TdateTime; var l,b,r: extended); *)
+procedure earth_coord(date:TdateTime; var l,b,r: extended);
 begin
-  result:=TVSOPEarth.calc_coord(date);
+  TVSOPEarth.calc_coord(date,l,b,r);
   end;
-(*@\\\000C00010100012E000325*)
+(*@\\\000000031E*)
+
 
 (*@/// class TVSOP *)
 (*@/// function TVSOP.CalcLongitude:extended; *)
 function TVSOP.CalcLongitude:extended;
+var
+  cache: TVSOPCacheEntry;
 begin
-  result:=rad2deg(calc(Longitudefactor));
+  cache:=FindCacheEntry(FDate);
+  if (cache<>NIL) and (Cache.Has_Longitude) then
+    result:=cache.longitude
+  else begin
+    result:=calc(Longitudefactor);
+    if cache=NIL then
+      cache:=CreateCacheEntry(FDate);
+    cache.has_longitude:=true;
+    cache.longitude:=result;
+    end;
   end;
-(*@\\\0000000329*)
+(*@\\\0000000201*)
 (*@/// function TVSOP.CalcLatitude:extended; *)
 function TVSOP.CalcLatitude:extended;
+var
+  cache: TVSOPCacheEntry;
 begin
-  result:=rad2deg(calc(Latitudefactor));
+  cache:=FindCacheEntry(FDate);
+  if (cache<>NIL) and (Cache.Has_Latitude) then
+    result:=cache.latitude
+  else begin
+    result:=calc(Latitudefactor);
+    if cache=NIL then
+      cache:=CreateCacheEntry(FDate);
+    cache.has_latitude:=true;
+    cache.latitude:=result;
+    end;
+
   end;
-(*@\\\0000000328*)
+(*@\\\0000000201*)
 (*@/// function TVSOP.CalcRadius:extended; *)
 function TVSOP.CalcRadius:extended;
+var
+  cache: TVSOPCacheEntry;
 begin
-  result:=calc(radiusfactor);
+  cache:=FindCacheEntry(FDate);
+  if (cache<>NIL) and (Cache.Has_radius) then
+    result:=cache.radius
+  else begin
+    result:=calc(radiusfactor);
+    if cache=NIL then
+      cache:=CreateCacheEntry(FDate);
+    cache.has_radius:=true;
+    cache.radius:=result;
+    end;
   end;
-(*@\\\0000000401*)
+(*@\\\*)
+(*@/// procedure TVSOP.SetDate(value: TDateTime); *)
+procedure TVSOP.SetDate(value: TDateTime);
+begin
+  FDate:=value;
+  end;
+(*@\\\0000000301*)
 (*@/// function TVSOP.Tau:extended; *)
 function TVSOP.Tau:extended;
 begin
-  result:=Century_Term(FDate)/10;
+  result:=(FDate-datetime_2000_01_01-0.5)/365250.0;
   end;
-(*@\\\0000000321*)
+(*@\\\*)
 (*@/// function TVSOP.Calc(factor: TVSOPCalcFunc):extended; *)
 function TVSOP.Calc(factor: TVSOPCalcFunc):extended;
 var
@@ -103,26 +175,158 @@ begin
   for j:=0 to 5 do begin
     r[j]:=0;
     i:=0;
-    while true do begin
-      WITH Factor(i,j) do begin
+    repeat
+      WITH Factor(i,j) do
         current:=a*cos(b+c*t);
-        if a=0 then
-          BREAK;
-        end;
       r[j]:=r[j]+current;
       inc(i);
-      end;
+    until current=0;
     end;
   result:=(r[0]+t*(r[1]+t*(r[2]+t*(r[3]+t*(r[4]+t*r[5])))))*1e-8;
   end;
 (*@\\\*)
-(*@/// procedure TVSOP.FinishCalculation(var v:TVector); *)
-procedure TVSOP.FinishCalculation(var v:TVector);
+(*@/// procedure TVSOP.DynamicToFK5(var longitude,latitude: extended); *)
+procedure TVSOP.DynamicToFK5(var longitude,latitude: extended);
+var
+  lprime,t: extended;
+  delta_l, delta_b: extended;
 begin
-  v:=DynamicToFK5(FDate,v);
+  t:=10*tau;
+  lprime:=longitude+deg2rad(-1.397-0.00031*t)*t;
+  delta_l:=-deg2rad(0.09033/3600)+deg2rad(0.03916/3600)*(cos(lprime)+sin(lprime))*tan(latitude);
+  delta_b:=deg2rad(0.03916/3600)*(cos(lprime)-sin(lprime));
+  longitude:=longitude+delta_l;
+  latitude:=latitude+delta_b;
   end;
 (*@\\\*)
-(*@\\\0000000630*)
+
+(*@/// Destructor TVSOP.Destroy; *)
+Destructor TVSOP.Destroy;
+var
+  i: integer;
+begin
+  if FCacheFIFO<>NIL then
+    for i:=FCacheFIFO.count-1 downto 0 do
+      TObject(FCacheFIFO[i]).free;
+  FCacheFIFO.free;
+  FCacheDate.free;
+  inherited destroy;
+  end;
+(*@\\\0000000723*)
+(*@/// function TVSOP.FindCacheEntry(Date: TdateTime):TVSOPCacheEntry; *)
+function TVSOP.FindCacheEntry(Date: TdateTime):TVSOPCacheEntry;
+var
+  i,m,o,c: integer;
+  obj: TVSOPCacheEntry;
+  diff: extended;
+begin
+  result:=NIL;
+  if FCacheDate=NIL then
+    EXIT
+  else begin
+    c:=FCacheDate.count;
+    if c=0 then
+      EXIT;
+    m:=MaxCacheCount;
+    o:=0;
+    while m>0 do begin
+      m:=m div 2;
+      i:=o+m;
+      if i>=c then
+        i:=c-1
+      else if i<0 then
+        i:=0;
+      obj:=TVSOPCacheEntry(FCacheDate[i]);
+      diff:=(obj.date-date)*86400;
+      if abs(diff)<1 then begin
+        result:=obj;
+        BREAK;
+        end
+      else if (diff<0) and (o+m<c) then
+        o:=o+m;
+      end;
+    end;
+  if result<>NIL then begin
+    i:=FCacheFIFO.IndexOf(result);
+    FCacheFIFO.Move(i,0);
+    end;
+  end;
+(*@\\\0000000B01*)
+(*@/// function TVSOP.CreateCacheEntry(Date: TdateTime):TVSOPCacheEntry; *)
+function TVSOP.CreateCacheEntry(Date: TdateTime):TVSOPCacheEntry;
+var
+  m,o,i,c: integer;
+  obj: TVSOPCacheEntry;
+begin
+  if FCacheFIFO=NIL then
+    FCacheFIFO:=TList.create;
+  if FCacheDate=NIL then
+    FCacheDate:=TList.create;
+  result:=FindCacheEntry(date);  (* In case the date is already in the list *)
+  if result=NIL then begin
+    result:=TVSOPCacheEntry.Create;
+    result.date:=date;
+    FCacheFIFO.Insert(0,result);
+    c:=FCacheDate.count;
+    m:=MaxCacheCount;
+    o:=0;
+    i:=0;
+    obj:=NIL;
+    if c>0 then
+      while m>0 do begin
+        m:=m div 2;
+        i:=o+m;
+        if i>=c then
+          i:=c-1
+        else if i<0 then
+          i:=0;
+        obj:=TVSOPCacheEntry(FCacheDate[i]);
+        if (obj.date-date)<0 then
+          if o+m<c then
+            o:=o+m;
+        end;
+    if obj=NIL then
+      FCacheDate.Insert(i,result)
+    else if obj.date>date then
+      FCacheDate.Insert(i,result)
+    else
+      FCacheDate.Insert(i+1,result)
+    end;
+
+  (* Limit the size *)
+  m:=FCacheFIFO.Count;
+  if m>MaxCacheCount then begin
+    obj:=TVSOPCacheEntry(FCacheFIFO[m-1]);
+    FCacheFIFO.Delete(m-1);
+    FCacheFIFO.pack;
+    FCachedate.remove(obj);
+    FCachedate.pack;
+    obj.free;
+    end;
+  end;
+(*@\\\0000000501*)
+
+(*@/// class procedure TVSOP.calc_coord(date: TDateTime; var l,b,r: extended); *)
+class procedure TVSOP.calc_coord(date: TDateTime; var l,b,r: extended);
+var
+  obj: TVSOP;
+begin
+  obj:=NIL;
+  try
+    obj:=self.Create;
+    obj.date:=date;
+    r:=obj.radius;
+    l:=obj.longitude;
+    b:=obj.latitude;
+    obj.DynamicToFK5(l,b);
+  finally
+    obj.free;
+    end;
+  l:=put_in_360(rad2deg(l));  (* rad -> degree *)
+  b:=rad2deg(b);
+  end;
+(*@\\\0000000701*)
+(*@\\\0000000D16*)
 (*@/// class TVSOPEarth *)
 (*@/// function TVSOPEarth.RadiusFactor(nr,index: integer):TVSOPEntry; *)
 function TVSOPEarth.RadiusFactor(nr,index: integer):TVSOPEntry;
@@ -1213,7 +1417,7 @@ begin
       end;
     end;
   end;
-(*@\\\0000000401*)
+(*@\\\0000000301*)
 (*@/// function TVSOPEarth.LatitudeFactor(nr,index: integer):TVSOPEntry; *)
 function TVSOPEarth.LatitudeFactor(nr,index: integer):TVSOPEntry;
 const
@@ -2819,8 +3023,18 @@ begin
     end;
   end;
 (*@\\\000000081C*)
-(*@\\\0000000201*)
-(*@\\\003200030100032E000401000401*)
+(*@\\\0000000301*)
+(*@\\\0000000F01*)
+(*@/// initialization *)
+(*$ifdef delphi_1 *)
+begin
+(*$else *)
+initialization
+(*$endif *)
+  datetime_2000_01_01:=Encodedate(2000,1,1);
+(*@\\\*)
 (*$ifdef delphi_ge_2 *) (*$warnings off *) (*$endif *)
 end.
-(*@\\\0001000011000F01*)
+
+
+(*@\\\000F001401001401000E01000011000E01*)

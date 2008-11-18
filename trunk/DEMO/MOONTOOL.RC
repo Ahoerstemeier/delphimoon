@@ -12,6 +12,8 @@ produced by Borland Resource Workshop
 #include "moontool.en"
 #include "moontool.de"
 #include "moontool.th"
+#include "moontool.yu"
+#include "moontool.nl"
 
 MAINICON ICON
 {

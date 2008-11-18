@@ -4,9 +4,23 @@ interface
 
 (*@/// uses *)
 uses
-  Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-  StdCtrls, ExtCtrls, moon;
-(*@\\\*)
+(*$ifdef ver80 *)
+  winprocs,
+  wintypes,
+(*$else *)
+  Windows,
+(*$endif *)
+  Messages,
+  SysUtils,
+  Classes,
+  Graphics,
+  Controls,
+  Forms,
+  Dialogs,
+  StdCtrls,
+  ExtCtrls,
+  moon;
+(*@\\\003C000101000101000201000801*)
 type
 (*@///   TAboutForm = class(TForm) *)
 TAboutForm = class(TForm)
@@ -26,7 +40,7 @@ end;
 
 var
   AboutForm: TAboutForm;
-(*@\\\*)
+(*@\\\0000000501*)
 (*@/// implementation *)
 implementation
 
@@ -38,7 +52,6 @@ begin
   moon.date:=now;
   end;
 (*@\\\*)
-
-(*@\\\0030000501000601000501*)
+(*@\\\0000000501*)
 end.
-(*@\\\000F000401000401000301000011000301*)
+(*@\\\0003000301000011000301*)

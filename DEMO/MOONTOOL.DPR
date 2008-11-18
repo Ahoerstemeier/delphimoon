@@ -8,7 +8,9 @@ uses
 {$R *.RES}
 
 begin
+(*$ifdef ver90 *)
   Application.Initialize;
+(*$endif *)
   Application.Title := 'Moontool';
   Application.CreateForm(TMainForm, MainForm);
   Application.CreateForm(TAboutForm, AboutForm);

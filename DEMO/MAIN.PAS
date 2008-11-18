@@ -4,9 +4,24 @@ interface
 
 (*@/// uses *)
 uses
-  Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-  ExtCtrls, StdCtrls, moon, Menus;
-(*@\\\*)
+(*$ifdef ver80 *)
+  winprocs,
+  wintypes,
+(*$else *)
+  Windows,
+(*$endif *)
+  Messages,
+  SysUtils,
+  Classes,
+  Graphics,
+  Controls,
+  Forms,
+  Dialogs,
+  ExtCtrls,
+  StdCtrls,
+  moon,
+  Menus;
+(*@\\\0000000801*)
 type
 (*@///   TForm1 = class(TForm) *)
 TMainForm = class(TForm)
@@ -74,7 +89,7 @@ end;
 
 var
   MainForm: TMainForm;
-(*@\\\0000000501*)
+(*@\\\0000000301*)
 (*@/// implementation *)
 implementation
 
@@ -100,13 +115,223 @@ begin
   end;
 (*@\\\0000000301*)
 
+(*@/// function TimeZoneBias:longint;          // in minutes ! *)
+function TimeZoneBias:longint;
+(*@/// 16 bit way: try a 32bit API call via thunking layer, if that fails try the TZ *)
+(*$ifdef ver80 *)
+(*@/// function GetEnvVar(const s:string):string; *)
+function GetEnvVar(const s:string):string;
+var
+  L: Word;
+  P: PChar;
+begin
+  L := length(s);
+  P := GetDosEnvironment;
+  while P^ <> #0 do begin
+    if (StrLIComp(P, @s[1], L) = 0) and (P[L] = '=') then begin
+      GetEnvVar := StrPas(P + L + 1);
+      EXIT;
+      end;
+    Inc(P, StrLen(P) + 1);
+    end;
+  GetEnvVar := '';
+  end;
+(*@\\\*)
+
+(*@/// function day_in_month(month,year,weekday: word; count: integer):TDateTime; *)
+function day_in_month(month,year,weekday: word; count: integer):TDateTime;
+var
+  h: integer;
+begin
+  if count>0 then begin
+    h:=dayofweek(encodedate(year,month,1));
+    h:=((weekday-h+7) mod 7) +1 + (count-1)*7;
+    result:=encodedate(year,month,h);
+    end
+  else begin
+    h:=dayofweek(encodedate(year,month,1));
+    h:=((weekday-h+7) mod 7) +1 + 6*7;
+    while count<0 do begin
+      h:=h-7;
+      try
+        result:=encodedate(year,month,h);
+        inc(count);
+        if count=0 then EXIT;
+      except
+        end;
+      end;
+    end;
+  end;
+(*@\\\*)
+(*@/// function DayLight_Start:TDateTime;     // american way ! *)
+function DayLight_Start:TDateTime;
+var
+  y,m,d: word;
+begin
+  DecodeDate(now,y,m,d);
+  result:=day_in_month(4,y,1,1);
+  (* for european one: day_in_month(3,y,1,-1) *)
+  end;
+(*@\\\*)
+(*@/// function DayLight_End:TDateTime;       // american way ! *)
+function DayLight_End:TDateTime;
+var
+  y,m,d: word;
+begin
+  DecodeDate(now,y,m,d);
+  result:=day_in_month(10,y,1,-1);
+  end;
+(*@\\\*)
+type    (* stolen from windows.pas *)
+(*@///   TSystemTime = record ... end; *)
+PSystemTime = ^TSystemTime;
+TSystemTime = record
+  wYear: Word;
+  wMonth: Word;
+  wDayOfWeek: Word;
+  wDay: Word;
+  wHour: Word;
+  wMinute: Word;
+  wSecond: Word;
+  wMilliseconds: Word;
+end;
+(*@\\\*)
+(*@///   TTimeZoneInformation = record ... end; *)
+TTimeZoneInformation = record
+  Bias: Longint;
+  StandardName: array[0..31] of word;  (* wchar *)
+  StandardDate: TSystemTime;
+  StandardBias: Longint;
+  DaylightName: array[0..31] of word;  (* wchar *)
+  DaylightDate: TSystemTime;
+  DaylightBias: Longint;
+  end;
+(*@\\\*)
+var
+  tz_info: TTimeZoneInformation;
+  LL32:function (LibFileName: PChar; handle: longint; special: longint):Longint;
+  FL32:function (hDll: Longint):boolean;
+  GA32:function (hDll: Longint; functionname: PChar):longint;
+  CP32:function (buffer:TTimeZoneInformation; prochandle,adressconvert,dwParams:Longint):longint;
+  hdll32,dummy,farproc: longint;
+  hdll:THandle;
+  sign: integer;
+  s: string;
+begin
+  hDll:=GetModuleHandle('kernel');                  { get the 16bit handle of kernel }
+  @LL32:=GetProcAddress(hdll,'LoadLibraryEx32W');   { get the thunking layer functions }
+  @FL32:=GetProcAddress(hdll,'FreeLibrary32W');
+  @GA32:=GetProcAddress(hdll,'GetProcAddress32W');
+  @CP32:=GetProcAddress(hdll,'CallProc32W');
+(*@///   if possible then   call GetTimeZoneInformation via Thunking *)
+if (@LL32<>NIL) and
+   (@FL32<>NIL) and
+   (@GA32<>NIL) and
+   (@CP32<>NIL) then begin
+  hDll32:=LL32('kernel32.dll',dummy,1);            { get the 32bit handle of kernel32 }
+  farproc:=GA32(hDll32,'GetTimeZoneInformation');  { get the 32bit adress of the function }
+  case CP32(tz_info,farproc,1,1) of                { and call it }
+    1: result:=tz_info.StandardBias+tz_info.Bias;
+    2: result:=tz_info.DaylightBias+tz_info.Bias;
+    else result:=0;
+    end;
+  FL32(hDll32);                                    { and free the 32bit dll }
+  end
+(*@\\\*)
+(*@///   else  calculate the bias out of the TZ environment variable *)
+else begin
+  s:=GetEnvVar('TZ');
+  while (length(s)>0) and (not(s[1] in ['+','-','0'..'9'])) do
+    s:=copy(s,2,length(s));
+  case s[1] of
+(*@///     '+': *)
+'+': begin
+  sign:=1;
+  s:=copy(s,2,length(s));
+  end;
+(*@\\\*)
+(*@///     '-': *)
+'-': begin
+  sign:=-1;
+  s:=copy(s,2,length(s));
+  end;
+(*@\\\*)
+    else sign:=1;
+    end;
+  try
+    result:=strtoint(copy(s,1,2))*60;
+    s:=copy(s,3,length(s));
+  except
+    try
+      result:=strtoint(s[1])*60;
+      s:=copy(s,2,length(s));
+    except
+      result:=0;
+      end;
+    end;
+(*@///   if s[1]=':' then    minutes offset *)
+if s[1]=':' then begin
+  try
+    result:=result+strtoint(copy(s,2,2));
+    s:=copy(s,4,length(s));
+  except
+    try
+      result:=result+strtoint(s[2]);
+      s:=copy(s,3,length(s));
+    except
+      end;
+    end;
+  end;
+(*@\\\*)
+(*@///   if s[1]=':' then    seconds offset - ignored *)
+if s[1]=':' then begin
+  try
+    strtoint(copy(s,2,2));
+    s:=copy(s,4,length(s));
+  except
+    try
+      strtoint(s[2]);
+      s:=copy(s,3,length(s));
+    except
+      end;
+    end;
+  end;
+(*@\\\*)
+  result:=result*sign;
+(*@///   if length(s)>0 then daylight saving activated, calculate it *)
+if length(s)>0 then begin
+  (* forget about the few hours on the start/end day *)
+  if (now>daylight_start) and (now<DayLight_End+1) then
+    result:=result-60;
+  end;
+(*@\\\*)
+  end;
+(*@\\\*)
+  end;
+(*@\\\*)
+(*@/// 32 bit way: API call GetTimeZoneInformation *)
+(*$else *)
+var
+  tz_info: TTimeZoneInformation;
+begin
+  case GetTimeZoneInformation(tz_info) of
+    1: result:=tz_info.StandardBias+tz_info.Bias;
+    2: result:=tz_info.DaylightBias+tz_info.Bias;
+    else result:=0;
+    end;
+  end;
+(*$endif *)
+(*@\\\*)
+(*@\\\0000000301*)
+
 (*@/// procedure TForm1.FormCreate(Sender: TObject); *)
 procedure TMainForm.FormCreate(Sender: TObject);
 begin
   first_now:=now;
   Timer.OnTimer(NIL);
+{   Application.Icon:=Moon.Icon; }
   end;
-(*@\\\*)
+(*@\\\0000000601*)
 
 (*@/// procedure TForm1.Timer1Timer(Sender: TObject); *)
 procedure TMainForm.TimerTimer(Sender: TObject);
@@ -116,9 +341,9 @@ var
   dist,age: extended;
   s:string;
   h,m,sec,ms: word;
-  tz_info: TTimeZoneInformation;
+  bias: integer;
 begin
-  GetTimeZoneInformation(tz_info);
+  bias:=TimeZoneBias;
   if mnu_fast.checked then begin
     jetzt:=(now-first_now)*3600+now;
     val_local.caption:='';
@@ -128,7 +353,7 @@ begin
     val_local.caption:=date2string(jetzt);
     end;
 
-  jetzt:=jetzt+tz_info.bias/(60*24);
+  jetzt:=jetzt+bias/(60*24);
   val_utc.caption:=date2string(jetzt);
   str(julian_date(jetzt):12:5,s);
   val_julian.caption:=s;
@@ -163,7 +388,7 @@ begin
   val_sun_subtend.caption:=s;
 
   end;
-(*@\\\0002000C20000C20*)
+(*@\\\000E000A09000A15000A15000A15*)
 (*@/// procedure TMainForm.mnu_stopClick(Sender: TObject); *)
 procedure TMainForm.mnu_stopClick(Sender: TObject);
 begin
@@ -193,7 +418,6 @@ begin
   aboutform.showmodal;
   end;
 (*@\\\*)
-
-(*@\\\003C001501001601001001001001001101*)
+(*@\\\0030000F0A000F16000F0A*)
 end.
 (*@\\\0001000011000301*)

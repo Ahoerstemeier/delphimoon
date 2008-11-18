@@ -59,14 +59,16 @@ function moon_diameter(date:TDateTime):extended;
 type
   TMoonSize=(ms64,ms32);
 (*@///   TMoon=class(TImage) *)
-TMoon=class(TImage)
+TMoon=class(TImage)   (* Borland, why no TCustomImage??? *)
 private
+  F_Align: TAlign;
   FBMP : TBitmap;
   FMaxWidth,FMaxHeight: integer;
   FMoonSize: TMoonSize;
   FAngle: extended;
   FDate: TDateTime;
   FDateChanged: boolean;
+{   FIcon: TIcon; }
   procedure Set_Size(Value:TMoonSize);
   procedure SetDate(value:TDateTime);
   procedure DoNothing(value:TPicture);
@@ -76,16 +78,19 @@ protected
   procedure WMSize (var Message: TWMSize); message wm_paint;
 public
   constructor Create(AOwner:TComponent); override;
+  destructor Destroy; override;
+{   property Icon: TIcon read ficon; }
 published
+  property Align: TAlign read F_Align default alNone;
   property MoonSize:TMoonSize read FMoonSize write Set_Size;
   property Date: TDateTime read FDate write SetDate stored FDateChanged;
   property Picture write donothing stored false;
   end;
-(*@\\\003000080300080F000803*)
+(*@\\\003C00170100170100030C000312001401*)
 
 procedure Register;
 (*$endif *)
-(*@\\\000000320C*)
+(*@\\\0000003210*)
 (*@/// implementation *)
 implementation
 
@@ -961,9 +966,11 @@ begin
   FBMP := TBitmap.Create;  {Note dynamic allocation of the pointer}
   SetDate(now);
   FDateChanged:=false;
+{   ficon:=TIcon.Create; }
   Set_Size(ms64);
+  f_align:=alNone;
   end;
-(*@\\\0000000617*)
+(*@\\\0000000901*)
 (*@/// procedure TMoon.SetBitmap; *)
 procedure TMoon.SetBitmap;
 begin
@@ -971,7 +978,7 @@ begin
   Self.Picture.Graphic := FBMP as TGraphic;
   draw_moon;
   end;
-(*@\\\0000000501*)
+(*@\\\0000000201*)
 (*@/// procedure TMoon.WMSize(var Message: TWMSize); *)
 procedure TMoon.WMSize(var Message: TWMSize);
 begin
@@ -1031,7 +1038,7 @@ begin
     self.canvas.lineto(xmax,-y+offset_y);
     end;
   end;
-(*@\\\0000001D16*)
+(*@\\\*)
 (*@/// procedure TMoon.SetDate(Value: TDateTime); *)
 procedure TMoon.SetDate(Value: TDateTime);
 begin
@@ -1041,12 +1048,20 @@ begin
   draw_moon;
   FDateChanged:=true;
   end;
-(*@\\\000C00070300070F000701*)
+(*@\\\0000000701*)
 (*@/// procedure TMoon.DoNothing(value:TPicture); *)
 procedure TMoon.DoNothing(value:TPicture);
 begin
   end;
 (*@\\\*)
+(*@/// destructor TMoon.Destroy; *)
+destructor TMoon.Destroy;
+begin
+  FBMP.free;
+{   ficon.free; }
+  inherited destroy;
+  end;
+(*@\\\0002000401000401*)
 
 (*@/// procedure Register; *)
 procedure Register;
@@ -1055,6 +1070,6 @@ begin
   end;
 (*@\\\000000040F*)
 (*$endif *)
-(*@\\\000000410C*)
+(*@\\\000000430C*)
 end.
-(*@\\\0003000601000011000601*)
+(*@\\\0001000011000C01*)

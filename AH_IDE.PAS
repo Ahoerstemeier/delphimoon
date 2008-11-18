@@ -1,4 +1,6 @@
+(*$ifndef clx *)
 unit ah_ide;
+(*$endif *)
 { Copyright 1997 Andreas Hörstemeier               Version 1.0 of 1998-05-13 }
 { this file is public domain - please check the file readme.txt for          }
 { more detailed info on usage and distributing                               }
@@ -9,6 +11,12 @@ interface
 
 (*@/// uses *)
 uses
+  classes,
+(*$ifdef clx *)
+  qgraphics,
+  qcontrols,
+  qextctrls,
+(*$else *)
 (*$ifndef delphi_1 *)
   windows,
 (*$else *)
@@ -17,34 +25,34 @@ uses
 (*$endif *)
   messages,
   graphics,
-  classes,
   controls,
   extctrls,
-  (*$ifdef delphi_ge_6 *)
+(*$endif *)
+(*$ifdef dsgnintf *)
+  dsgnintf,
+(*$else *)
   designintf,
   DesignEditors,
-  (*$else *)
-  dsgnintf,
-  (*$endif *)
+(*$endif *)
   sysutils;
-(*@\\\0000000D01*)
+(*@\\\*)
 
 type
-(*@///   t_ah_datetimeproperty=class(TFloatProperty) *)
-t_ah_datetimeproperty=class(TFloatProperty)
-protected
-  function parsespecialvalue(const s:string; var return:TDateTime):boolean;
-public
-  procedure edit; override;
-  function getattributes:TPropertyAttributes; override;
-  function GetValue:string; override;
-  procedure GetValues(Proc:TGetStrProc); override;
-  procedure SetValue(const value:string); override;
-  procedure Initialize; override;
-  function AllEqual:boolean; override;
-  end;
-(*@\\\0000000B01*)
-(*@\\\0000000701*)
+  (*@/// t_ah_datetimeproperty=class(TFloatProperty) *)
+  t_ah_datetimeproperty=class(TFloatProperty)
+  protected
+    function parsespecialvalue(const s:string; var return:TDateTime):boolean;
+  public
+    procedure edit; override;
+    function getattributes:TPropertyAttributes; override;
+    function GetValue:string; override;
+    procedure GetValues(Proc:TGetStrProc); override;
+    procedure SetValue(const value:string); override;
+    procedure Initialize; override;
+    function AllEqual:boolean; override;
+    end;
+  (*@\\\*)
+(*@\\\0000000301*)
 (*@/// implementation *)
 implementation
 
@@ -120,7 +128,7 @@ begin
                        {  editor pops up                                     }
 (*$endif *)
   end;
-(*@\\\0030000503000513000703*)
+(*@\\\0000000703*)
 (*@/// function t_ah_datetimeproperty.AllEqual:boolean; *)
 function t_ah_datetimeproperty.AllEqual:boolean;
 var
@@ -136,9 +144,8 @@ begin
       end;
   end;
 (*@\\\0000000901*)
-(*@\\\0000000701*)
-
-
-(*@\\\0002000A01000A01*)
+(*@\\\*)
+(*@\\\*)
+(*$ifdef support_warnings *) (*$warnings off *) (*$endif *)
 end.
-(*@\\\000D000201000201000011000805*)
+(*@\\\003F000C05000C05000B01000B3C000C05000011000C05*)

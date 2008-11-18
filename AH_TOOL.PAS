@@ -1,5 +1,5 @@
 unit ah_tool;
-{ Copyright 1995-200 Andreas Hörstemeier            Version 1.1 2001-06-04   }
+{ Copyright 1995-2001 Andreas Hörstemeier            Version 1.2 2001-08-17  }
 { this utility functions are public domain. They are used by several of my   }
 { components. In case you have several version of this file always use the   }
 { latest one. Please check the file readme.txt of the component you found    }
@@ -53,14 +53,6 @@ function text2html(const s:string):string;
 function min(x,y: longint):longint;
 function max(x,y: longint):longint;
 
-(*@/// Create a windows HWnd avoiding the stuff from forms *)
-type
-  TWndProc = procedure (var Message: TMessage) of object;
-
-function AH_AllocateHWnd(Method: TWndProc): HWND;
-procedure AH_DeallocateHWnd(Wnd: HWND);
-(*@\\\*)
-
 (*@/// The routines to make the applications events use a list of methods *)
 (*$ifndef delphi_ge_3 *)
 procedure AddShowHintProc(proc:TShowHintEvent);
@@ -83,7 +75,7 @@ function LoadStr(id:word):string;
 (*@\\\*)
 
 function ScrollBarVisible(control: TWinControl; vertical: boolean):boolean;
-(*@\\\0000002501*)
+(*@\\\*)
 (*@/// implementation *)
 implementation
 
@@ -246,6 +238,16 @@ begin
 
 (*@/// function TimeZoneBias:longint;          // in minutes ! *)
 function TimeZoneBias:longint;
+(*$ifdef delphi_1 *)
+const
+  TIME_ZOME_ID_INVALID = -1;
+(*$endif *)
+(*$ifndef delphi_ge_4 *)
+const
+  TIME_ZONE_ID_UNKNOWN  = 0;
+  TIME_ZONE_ID_STANDARD = 1;
+  TIME_ZONE_ID_DAYLIGHT = 2;
+(*$endif *)
 (*@/// 16 bit way: try a 32bit API call via thunking layer, if that fails try the TZ *)
 (*$ifdef delphi_1 *)
 (*@/// function GetEnvVar(const s:string):string; *)
@@ -360,13 +362,14 @@ begin
     hDll32:=LL32('kernel32.dll',dummy,1);            { get the 32bit handle of kernel32 }
     farproc:=GA32(hDll32,'GetTimeZoneInformation');  { get the 32bit adress of the function }
     case CP32(tz_info,farproc,1,1) of                { and call it }
-      1: result:=tz_info.StandardBias+tz_info.Bias;
-      2: result:=tz_info.DaylightBias+tz_info.Bias;
+      TIME_ZONE_ID_UNKNOWN,
+      TIME_ZONE_ID_STANDARD:  result:=tz_info.StandardBias+tz_info.Bias;
+      TIME_ZONE_ID_DAYLIGHT:  result:=tz_info.DaylightBias+tz_info.Bias;
       else result:=0;
       end;
     FL32(hDll32);                                    { and free the 32bit dll }
     end
-  (*@\\\*)
+  (*@\\\0030000801000B01000801*)
   (*@/// else  calculate the bias out of the TZ environment variable *)
   else begin
     s:=GetEnvVar('TZ');
@@ -437,21 +440,22 @@ begin
     end;
   (*@\\\*)
   end;
-(*@\\\0000001C01*)
+(*@\\\0000001B01*)
 (*@/// 32 bit way: API call GetTimeZoneInformation *)
 (*$else *)
 var
   tz_info: TTimeZoneInformation;
 begin
   case GetTimeZoneInformation(tz_info) of
-    1: result:=tz_info.StandardBias+tz_info.Bias;
-    2: result:=tz_info.DaylightBias+tz_info.Bias;
+    TIME_ZONE_ID_UNKNOWN,
+    TIME_ZONE_ID_STANDARD:  result:=tz_info.StandardBias+tz_info.Bias;
+    TIME_ZONE_ID_DAYLIGHT:  result:=tz_info.DaylightBias+tz_info.Bias;
     else result:=0;
     end;
   end;
 (*$endif *)
-(*@\\\*)
-(*@\\\0000000301*)
+(*@\\\000C000601000901000901*)
+(*@\\\0002000D01000D01*)
 
 (*@/// function text2html(const s:string):string; *)
 function text2html(const s:string):string;
@@ -637,7 +641,11 @@ type
     end;
   (*@\\\*)
 
+(*$ifdef delphi_ge_3 *)
+var
+(*$else *)
 const
+(*$endif *)
 (*$ifndef delphi_ge_3 *)
   ShowHintProcs: TObjectList =NIL;
 (*$endif *)
@@ -697,7 +705,11 @@ begin
 (*@\\\*)
 (*@\\\0000000301*)
 
+(*$ifdef delphi_ge_3 *)
+var
+(*$else *)
 const
+(*$endif *)
   Dummy: TDummyObject        =NIL;
 
 (*@/// Compare two method pointers *)
@@ -773,101 +785,7 @@ begin
   end;
 (*@\\\*)
 (*@\\\000000062B*)
-(*@\\\*)
-(*@/// Generating HWnd's without the routines in forms *)
-{ Creating a new HWnd with a WndProc for an arbitrary class. Just the same   }
-{ as the routines in forms, but without the assembler stuff and using simple }
-{ TList's for the storage - maybe not as fast the original routines, but     }
-{ much easier to understand and to use. This is only for fun here as the     }
-{ routines in forms do absolutely the same, but this stuff may be used to    }
-{ create an console application without using forms but receiving Windows    }
-{ messages.                                                                  }
-
-const
-  (*@/// UtilWindowClass: TWndClass = (...); *)
-  UtilWindowClass: TWndClass = (
-    style: 0;
-    lpfnWndProc: @DefWindowProc;
-    cbClsExtra: 0;
-    cbWndExtra: 0;
-    hInstance: 0;
-    hIcon: 0;
-    hCursor: 0;
-    hbrBackground: 0;
-    lpszMenuName: nil;
-    lpszClassName: 'TAHUtilWindow');
-  (*@\\\*)
-  WndProcs: TObjectList =NIL;
-  WndWnds: TList        =NIL;
-
-{ Converts a Windows WndProc (HWnd as parameter) to a Delphi method with }
-{ self as implicit first parameter by looking up the HWnd in the List    }
-(*@/// function AH_StdWndProc(Window: HWND; Message,WParam,LParam: Word/Longint); *)
-(*$ifdef delphi_1 *)
-function AH_StdWndProc(Window: HWND; Message: Longint; WParam: Word;
-  LParam: Longint): Longint; export;
-(*$else *)
-function AH_StdWndProc(Window: HWND; Message: Word; WParam: Longint;
-  LParam: Longint): Longint; stdcall;
-(*$endif *)
-var
-  p: integer;
-  m: TMessage;
-begin
-  m.msg:=message;
-  m.wparam:=wparam;
-  m.lparam:=lparam;
-  m.result:=0;
-  p:=wndwnds.indexof(pointer(window));
-  if p>=0 then
-    TWndProc(TMethod(wndprocs.Items[p]).methodpointer)(m);
-  result:=m.result;
-  end;
-(*@\\\0000000112*)
-{ Creates a new HWnd and link it with the given Method }
-(*@/// function AH_AllocateHWnd(Method: TWndProc): HWND; *)
-function AH_AllocateHWnd(Method: TWndProc): HWND;
-var
-  tempmethod: TMethod;
-  TempClass: TWndClass;
-begin
-  result:=0;
-  if (wndprocs=NIL) then exit;
-
-  UtilWindowClass.hInstance := HInstance;
-  if not GetClassInfo(HInstance, UtilWindowClass.lpszClassName, TempClass) then
-(*$ifdef delphi_1 *)
-    WinProcs.RegisterClass(UtilWindowClass);
-(*$else *)
-    Windows.RegisterClass(UtilWindowClass);
-(*$endif *)
-  Result := CreateWindow(UtilWindowClass.lpszClassName, '', 0,
-    0, 0, 0, 0, 0, 0, HInstance, nil);
-
-  tempmethod:=TMethod.Create;
-  tempmethod.methodpointer:=TMethodPointer(method);
-
-  { These two lists must be absolutely parallel, otherwise the messages may }
-  { go to the wrong object                                                  }
-  wndprocs.add(tempmethod);
-  wndwnds.add(pointer(result));
-
-  SetWindowLong(Result, GWL_WNDPROC, Longint(@AH_StdWndProc));
-end;
-(*@\\\0000000B12*)
-{ Removes the HWnd both in Windows an in the internal lists }
-(*@/// procedure AH_DeallocateHWnd(Wnd: HWND); *)
-procedure AH_DeallocateHWnd(Wnd: HWND);
-var
-  p: integer;
-begin
-  DestroyWindow(Wnd);
-  p:=wndwnds.remove(pointer(Wnd));
-  if p>=0 then
-    wndprocs.delete(p);
-end;
-(*@\\\*)
-(*@\\\0000001401*)
+(*@\\\0000002101*)
 
 (*@/// Make Stream and Clipboard work together *)
 (*@/// function GetPointer(index: integer; memblock: THandle):pointer; *)
@@ -1040,7 +958,7 @@ begin
   result:=sysutils.loadstr(id);
   (*$endif *)
   end;
-(*@\\\003C00050100060100070100080100070B*)
+(*@\\\000000070B*)
 (*@\\\*)
 
 (*@/// function ScrollBarVisible(control: TWinControl; vertical: boolean):boolean; *)
@@ -1104,18 +1022,9 @@ begin
   Dummy.Free;
   Dummy:=NIL;
 
-{ The explicit removing of the list entries is needed since the delete method }
-{  of the TLIst isn't virtual an therefore not called by the Free             }
-  if WndProcs<>NIL then
-    while WndProcs.Count>0 do
-      WndProcs.delete(0);
-  WndProcs.Free;
-  WndProcs:=NIL;
-  WndWnds.Free;
-  WndWnds:=NIL;
   end;
-(*@\\\*)
-(*@\\\0000001101*)
+(*@\\\0000001C01*)
+(*@\\\0000000801*)
 (*@/// initialization *)
 (*$ifndef delphi_ge_3 *)
 var
@@ -1140,9 +1049,7 @@ begin
                            { for the hints of the component palette so I   }
                            { need to remember this                         }
 (*$endif *)
-  WndProcs:=TObjectList.Create;
-  WndWnds:=TList.Create;
-(*@\\\000000040C*)
+(*@\\\*)
 (*@/// finalization *)
 (*$ifdef delphi_1 *)
   AddExitProc(DoneUnit);
@@ -1152,5 +1059,6 @@ finalization
   DoneUnit;
 (*$endif *)
 (*@\\\0000000201*)
+(*$ifdef delphi_ge_2 *) (*$warnings off *) (*$endif *)
 end.
-(*@\\\0003000701000011000701*)
+(*@\\\0001000011000801*)

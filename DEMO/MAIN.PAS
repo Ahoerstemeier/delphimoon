@@ -1,4 +1,5 @@
 unit main;
+ {$i ah_def.inc }
 (*@/// interface *)
 interface
 
@@ -128,7 +129,7 @@ type
     start_time: TDateTime;
     procedure SetLanguage(Sender: TObject);
     end;
-  (*@\\\0000005F01*)
+  (*@\\\0000003D05*)
 
 function datestring(x:TDateTime):string;
 function date2string(x:TDateTime):string;
@@ -139,10 +140,7 @@ var
   MainForm: TMainForm;
 
 const
-  negative_dates_broken: boolean = false;
   helpfilename = 'moon.hlp';
-  moontool_inifile: string = 'moontool.ini';
-  time_max_width: integer = 150;
   hc_main      = 1000;
   hc_timezones = 1001;
   hc_mainform  = 1002;
@@ -151,7 +149,15 @@ const
   hc_setutc    = 1010;
   hc_setjewish = 1012;
   hc_locations = 1013;
-(*@\\\0000001403*)
+
+(*$ifdef delphi_ge_3 *)
+var
+(*$else *)
+const
+(*$endif *)
+  moontool_inifile: string = 'moontool.ini';
+  time_max_width: integer = 150;
+(*@\\\0000000601*)
 (*@/// implementation *)
 implementation
 
@@ -519,6 +525,21 @@ begin
       lbl_full.font.color:=clBlue
     else
       lbl_full.font.color:=clWindowText;
+    case moonname(lunation_value) of
+      mn_wolf:        lbl_full.hint:=LoadStr(SMoonNameWolf      );
+      mn_snow:        lbl_full.hint:=LoadStr(SMoonNameSnow      );
+      mn_worm:        lbl_full.hint:=LoadStr(SMoonNameWorm      );
+      mn_pink:        lbl_full.hint:=LoadStr(SMoonNamePink      );
+      mn_flower:      lbl_full.hint:=LoadStr(SMoonNameFlower    );
+      mn_strawberry:  lbl_full.hint:=LoadStr(SMoonNameStrawberry);
+      mn_buck:        lbl_full.hint:=LoadStr(SMoonNameBuck      );
+      mn_sturgeon:    lbl_full.hint:=LoadStr(SMoonNameSturgeon  );
+      mn_harvest:     lbl_full.hint:=LoadStr(SMoonNameHarvest   );
+      mn_hunter:      lbl_full.hint:=LoadStr(SMoonNameHunter    );
+      mn_beaver:      lbl_full.hint:=LoadStr(SMoonNameBeaver    );
+      mn_cold:        lbl_full.hint:=LoadStr(SMoonNameCold      );
+      mn_blue:        lbl_full.hint:=LoadStr(SMoonNameBlue      );
+      end;
     val_lastquart.caption:=datestring(next_phase(temp,LastQuarter));
     val_nextnew.caption:=datestring(next_phase(jetzt,NewMoon));
     val_lastlunation.caption:=inttostr(lunation_value);
@@ -534,7 +555,7 @@ begin
   str(dist:6:3,s);
   val_sun_distance.caption:=inttostr(round(dist*AU))+' '+kilometers+', '+s+' '+AstronomicalUnits+'.';
 
-  age:=age_of_moon(jetzt);
+  age:=ageofmoonwalker(jetzt);
   decodetime(age,h,m,sec,ms);
   val_age.caption:=exchange_s('%1%',inttostr(trunc(age)),
                    exchange_s('%2%',inttostr(trunc(h)),
@@ -562,7 +583,7 @@ begin
     (*$endif *)
     end;
   end;
-(*@\\\0000002801*)
+(*@\\\0002004A17004A17*)
 (*@/// procedure TMainForm.mnu_stopClick(Sender: TObject); *)
 procedure TMainForm.mnu_stopClick(Sender: TObject);
 begin
@@ -702,7 +723,7 @@ begin
   last_phase_value:=199;
   TimerTimer(NIL);
   end;
-(*@\\\003C00050100060100070100080100071F*)
+(*@\\\000000071F*)
 
 (*@/// procedure TMainForm.tray_dblclick(sender: TObject); *)
 procedure TMainForm.tray_dblclick(sender: TObject);
@@ -737,7 +758,7 @@ begin
     rotate:=0;
   save_settings(rotate,moon.moonstyle=msColor);
   end;
-(*@\\\000200092E00092E*)
+(*@\\\000000092E*)
 
 (*@/// procedure TMainForm.SetLanguage(Sender: TObject); *)
 procedure TMainForm.SetLanguage(Sender: TObject);
@@ -789,6 +810,7 @@ begin
   mnu_color         .caption := LoadStr(SMenuColorMoon);
   mnu_more          .caption := LoadStr(SMenuMore);
   mnu_help          .caption := LoadStr(SMenuHelp);
+  mnu_help_item     .caption := LoadStr(SMenuHelp);
   mnu_about         .caption := LoadStr(SMenuAbout);
   mnu_timezone      .caption := LoadStr(SMenuTimeZones);
   application.title:=self.caption;
@@ -824,7 +846,7 @@ begin
   self.width:=size_x;
 {   size_x:=pos_x+80; }
   end;
-(*@\\\0000005401*)
+(*@\\\003C003115003134003215003234003201*)
 
 (*@/// procedure init; *)
 procedure init;
@@ -836,7 +858,7 @@ begin
   moontool_inifile:=s+moontool_inifile;
   end;
 (*@\\\*)
-(*@\\\0000002901*)
+(*@\\\0000001601*)
 begin
   init;
   (*$ifndef ver80 *) (*$warnings off*) (*$endif *)

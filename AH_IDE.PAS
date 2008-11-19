@@ -43,8 +43,8 @@ type
   protected
     function parsespecialvalue(const s:string; var return:TDateTime):boolean;
   public
-    procedure edit; override;
-    function getattributes:TPropertyAttributes; override;
+    procedure Edit; override;
+    function GetAttributes:TPropertyAttributes; override;
     function GetValue:string; override;
     procedure GetValues(Proc:TGetStrProc); override;
     procedure SetValue(const value:string); override;
@@ -63,12 +63,12 @@ const
     ( 'Now', 'Midnight', 'Midday', 'Tomorrow', 'Yesterday');
 (*@/// class t_ah_datetimeproperty(TFloatProperty) *)
 (*@/// procedure t_ah_datetimeproperty.edit; *)
-procedure t_ah_datetimeproperty.edit;
+procedure t_ah_datetimeproperty.Edit;
 begin
   end;
 (*@\\\0000000301*)
 (*@/// function t_ah_datetimeproperty.getattributes:TPropertyAttributes; *)
-function t_ah_datetimeproperty.getattributes:TPropertyAttributes;
+function t_ah_datetimeproperty.GetAttributes:TPropertyAttributes;
 begin
   result:=[paMultiSelect,paValueList,paSortlist];
   end;

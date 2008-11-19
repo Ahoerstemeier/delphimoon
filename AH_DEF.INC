@@ -187,5 +187,6 @@
 (*$else *)
   { The Delphi2/3 VCL only compiles with huge strings }
   (*$undef shortstring *)
+  (*$define support_warnings *)
 (*$endif *)
 (*@\\\*)

@@ -11,5 +11,6 @@ interface
   {$r moon.d32 }            { The File containing the bitmap }
 (*$endif *)
 implementation
+(*$ifdef support_warnings *) (*$warnings off *) (*$endif *)
 end.
 (*@\\\003F000E01000E01000E01000E01000501000011000501*)

@@ -92,6 +92,22 @@ const
     'Adar 2'
     );
   (*@\\\*)
+  (*@/// Muslim_Month_Name:array[1..12] of string *)
+  Muslim_Month_Name:array[1..12] of string = (
+    'Muharram',
+    'Safar',
+    'Rabi''al-Awwal',
+    'Rabi''ath-Thani',
+    'Jumada l-Ula',
+    'Jumada t-Tania',
+    'Rajab',
+    'Sha''ban',
+    'Ramadam',
+    'Sawwal',
+    'Dhu l-Qa''da',
+    'Dhu l-Hijja'
+    );
+  (*@\\\*)
 
 
 { Calendar algorithms }
@@ -102,6 +118,9 @@ function EasterDateJulian(year:integer):TDateTime;
 function PesachDate(year:integer):TDateTime;
 procedure DecodeDateJewish(date: TDateTime; var year,month,day: word);
 function EncodeDateJewish(year,month,day: word):TDateTime;
+procedure DecodeDateMuslim(date: TDateTime; var year,month,day: word);
+function EncodeDateMuslim(year,month,day: word):TDateTime;
+function IsMuslimLeapYear(year: word):boolean;
 function WeekNumber(date:TDateTime):integer;
 
 { Convert date to julian date and back }
@@ -996,6 +1015,92 @@ begin
     end;
   end;
 (*@\\\*)
+function IsMuslimLeapYear(year: word):boolean;
+var
+  cl,dl: integer;
+begin
+  cl:=year mod 30;
+  dl:=(11*cl+3) mod 30;
+  result:=(dl>18);
+  end;
+procedure DecodeDateMuslim(date: TDateTime; var year,month,day: word);
+var
+  x,m,d: word;
+  w,n,a,b,c,c2,ds,q,r,j,k,o,h,jj,s: integer;
+  c1: real;
+begin
+  DecodedateJulian(date,x,m,d);
+  if (x mod 4)=0 then
+    w:=1
+  else
+    w:=2;
+  n:=(275*m) div 9 - w*((m+9) div 12) + d -30;
+  a:=x-623;
+  b:=a div 4;
+  c:=a mod 4;
+  c1:=365.2501*c;
+  c2:=trunc(c1);
+  if (c1-c2)>0.5 then
+    inc(c2);
+  ds:=1461*b+170+c2;
+  q:=ds div 10631;
+  r:=ds mod 10631;
+  j:=r div 354;
+  k:=r mod 354;
+  o:=(11*j+14) div 30;
+  h:=30*q+j+1;
+  jj:=k-o+n-1;
+  if jj>354 then begin
+    if IsMuslimLeapYear(h) then begin
+      jj:=jj-355;
+      inc(h);
+      end
+    else begin
+      jj:=jj-354;
+      inc(h);
+      end;
+    end;
+  if jj=0 then begin
+    jj:=355;
+    dec(h);
+    end;
+  if jj=355 then begin
+    month:=12;
+    day:=30;
+    end
+  else begin
+    s:=trunc((jj-1)/29.5);
+    month:=1+s;
+    day:=trunc(jj-29.5*s);
+    end;
+  year:=h;
+  end;
+function EncodeDateMuslim(year,month,day: word):TDateTime;
+var
+  n,q,r,a,w,q1,q2,g,k,e,j,x: integer;
+begin
+  n:=day+trunc(29.5001*(month-1)+0.99);
+  q:=year div 30;
+  r:=year mod 30;
+  a:=(11*r+3) div 30;
+  w:=404*q+354*r+208+a;
+  q1:=w div 1461;
+  q2:=w mod 1461;
+  g:=621+4*(7*q+q1);
+  k:=trunc(q2/365.2422);
+  e:=trunc(365.2422*k);
+  j:=q2-e+n-1;
+  x:=g+k;
+  if (j>366) and (x mod 4 = 0) then begin
+    j:=j-366;
+    x:=x+1;
+    end;
+  if (j>365) and (x mod 4 > 0) then begin
+    j:=j-365;
+    x:=x+1;
+    end;
+  result:=EncodedateJulian(x,1,1)+j-1;
+  end;
 
 { Misc }
 (*@/// function EquationOfTime(date:TDateTime):extended;       // seconds *)

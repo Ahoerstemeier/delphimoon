@@ -35,6 +35,12 @@ type
     procedure TestPesachEasterCoincide;
     end;
   (*@\\\0000000201*)
+  TMuslimTestCase = class(TTestcase)
+  published
+    procedure TestEncodeDateMuslim;
+    procedure TestDecodeDateMuslim;
+    procedure TestLeapYear;
+    end;
   (*@/// TChineseTestCase = class(TTestcase) *)
   TChineseTestCase = class(TTestcase)
   published
@@ -243,6 +249,22 @@ begin
   end;
 (*@\\\0000000901*)
 
+procedure TMuslimTestCase.TestEncodeDateMuslim;
+begin
+  Check( EncodeDateMuslim(1421,1,1) = Encodedate(2000,4,6),
+         'Muslim calendar: 1 Muharram 1421 failed');
+  end;
+procedure TMuslimTestCase.TestDecodeDateMuslim;
+var
+  y,m,d: word;
+begin
+  DecodeDateMuslim(EncodeDate(1991,8,13),y,m,d);
+  Check((y=1412) and (m=2) and (d=2),'Muslim calendar: Date from 1991-08-13 failed');
+  end;
+procedure TMuslimTestCase.TestLeapYear;
+begin
+  Check(IsMuslimLeapYear(1421)=false,'Muslim year 1421 wrongly calculated as leap year');
+  end;
 { TChineseTestCase }
 
 (*@/// procedure TChineseTestCase.TestChineseNewYear; *)
@@ -1089,6 +1111,7 @@ var
   MoonTestSuite,
   CalendarTestSuite,
   JewishCalendarTestSuite,
+  MuslimCalendarTestSuite,
   ChineseCalendarTestSuite,
   MoonAlgorithmsTestSuite,
   SunAlgorithmsTestSuite,
@@ -1108,6 +1131,10 @@ begin
   JewishCalendarTestSuite := TTestSuite.Create('Jewish calendar functions');
   JewishCalendarTestSuite.AddTests(TJewishTestCase);
   MoonTestSuite.AddSuite(JewishCalendarTestSuite);
+
+  MuslimCalendarTestSuite := TTestSuite.Create('Muslim calendar functions');
+  MuslimCalendarTestSuite.AddTests(TMuslimTestCase);
+  MoonTestSuite.AddSuite(MuslimCalendarTestSuite);
 
   ChineseCalendarTestSuite := TTestSuite.Create('Chinese calendar functions');
   ChineseCalendarTestSuite.AddTests(TChineseTestCase);

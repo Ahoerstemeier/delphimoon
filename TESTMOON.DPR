@@ -8,7 +8,8 @@ uses
   TestFramework,
   GUITestRunner,
   TextTestRunner,
-  MoonTest in 'MoonTest.pas';
+  MOONTEST in 'MOONTEST.PAS',
+  MOON in 'MOON.PAS';
 
 {$R *.RES}
 

@@ -1,0 +1,1 @@
+Astronomical algorithms, mostly around the moon encapsulated in a component for Delphi. Includes an enhanced clone of the XWindows Moontool as an example application using the component and the functions.

@@ -1,6 +1,10 @@
 unit vsop;
 
- {$i ah_def.inc }
+{$ifdef fpc}
+  {$mode delphi}
+{$endif}
+
+{$i ah_def.inc }
 
 {  Calculates the planetary heliocentric coordinates according to the
    VSOP87 theory. Calculations according to chapter 32 (31) of Meeus. }

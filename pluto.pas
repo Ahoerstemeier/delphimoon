@@ -1,6 +1,10 @@
 unit pluto;
 
- {$i ah_def.inc }
+{$ifdef fpc}
+  {$mode delphi}
+{$endif}
+
+{$i ah_def.inc }
 
 {  Calculates the heliocentric coordinates of Pluto using the
    Meeus approximation }

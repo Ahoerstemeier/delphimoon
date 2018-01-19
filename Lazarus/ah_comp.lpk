@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CONFIG>
+  <Package Version="4">
+    <PathDelim Value="\"/>
+    <Name Value="ah_comp"/>
+    <Type Value="RunAndDesignTime"/>
+    <CompilerOptions>
+      <Version Value="11"/>
+      <PathDelim Value="\"/>
+      <SearchPaths>
+        <IncludeFiles Value=".."/>
+        <OtherUnitFiles Value=".."/>
+        <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)\"/>
+      </SearchPaths>
+      <Parsing>
+        <SyntaxOptions>
+          <SyntaxMode Value="Delphi"/>
+        </SyntaxOptions>
+      </Parsing>
+    </CompilerOptions>
+    <Files Count="7">
+      <Item1>
+        <Filename Value="..\moon_aux.pas"/>
+        <UnitName Value="moon_aux"/>
+      </Item1>
+      <Item2>
+        <Filename Value="..\ah_def.inc"/>
+        <Type Value="Include"/>
+      </Item2>
+      <Item3>
+        <Filename Value="..\ah_math.pas"/>
+        <UnitName Value="ah_math"/>
+      </Item3>
+      <Item4>
+        <Filename Value="..\elp_full.pas"/>
+        <Type Value="Include"/>
+      </Item4>
+      <Item5>
+        <Filename Value="..\moon_elp.pas"/>
+        <UnitName Value="moon_elp"/>
+      </Item5>
+      <Item6>
+        <Filename Value="..\vsop.pas"/>
+        <UnitName Value="vsop"/>
+      </Item6>
+      <Item7>
+        <Filename Value="..\moon.pas"/>
+        <UnitName Value="moon"/>
+      </Item7>
+    </Files>
+    <RequiredPkgs Count="2">
+      <Item1>
+        <PackageName Value="LCL"/>
+      </Item1>
+      <Item2>
+        <PackageName Value="FCL"/>
+      </Item2>
+    </RequiredPkgs>
+    <UsageOptions>
+      <UnitPath Value="$(PkgOutDir)"/>
+    </UsageOptions>
+    <PublishOptions>
+      <Version Value="2"/>
+    </PublishOptions>
+  </Package>
+</CONFIG>

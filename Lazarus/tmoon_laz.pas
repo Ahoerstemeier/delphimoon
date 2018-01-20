@@ -2,7 +2,7 @@
   This source is only used to compile and install the package.
  }
 
-unit ah_comp;
+unit tmoon_laz;
 
 {$warn 5023 off : no warning about unused units}
 interface
@@ -19,5 +19,5 @@ begin
 end;
 
 initialization
-  RegisterPackage('ah_comp', @Register);
+  RegisterPackage('tmoon_laz', @Register);
 end.

@@ -1,19 +1,30 @@
 unit mdMain;
 
+{$ifdef fpc}
+ {$mode delphi}
+{$endif}
+
 interface
 
 uses
-  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+ {$ifdef fpc}
+  LCLIntf, LCLType, Calendar,
+ {$else}
+  Windows, Messages,
+ {$endif}
+  SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, StdCtrls, mooncomp, ExtCtrls, ComCtrls;
 
 type
+
+  { TForm1 }
+
   TForm1 = class(TForm)
     Moon1: TMoon;
     ScrollBar1: TScrollBar;
     ScrollBar2: TScrollBar;
     RadioGroup1: TRadioGroup;
     ScrollBar3: TScrollBar;
-    MonthCalendar1: TMonthCalendar;
     Label1: TLabel;
     Label2: TLabel;
     Label3: TLabel;
@@ -32,6 +43,7 @@ type
     procedure FormCreate(Sender: TObject);
   private
     { Private-Deklarationen }
+    MonthCalendar1: {$ifdef fpc}TCalendar{$else}TMonthCalendar{$endif};
   public
     { Public-Deklarationen }
   end;
@@ -41,7 +53,11 @@ var
 
 implementation
 
-{$R *.dfm}
+{$ifdef fpc}
+ {$R *.lfm}
+{$else}
+ {$R *.dfm}
+{$endif}
 
 procedure TForm1.ScrollBar2Change(Sender: TObject);
 begin
@@ -68,7 +84,11 @@ end;
 
 procedure TForm1.MonthCalendar1Click(Sender: TObject);
 begin
+ {$ifdef fpc}
+  Moon1.Date := MonthCalendar1.DateTime;
+ {$else}
   Moon1.Date := MonthCalendar1.Date;
+ {$endif}
 end;
 
 procedure TForm1.RadioGroup2Click(Sender: TObject);
@@ -99,6 +119,14 @@ begin
 
   Moon1.MoonColor := clWhite;
   Panel1.Color := Moon1.MoonColor;
+
+  MonthCalendar1 := {$ifdef fpc}TCalendar{$else}TMonthCalendar{$endif}.Create(self);
+  with MonthCalendar1 do begin
+    Parent := self;
+    Left := 208;
+    Top := 8;
+    OnClick := MonthCalendar1Click;
+  end;
 end;
 
 end.

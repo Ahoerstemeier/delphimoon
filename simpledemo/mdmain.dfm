@@ -105,15 +105,6 @@ object Form1: TForm1
     TabOrder = 3
     OnChange = ScrollBar3Change
   end
-  object MonthCalendar1: TMonthCalendar
-    Left = 208
-    Top = 8
-    Width = 191
-    Height = 154
-    Date = 43120.447966435180000000
-    TabOrder = 4
-    OnClick = MonthCalendar1Click
-  end
   object RadioGroup2: TRadioGroup
     Left = 224
     Top = 280
@@ -126,7 +117,7 @@ object Form1: TForm1
       'ms64'
       'ms32'
       'ms16')
-    TabOrder = 5
+    TabOrder = 4
     OnClick = RadioGroup2Click
   end
   object RadioGroup3: TRadioGroup
@@ -140,7 +131,7 @@ object Form1: TForm1
       'msClassic'
       'msColor'
       'msMonochrome')
-    TabOrder = 6
+    TabOrder = 5
     OnClick = RadioGroup3Click
   end
   object Panel1: TPanel
@@ -148,7 +139,7 @@ object Form1: TForm1
     Top = 296
     Width = 25
     Height = 25
-    TabOrder = 7
+    TabOrder = 6
     OnClick = Panel1Click
   end
   object ColorDialog1: TColorDialog

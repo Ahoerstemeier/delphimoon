@@ -8,12 +8,14 @@ unit ah_comp;
 interface
 
 uses
-  moon_aux, ah_math, moon_elp, vsop, moon, LazarusPackageIntf;
+  moon_aux, ah_math, moon_elp, vsop, moon, mooncomp, ah_ide, moon_reg, 
+  ah_tool, LazarusPackageIntf;
 
 implementation
 
 procedure Register;
 begin
+  RegisterUnit('moon_reg', @moon_reg.Register);
 end;
 
 initialization

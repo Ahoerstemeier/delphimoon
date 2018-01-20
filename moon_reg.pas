@@ -1,25 +1,29 @@
-(*$ifndef clx *)
+{$ifndef clx}
 unit moon_reg;
-(*$endif *)
-  (*$i ah_def.inc *)
+{$endif}
+  {$i ah_def.inc}
 (*@/// interface *)
 interface
 
 uses
   classes,
-  (*$ifdef dsgnintf *)
+ {$ifdef fpc}
+  propedits, moonres, mooncomp, ah_ide;
+ {$else}
+  {$ifdef dsgnintf}
   dsgnintf,
-  (*$else *)
+  {$else}
   designintf,
-  (*$endif *)
+  {$endif}
   moonres,
-  (*$ifdef clx *)
+  {$ifdef clx}
   qmooncom,
   qah_ide;
-  (*$else *)
+  {$else}
   mooncomp,
   ah_ide;
-  (*$endif *)
+  {$endif}
+ {$endif}
 
 procedure Register;
 (*@\\\000C000801000901000501*)
@@ -27,25 +31,25 @@ procedure Register;
 implementation
 
 procedure Register;
-(*$ifndef delphi_5 *)  { were predefined in Delphi 5 only }
+{$ifndef delphi_5}  { were predefined in Delphi 5 only }
 const
   TInputCategory = 'Input';
   TVisualCategory = 'Visual';
   TMiscellaneousCategory = 'Miscellaneous';
-(*$endif *)
+{$endif}
 begin
   RegisterPropertyEditor(TypeInfo(TDateTime),NIL,'',t_ah_datetimeproperty);
   RegisterComponents('Custom', [TMoon]);
-(*$ifdef propertycategory *)
+{$ifdef propertycategory}
   RegisterPropertiesInCategory(TInputCategory, TMoon,
     ['Date']);
   RegisterPropertiesInCategory(TVisualCategory, TMoon,
     ['MoonStyle','MoonSize','Rotation']);
   RegisterPropertiesInCategory(TMiscellaneousCategory, TMoon,
     ['ShowApollo11']);
-(*$endif *)
+{$endif}
   end;
 (*@\\\0000000D1D*)
-(*$ifdef support_warnings *) (*$warnings off *) (*$endif *)
+{$ifdef support_warnings} {$warnings off} {$endif}
 end.
 (*@\\\003100071A00071A000011*)

@@ -1,44 +1,48 @@
-(*$ifndef clx *)
+{$ifndef clx}
 unit ah_ide;
-(*$endif *)
-{ Copyright 1997 Andreas Hörstemeier               Version 1.0 of 1998-05-13 }
-{ this file is public domain - please check the file readme.txt for          }
-{ more detailed info on usage and distributing                               }
+{$endif}
+{ Copyright 1997 Andreas Hörstemeier               Version 1.0 of 1998-05-13}
+{ this file is public domain - please check the file readme.txt for         }
+{ more detailed info on usage and distributing                              }
 
- {$i ah_def.inc }
-(*@/// interface *)
+ {$i ah_def.inc}
+{@/// interface}
 interface
 
-(*@/// uses *)
+{@/// uses}
 uses
   classes,
-(*$ifdef clx *)
+{$ifdef fpc}
+  propedits,
+{$else}
+{$ifdef clx}
   qgraphics,
   qcontrols,
   qextctrls,
-(*$else *)
-(*$ifndef delphi_1 *)
+{$else}
+{$ifndef delphi_1}
   windows,
-(*$else *)
+{$else}
   winprocs,
   wintypes,
-(*$endif *)
+{$endif}
   messages,
   graphics,
   controls,
   extctrls,
-(*$endif *)
-(*$ifdef dsgnintf *)
+{$endif}
+{$ifdef dsgnintf}
   dsgnintf,
-(*$else *)
+{$else}
   designintf,
   DesignEditors,
-(*$endif *)
+{$endif}
+{$endif}
   sysutils;
-(*@\\\*)
+{@\\\}
 
 type
-  (*@/// t_ah_datetimeproperty=class(TFloatProperty) *)
+  {@/// t_ah_datetimeproperty=class(TFloatProperty)}
   t_ah_datetimeproperty=class(TFloatProperty)
   protected
     function parsespecialvalue(const s:string; var return:TDateTime):boolean;
@@ -51,9 +55,9 @@ type
     procedure Initialize; override;
     function AllEqual:boolean; override;
     end;
-  (*@\\\*)
-(*@\\\0000000301*)
-(*@/// implementation *)
+  {@\\\}
+{@\\\0000000301}
+{@/// implementation}
 implementation
 
 type
@@ -61,25 +65,25 @@ type
 const
   specialvalues: array[sd_Now..sd_Yesterday] of string =
     ( 'Now', 'Midnight', 'Midday', 'Tomorrow', 'Yesterday');
-(*@/// class t_ah_datetimeproperty(TFloatProperty) *)
-(*@/// procedure t_ah_datetimeproperty.edit; *)
+{@/// class t_ah_datetimeproperty(TFloatProperty)}
+{@/// procedure t_ah_datetimeproperty.edit;}
 procedure t_ah_datetimeproperty.Edit;
 begin
   end;
-(*@\\\0000000301*)
-(*@/// function t_ah_datetimeproperty.getattributes:TPropertyAttributes; *)
+{@\\\0000000301}
+{@/// function t_ah_datetimeproperty.getattributes:TPropertyAttributes;}
 function t_ah_datetimeproperty.GetAttributes:TPropertyAttributes;
 begin
   result:=[paMultiSelect,paValueList,paSortlist];
   end;
-(*@\\\0000000301*)
-(*@/// function t_ah_datetimeproperty.GetValue:string; *)
+{@\\\0000000301}
+{@/// function t_ah_datetimeproperty.GetValue:string;}
 function t_ah_datetimeproperty.GetValue:string;
 begin
   result:=DateTimeToStr(GetFloatValue);
   end;
-(*@\\\0000000301*)
-(*@/// procedure t_ah_datetimeproperty.GetValues(Proc:TGetStrProc); *)
+{@\\\0000000301}
+{@/// procedure t_ah_datetimeproperty.GetValues(Proc:TGetStrProc);}
 procedure t_ah_datetimeproperty.GetValues(Proc:TGetStrProc);
 var
   i: T_Specialdates;
@@ -87,8 +91,8 @@ begin
   for i:=low(specialvalues) to high(specialvalues) do
     proc(specialvalues[i]);
   end;
-(*@\\\0000000501*)
-(*@/// function t_ah_datetimeproperty.parsespecialvalue(const s:string;...):boolean; *)
+{@\\\0000000501}
+{@/// function t_ah_datetimeproperty.parsespecialvalue(const s:string;...):boolean;}
 function t_ah_datetimeproperty.parsespecialvalue(const s:string; var return:TDateTime):boolean;
 var
   i: T_Specialdates;
@@ -107,8 +111,8 @@ begin
       BREAK;
       end;
   end;
-(*@\\\0000000730*)
-(*@/// procedure t_ah_datetimeproperty.SetValue(const value:string); *)
+{@\\\0000000730}
+{@/// procedure t_ah_datetimeproperty.SetValue(const value:string);}
 procedure t_ah_datetimeproperty.SetValue(const value:string);
 var
   dt: TdateTime;
@@ -117,19 +121,19 @@ begin
     dt:=StrToDateTime(value);
   SetFloatValue(dt);
   end;
-(*@\\\0000000505*)
-(*@/// procedure t_ah_datetimeproperty.Initialize; *)
+{@\\\0000000505}
+{@/// procedure t_ah_datetimeproperty.Initialize;}
 procedure t_ah_datetimeproperty.Initialize;
 begin
   inherited Initialize;
-(*$ifdef delphi_1 *)
-  GetFormatSettings;   { The Delphi 1 VCL isn't prepared for changing locale }
-                       { settings, so this makes an update everytime the     }
-                       {  editor pops up                                     }
-(*$endif *)
+{$ifdef delphi_1}
+  GetFormatSettings;   { The Delphi 1 VCL isn't prepared for changing locale}
+                       { settings, so this makes an update everytime the    }
+                       {  editor pops up                                    }
+{$endif}
   end;
-(*@\\\0000000703*)
-(*@/// function t_ah_datetimeproperty.AllEqual:boolean; *)
+{@\\\0000000703}
+{@/// function t_ah_datetimeproperty.AllEqual:boolean;}
 function t_ah_datetimeproperty.AllEqual:boolean;
 var
   i: integer;
@@ -143,9 +147,9 @@ begin
       BREAK;
       end;
   end;
-(*@\\\0000000901*)
-(*@\\\*)
-(*@\\\*)
-(*$ifdef support_warnings *) (*$warnings off *) (*$endif *)
+{@\\\0000000901}
+{@\\\}
+{@\\\}
+{$ifdef support_warnings} {$warnings off} {$endif}
 end.
-(*@\\\003F000C05000C05000B01000B3C000C05000011000C05*)
+{@\\\003F000C05000C05000B01000B3C000C05000011000C05}

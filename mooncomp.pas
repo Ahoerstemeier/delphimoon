@@ -1,6 +1,6 @@
-(*$ifndef clx *)
+{$ifndef clx}
 unit mooncomp;
-(*$endif *)
+{$endif}
 
  {$i ah_def.inc }
 
@@ -8,51 +8,59 @@ unit mooncomp;
 { this component is public domain - please check the file moon.hlp for       }
 { more detailed info on usage and distributing                               }
 
-(*$b-*)   { I may make use of the shortcut boolean eval }
+{$b-}   { I may make use of the shortcut boolean eval }
 
-(*@/// interface *)
+{@/// interface}
 interface
 
-(*@/// uses *)
+{@/// uses}
 uses
-(*$ifdef clx *)
+{$ifdef fpc}
+  LCLType, LCLIntf, LMessages, graphics, controls, extctrls,
+{$else}
+{$ifdef clx}
   types,
   qgraphics,
   qextctrls,
   qcontrols,
-(*$else *)
-(*$ifdef delphi_1 *)
+{$else}
+{$ifdef delphi_1}
   winprocs,
   wintypes,
-(*$else *)
+{$else}
   windows,
-(*$endif *)
+{$endif}
   messages,
   graphics,
   extctrls,
   controls,
-(*$endif *)
+{$endif}
+{$endif}
   classes,
   sysutils,
   ah_math,
   moon;
-(*@\\\0000000504*)
+{@\\\0000000504}
 
-(*$ifdef clx *)
+{$ifdef fpc}
+  {$r moon.r32}
+{$else}
+{$ifdef clx}
   {$r moon.q32 }            { The File containing the bitmaps }
-(*$else *)
-(*$ifdef delphi_1 *)
+{$else}
+{$ifdef delphi_1}
   {$r moon.r16 }            { The File containing the bitmaps }
-(*$else *)
+{$else}
   {$r moon.r32 }            { The File containing the bitmaps }
-(*$endif *)
-(*$endif *)
+{$endif}
+{$endif}
+{$endif}
 
 type
   TMoonSize=(ms64,ms32,ms16);
   TMoonStyle=(msClassic,msColor,msMonochrome);
   TRotate=(rot_none,rot_90,rot_180,rot_270,rot_angle,rot_location);
-  (*@/// TLocation=class(TPersistent) *)
+  {@/// TLocation=class(TPersistent)}
   TLocation=class(TPersistent)
   private
     Fname: string;
@@ -72,17 +80,17 @@ type
     property Longitude: extended read FLongitude write SetLongitude;
     property Name: string read FName write FName;
     end;
-  (*@\\\*)
-  (*@/// TMoon=class(TGraphicControl) *)
+  {@\\\}
+  {@/// TMoon=class(TGraphicControl)}
   TMoon=class(TGraphicControl)
   private
     FBMP : TBitmap;
     FIcon: TIcon;
     FLimbAngle: extended;
     FAngle: integer;
-  (*$ifdef delphi_lt_4 *)
+  {$ifdef delphi_lt_4}
     FMaxWidth,FMaxHeight: integer;
-  (*$endif *)
+  {$endif}
     FMoonSize: TMoonSize;
     FMoonIconSize: TMoonSize;
     FMoonColor: TColor;
@@ -105,9 +113,9 @@ type
     procedure SetRotAngle(value: integer);
     procedure SetLocation(value: TLocation);
     procedure LocationChange(sender: TObject);
-  (*$ifdef delphi_lt_4 *)
+  {$ifdef delphi_lt_4}
     procedure WMSize (var Message: TWMSize); message wm_paint;
-  (*$endif *)
+  {$endif}
 
   protected
     procedure SetBitmap;
@@ -116,7 +124,7 @@ type
     function GetIcon:TIcon;
     procedure Paint;  override;
     procedure Loaded; override;
-    (* not yet supported *)
+    { not yet supported}
     property MoonIconSize:TMoonSize read FMoonIconSize write SetIconSize;
     property LimbAngle:extended read FLimbAngle write FLimbAngle;
   public
@@ -147,41 +155,122 @@ type
     property OnDragOver;
     property OnStartDrag;
     property OnEndDrag;
-  (*$ifndef clx *)
+  {$ifndef clx}
     property DragCursor;
-  (*$endif *)
+  {$endif}
     property DragMode;
     property OnMouseDown;
     property OnMouseMove;
     property OnMouseUp;
-  (*$ifdef delphi_ge_4 *)
+  {$ifdef delphi_ge_4}
     property Anchors;
-  (*$ifndef clx *)
+  {$ifndef clx}
     property DragKind;
     property OnStartDock;
     property OnEndDock;
-  (*$endif *)
-  (*$endif *)
+  {$endif}
+  {$endif}
+  {$ifdef fpc}
+    //property AntialiasingMode;
+//    property Align;
+    property AutoSize;
+    property BorderSpacing;
+    property Constraints;
+    property Enabled;
+    property OnChangeBounds;
+    property OnMouseEnter;
+    property OnMouseLeave;
+    property OnMouseWheel;
+    property OnMouseWheelDown;
+    property OnMouseWheelUp;
+    property OnPaint;
+    property OnResize;
+  {$endif}
     end;
-  (*@\\\0000002727*)
+  {@\\\0000002727}
 
 procedure rotate_bitmap_free(source:TBitmap; angle:extended);
-(*@\\\000000140B*)
-(*@/// implementation *)
+{@\\\000000140B}
+{@/// implementation}
 implementation
+
+{$ifdef fpc}
+uses
+  IntfGraphics;
+{$endif}
 
 const
   transcolor_1 = clFuchsia;
   transcolor_2 = clLime;
 
-(*@/// procedure rotate_bitmap(source:TBitmap; rotate:TRotate); *)
+{$ifdef fpc}
+procedure rotate_bitmap(ASource: TBitmap; ARotate: TRotate);
+var
+  tempImage: TBitmap;
+  w,h,i,j: integer;
+  s_wnd, h_wnd: THandle;
+  {$IFDEF FPC}
+  srcImg, tmpImg: TLazIntfImage;
+  {$ENDIF}
+begin
+  tempImage := TBitmap.Create;
+  try
+    tempImage.Assign(ASource);
+    h := ASource.Height - 1;
+    w := ASource.Width - 1;
+    s_wnd := ASource.Canvas.Handle;
+    h_wnd := tempImage.Canvas.Handle;
+    case ARotate of
+      rot_none:
+        ;
+      rot_90:
+        begin
+          srcImg := ASource.CreateIntfImage;
+          tmpImg := tempImage.CreateIntfImage;
+          try
+            for i:=0 to w do
+              for j:=0 to h do
+                srcImg.Pixels[i,h-j] := tmpImg.Pixels[j,i];
+            ASource.LoadFromIntfImage(srcImg);
+          finally
+            srcImg.free;
+            tmpImg.free;
+          end;
+        end;
+      rot_180:
+        ASource.Canvas.CopyRect(
+          Rect(w, h, 0, 0),
+          tempImage.Canvas,
+          Rect(0, 0, w, h)
+        );
+      rot_270:
+        begin
+          srcImg := ASource.CreateIntfImage;
+          tmpImg := tempImage.CreateIntfImage;
+          try
+            for i:=0 to w do
+              for j:=0 to h do
+                srcImg.Pixels[w-i,j] := tmpImg.Pixels[j,i];
+            ASource.LoadFromIntfImage(srcImg);
+          finally
+            srcImg.Free;
+            tmpImg.Free;
+          end;
+        end;
+    end;
+  finally
+    tempImage.free;
+  end;
+end;
+{$else}
+{@/// procedure rotate_bitmap(source:TBitmap; rotate:TRotate);}
 procedure rotate_bitmap(source:TBitmap; rotate:TRotate);
 var
   tempimage: TBitmap;
   w,h,i,j: integer;
-(*$ifndef clx *)
+{$ifndef clx}
   s_wnd, h_wnd: THandle;
-(*$endif *)
+{$endif}
 begin
   tempimage:=NIL;
   try
@@ -189,61 +278,63 @@ begin
     tempimage.assign(source);
     h:=source.height-1;
     w:=source.width-1;
-(*$ifndef clx *)
+{$ifndef clx}
     s_wnd:=source.canvas.handle;
     h_wnd:=tempimage.canvas.handle;
-(*$endif *)
+{$endif}
     case rotate of
       rot_none: ;
-      (*@/// rot_90:   rotate pixel by pixel *)
+      {@/// rot_90:   rotate pixel by pixel}
       rot_90: begin
         for i:=0 to w do
           for j:=0 to h do begin
-      (*$ifdef clx *)
+      {$ifdef clx}
             source.canvas.copyrect(rect(i,h-j,i+1,h-j+1),tempimage.canvas,rect(j,i,j+1,i+1));
-      (*$else *)
+      {$else}
             setpixel(s_wnd,i,h-j,getpixel(h_wnd,j,i));
             { Much faster than using canvas.pixels[] }
-      (*$endif *)
+      {$endif}
             end;
           end;
-      (*@\\\*)
-      (*@/// rot_180:  rotate via the StretchBlt *)
+      {@\\\}
+      {@/// rot_180:  rotate via the StretchBlt}
       rot_180: begin
-      (*$ifdef clx *)
+      {$ifdef clx}
         source.canvas.stretchdraw(rect(w,h,0,0),tempimage);
-      (*$else *)
+      {$else}
         source.canvas.copyrect(rect(w,h,0,0),tempimage.canvas,rect(0,0,w,h));
-      (*$endif *)
+      {$endif}
         end;
-      (*@\\\0000000201*)
-      (*@/// rot_270:  rotate pixel by pixel *)
+      {@\\\0000000201}
+      {@/// rot_270:  rotate pixel by pixel}
       rot_270: begin
         for i:=0 to w do
           for j:=0 to h do
-      (*$ifdef clx *)
+      {$ifdef clx}
             source.canvas.copyrect(rect(w-i,j,w-i+1,j+1),tempimage.canvas,rect(j,i,j+1,i+1));
-      (*$else *)
+      {$else}
             setpixel(s_wnd,w-i,j,getpixel(h_wnd,j,i));
-      (*$endif *)
+      {$endif}
         end;
-      (*@\\\0000000401*)
+      {@\\\0000000401}
       end;
   finally
     tempimage.free;
     end;
   end;
-(*@\\\0000001801*)
-(*@/// procedure rotate_bitmap_free(source:TBitmap; angle:extended); *)
+{@\\\0000001801}
+{$endif}
+
+{@/// procedure rotate_bitmap_free(source:TBitmap; angle:extended);}
 procedure rotate_bitmap_free(source:TBitmap; angle:extended);
 var
   tempimage: TBitmap;
   w,h,i,j: integer;
   xx,xy,yx,yy: extended;
   sx, sy, dx, dy: integer;
-(*$ifndef clx *)
+{$ifndef clx}
   s_wnd, h_wnd: THandle;
-(*$endif *)
+{$endif}
 begin
   xx:=+cos_d(angle);  xy:=+sin_d(angle);
   yx:=-sin_d(angle);  yy:=+cos_d(angle);
@@ -255,48 +346,52 @@ begin
     w:=source.width-1;
     dx:=(w+1) div 2;
     dy:=(h+1) div 2;
-(*$ifndef clx *)
+{$ifndef clx}
     s_wnd:=source.canvas.handle;
     h_wnd:=tempimage.canvas.handle;
-(*$endif *)
+{$endif}
     for i:=0 to w do
       for j:=0 to h do begin
         sx:=put_in_range(round(xx*(i-dx)+xy*(j-dy))+dx,0,w);
         sy:=put_in_range(round(yx*(i-dx)+yy*(j-dy))+dy,0,h);
-(*$ifdef clx *)
+{$ifdef fpc}
+        source.canvas.Pixels[i, j] := tempimage.canvas.Pixels[sx, sy];
+{$else}
+{$ifdef clx}
         source.canvas.copyrect(rect(i,j,i+1,j+1),tempimage.canvas,rect(sx,sy,sx+1,sy+1));
-(*$else *)
+{$else}
         setpixel(s_wnd,i,j,getpixel(h_wnd,sx,sy));
         { Much faster than using canvas.pixels[] }
-(*$endif *)
+{$endif}
+{$endif}
         end;
   finally
     tempimage.free;
     end;
   end;
-(*@\\\0000001101*)
+{@\\\0000001101}
 
-(*$ifdef ver80 *)
+{$ifdef ver80}
 const
-(*$else *)
+{$else}
 var
-(*$endif *)
+{$endif}
   ApolloDate : TDateTime = 0;
 const
   ApolloLongitude = -(23+25/60);
 
 type
-  (*@/// TMoonSizeInfo = record *)
+  {@/// TMoonSizeInfo = record}
   TMoonSizeInfo = record
     max_x, max_y: integer;
     offset_x, offset_y: integer;
     radius: integer;
     end;
-  (*@\\\0000000501*)
+  {@\\\0000000501}
 
-(*@/// Resource names and sizes *)
+{@/// Resource names and sizes}
 const
-(*$ifdef clx *)
+{$ifdef clx}
   ResString:array[TMoonSize] of string=('QMOON_LARGE'#0,
                                         'QMOON_SMALL'#0,
                                         'QMOON_TINY'#0);
@@ -306,7 +401,7 @@ const
   ResStringColor:array[TMoonSize] of string=('QMOON_COLOR_LARGE'#0,
                                              'QMOON_COLOR_SMALL'#0,
                                              'QMOON_COLOR_TINY'#0);
-(*$else *)
+{$else}
   ResString:array[TMoonSize] of string=('MOON_LARGE'#0,
                                         'MOON_SMALL'#0,
                                         'MOON_TINY'#0);
@@ -316,15 +411,15 @@ const
   ResStringColor:array[TMoonSize] of string=('MOON_COLOR_LARGE'#0,
                                              'MOON_COLOR_SMALL'#0,
                                              'MOON_COLOR_TINY'#0);
-(*$endif *)
+{$endif}
   size_moon:array[TMoonSize] of TMoonSizeInfo =
     ((max_x: 64; max_y: 64; offset_x: 31; offset_y: 28; radius: 28 ),
      (max_x: 32; max_y: 32; offset_x: 15; offset_y: 14; radius: 14 ),
      (max_x: 16; max_y: 16; offset_x:  7; offset_y:  7; radius:  7 ));
-(*@\\\0000001701*)
+{@\\\0000001701}
 
-(*@/// class TMoon(TGraphicControl) *)
-(*@/// constructor TMoon.Create(AOwner: TComponent); *)
+{@/// class TMoon(TGraphicControl)}
+{@/// constructor TMoon.Create(AOwner: TComponent);}
 constructor TMoon.Create(AOwner: TComponent);
 begin
   inherited Create(AOwner);
@@ -340,16 +435,16 @@ begin
   Transparent:=false;
   SetSize(ms64);
   end;
-(*@\\\0000000403*)
-(*@/// destructor TMoon.Destroy; *)
+{@\\\0000000403}
+{@/// destructor TMoon.Destroy;}
 destructor TMoon.Destroy;
 begin
   FBMP.free;
   ficon.free;
   inherited destroy;
   end;
-(*@\\\*)
-(*@/// procedure TMoon.Paint; *)
+{@\\\}
+{@/// procedure TMoon.Paint;}
 procedure TMoon.Paint;
 begin
   if not transparent then begin
@@ -358,20 +453,20 @@ begin
     end;
   canvas.Draw(0,0,FBMP);
   end;
-(*@\\\0000000701*)
-(*@/// procedure TMoon.Loaded; *)
+{@\\\0000000701}
+{@/// procedure TMoon.Loaded;}
 procedure TMoon.Loaded;
 begin
   inherited Loaded;
   SetBitmap;
   end;
-(*@\\\*)
+{@\\\}
 
-(*@/// procedure TMoon.SetBitmap; *)
+{@/// procedure TMoon.SetBitmap;}
 procedure TMoon.SetBitmap;
-(*@/// procedure color_bitmap(var bmp:TBitmap; Color:TColor); *)
+{@/// procedure color_bitmap(var bmp:TBitmap; Color:TColor);}
 procedure color_bitmap(var bmp:TBitmap; Color:TColor);
-(* cmSrcPaint doesn't work with CLX of D6, that's why it's more complicated *)
+{ cmSrcPaint doesn't work with CLX of D6, that's why it's more complicated}
 var
   tempbmp,h: TBitmap;
   dest: TRect;
@@ -396,7 +491,7 @@ begin
     tempbmp.free;
     end;
   end;
-(*@\\\0000000105*)
+{@\\\0000000105}
 var
   h: string;
   tempbmp: TBitmap;
@@ -412,15 +507,15 @@ begin
       msColor:      h:=ResStringColor[FMoonSize];
       msMonochrome: h:=ResStringBW[FMoonSize];
       end;
-(*$ifdef clx *)
+{$ifdef clx}
     tempbmp.LoadFromResourceName(hInstance, h);
-    (* ARGH! Why not working by using FBMP.Width  *)
+    { ARGH! Why not working by using FBMP.Width }
     FBMP.LoadFromResourceName(hInstance, ResStringColor[FMoonSize]);
-(*$else *)
+{$else}
     tempbmp.Handle := LoadBitmap(hInstance, @h[1]);
     FBMP.Width:=tempbmp.Width;
     FBMP.Height:=tempbmp.Height;
-(*$endif *)
+{$endif}
     if FStyle=msMonochrome then
       color_bitmap(tempbmp,FMoonColor);
     if ColorToRGB(FMoonColor)<>transcolor_1 then
@@ -428,15 +523,15 @@ begin
     else
       transcolor:=transcolor_2;
     FBMP.Canvas.Brush.Color:=transcolor;
-(*$ifndef clx *)
+{$ifndef clx}
     FBMP.TransparentColor:=transcolor;
-(*$else *)
-    FBMP.TransparentMode:=tmAuto;  (* tmFixed doesn't work with D6 CLX *)
+{$else}
+    FBMP.TransparentMode:=tmAuto;  { tmFixed doesn't work with D6 CLX}
     if transcolor=transcolor_1 then
       FBMP.TransparentColor:=transcolor_2
     else
       FBMP.TransparentColor:=transcolor_1;
-(*$endif *)
+{$endif}
     dest:=Rect(0,0,Fbmp.width,Fbmp.height);
     FBMP.Canvas.FillRect(dest);
     tempbmp.transparent:=true;
@@ -457,42 +552,42 @@ begin
       end;
     rotate_bitmap_free(FBMP,current_angle);
     Draw_Apollo(FBMP.canvas,current_angle,FMoonSize);
-(*$ifdef clx *)
+{$ifdef clx}
     FBMP.TransparentColor:=transcolor;
-(*$endif *)
+{$endif}
     invalidate;
   finally
     tempbmp.free;
     end;
   end;
-(*@\\\0000003407*)
-(*@/// procedure TMoon.SetSize(Value:TMoonSize); *)
+{@\\\0000003407}
+{@/// procedure TMoon.SetSize(Value:TMoonSize);}
 procedure TMoon.SetSize(Value:TMoonSize);
 begin
   if (FMoonSize<>value) or (width<>size_moon[FMoonSize].max_x) then begin
     FMoonSize:=value;
-    (*$ifdef delphi_ge_4 *)
+    {$ifdef delphi_ge_4}
     constraints.maxheight:=size_moon[FMoonSize].max_y;
     constraints.minheight:=size_moon[FMoonSize].max_y;
     height:=size_moon[FMoonSize].max_y;
     constraints.maxwidth:=size_moon[FMoonSize].max_x;
     constraints.minwidth:=size_moon[FMoonSize].max_x;
-    (* at least D4 and D6 CLX need this - setting constraints does not update width/height *)
-    (* $ifdef clx *)
+    { at least D4 and D6 CLX need this - setting constraints does not update width/height}
+    { $ifdef clx}
     height:=size_moon[FMoonSize].max_y;
     width:=size_moon[FMoonSize].max_x;
-    (* $endif *)
-    (*$else *)
+    { $endif}
+    {$else}
     FMaxHeight:=size_moon[FMoonSize].max_x;
     FMaxWidth:=size_moon[FMoonSize].max_y;
     Self.Height := FMaxHeight;
     Self.Width := FMaxWidth;
-    (*$endif *)
+    {$endif}
     setbitmap;
     end;
   end;
-(*@\\\0000000601*)
-(*@/// procedure TMoon.Draw_Moon(canvas:TCanvas; size:TMoonSize); *)
+{@\\\0000000601}
+{@/// procedure TMoon.Draw_Moon(canvas:TCanvas; size:TMoonSize);}
 procedure TMoon.Draw_Moon(canvas:TCanvas; size:TMoonSize);
 var
   y,radius2: integer;
@@ -501,10 +596,10 @@ var
   offset_x,offset_y,radius: integer;
 begin
 
-(* FLimbAngle = 0   -> Full Moon
+{ FLimbAngle = 0   -> Full Moon
    FLimbAngle = 90  -> First Quarter
    FLimbAngle = 180 -> New Moon
-   FLimbAngle = 270 -> LasT Quarter *)
+   FLimbAngle = 270 -> LasT Quarter}
 
   offset_x:=size_moon[Size].offset_x;
   offset_y:=size_moon[Size].offset_y;
@@ -533,8 +628,8 @@ begin
       end;
     end;
   end;
-(*@\\\0000001201*)
-(*@/// procedure TMoon.Draw_Apollo(canvas:TCanvas; angle:integer; size:TMoonSize); *)
+{@\\\0000001201}
+{@/// procedure TMoon.Draw_Apollo(canvas:TCanvas; angle:integer; size:TMoonSize);}
 procedure TMoon.Draw_Apollo(canvas:TCanvas; angle:integer; size:TMoonSize);
 var
   apollo_x, apollo_y: extended;
@@ -547,38 +642,38 @@ begin
     apollo_y:=size_moon[Size].offset_y-size_moon[Size].max_y div 2;
     x:=round( apollo_x*cos_d(angle)-apollo_y*sin_d(angle)+size_moon[Size].max_x div 2);
     y:=round( apollo_x*sin_d(angle)+apollo_y*cos_d(angle)+size_moon[Size].max_y div 2);
-(*$ifdef clx *)
+{$ifdef clx}
     canvas.pen.color:=clRed;
     canvas.DrawPoint(x,y);
-(*$else *)
+{$else}
     canvas.pixels[x,y]:=clRed;
-(*$endif *)
+{$endif}
     end;
   end;
-(*@\\\003C000B3B000B5600095600097100090F*)
-(*$ifdef clx *)
-(*@/// function TMoon.GetIcon:TIcon; *)
+{@\\\003C000B3B000B5600095600097100090F}
+{$ifdef clx}
+{@/// function TMoon.GetIcon:TIcon;}
 function TMoon.GetIcon:TIcon;
 begin
-  FIcon.Assign(FBMP);  (* !!! *)
+  FIcon.Assign(FBMP);  { !!!}
   result:=FIcon;
   end;
-(*@\\\0000000401*)
-(*$else *)
-(*@/// function TMoon.GetIcon:TIcon; *)
+{@\\\0000000401}
+{$else}
+{@/// function TMoon.GetIcon:TIcon;}
 function TMoon.GetIcon:TIcon;
 var
   IconSizeX : integer;
   IconSizeY : integer;
   AndMask : TBitmap;
   XOrMask : TBitmap;
-(*$ifdef delphi_1 *)
+{$ifdef delphi_1}
   BitmapX,BitmapA: wintypes.TBitmap;
   AndData, XOrData: pointer;
   AndLen, XorLen: integer;
-(*$else *)
+{$else}
   IconInfo : TIconInfo;
-(*$endif *)
+{$endif}
   Size: TMoonSize;
   FBMP: TBitmap;
   tempcolor: TColor;
@@ -601,7 +696,7 @@ begin
     else if (IconSizeX=64) and (IconSizeY=64) then
       size:=ms64
     else
-      (* ??? *);
+      { ???};
 
     {Create the "And" mask}
     AndMask := TBitmap.Create;
@@ -655,8 +750,8 @@ begin
     rotate_bitmap_free(AndMask,current_angle);
     Draw_Apollo(XOrMask.canvas,current_angle,Size);
 
-    (*@/// Create a icon *)
-    (*$ifdef delphi_1 *)
+    {@/// Create a icon}
+    {$ifdef delphi_1}
     AndData:=NIL;
     XorData:=NIL;
     try
@@ -675,15 +770,15 @@ begin
       if AndData<>NIL then  FreeMem(AndData, AndLen);
       if XorData<>NIL then  FreeMem(XorData, XorLen);
       end;
-    (*$else *)
+    {$else}
     IconInfo.fIcon := true;
     IconInfo.xHotspot := 0;
     IconInfo.yHotspot := 0;
     IconInfo.hbmMask := AndMask.Handle;
     IconInfo.hbmColor := XOrMask.Handle;
-    FIcon.Handle := CreateIconIndirect(IconInfo);
-    (*$endif *)
-    (*@\\\0000001B01*)
+    FIcon.Handle := CreateIconIndirect({$ifdef fpc}@{$endif}IconInfo);
+    {$endif}
+    {@\\\0000001B01}
 
     result := FIcon;
   finally
@@ -692,10 +787,10 @@ begin
     FBMP.Free;
     end;
   end;
-(*@\\\0000005401*)
-(*$endif *)
+{@\\\0000005401}
+{$endif}
 
-(*@/// procedure TMoon.SetDate(Value: TDateTime); *)
+{@/// procedure TMoon.SetDate(Value: TDateTime);}
 procedure TMoon.SetDate(Value: TDateTime);
 begin
   FDate:=Value;
@@ -703,8 +798,8 @@ begin
   setbitmap;
   FDateChanged:=true;
   end;
-(*@\\\0000000501*)
-(*@/// procedure TMoon.SetRotate(value:TRotate); *)
+{@\\\0000000501}
+{@/// procedure TMoon.SetRotate(value:TRotate);}
 procedure TMoon.SetRotate(value:TRotate);
 begin
   if frotate<>value then begin
@@ -712,8 +807,8 @@ begin
     setbitmap;
     end;
   end;
-(*@\\\0000000501*)
-(*@/// procedure TMoon.SetStyle(value:TMoonStyle); *)
+{@\\\0000000501}
+{@/// procedure TMoon.SetStyle(value:TMoonStyle);}
 procedure TMoon.SetStyle(value:TMoonStyle);
 begin
   if fstyle<>value then begin
@@ -721,8 +816,8 @@ begin
     setbitmap;
     end;
   end;
-(*@\\\0000000201*)
-(*@/// procedure TMoon.SetIconSize(Value:TMoonSize); *)
+{@\\\0000000201}
+{@/// procedure TMoon.SetIconSize(Value:TMoonSize);}
 procedure TMoon.SetIconSize(Value:TMoonSize);
 begin
   if FMoonIconSize<>value then begin
@@ -730,8 +825,8 @@ begin
     GetIcon;
     end;
   end;
-(*@\\\0000000401*)
-(*@/// procedure TMoon.SetTransparent(value: boolean); *)
+{@\\\0000000401}
+{@/// procedure TMoon.SetTransparent(value: boolean);}
 procedure TMoon.SetTransparent(value: boolean);
 begin
   if FTransparent<>value then begin
@@ -739,8 +834,8 @@ begin
     self.invalidate;
     end;
   end;
-(*@\\\0000000301*)
-(*@/// procedure TMoon.SetColor(value: TColor); *)
+{@\\\0000000301}
+{@/// procedure TMoon.SetColor(value: TColor);}
 procedure TMoon.SetColor(value: TColor);
 begin
   if Color<>value then begin
@@ -749,8 +844,8 @@ begin
       invalidate;
     end;
   end;
-(*@\\\000000030B*)
-(*@/// procedure TMoon.SetApollo(value: boolean); *)
+{@\\\000000030B}
+{@/// procedure TMoon.SetApollo(value: boolean);}
 procedure TMoon.SetApollo(value: boolean);
 begin
   if fapollo<>value then begin
@@ -758,8 +853,8 @@ begin
     setbitmap;
     end;
   end;
-(*@\\\0000000505*)
-(*@/// procedure TMoon.SetMoonColor(value: TColor); *)
+{@\\\0000000505}
+{@/// procedure TMoon.SetMoonColor(value: TColor);}
 procedure TMoon.SetMoonColor(value: TColor);
 begin
   if FMoonColor<>value then begin
@@ -768,8 +863,8 @@ begin
       setbitmap;
     end;
   end;
-(*@\\\0000000601*)
-(*@/// procedure TMoon.SetRotAngle(value: integer); *)
+{@\\\0000000601}
+{@/// procedure TMoon.SetRotAngle(value: integer);}
 procedure TMoon.SetRotAngle(value: integer);
 begin
   if fangle<>value then begin
@@ -784,23 +879,23 @@ begin
     setbitmap;
     end;
   end;
-(*@\\\0000000C01*)
-(*@/// procedure TMoon.LocationChange(sender: TObject); *)
+{@\\\0000000C01}
+{@/// procedure TMoon.LocationChange(sender: TObject);}
 procedure TMoon.LocationChange(sender: TObject);
 begin
   setbitmap;
   end;
-(*@\\\*)
-(*@/// procedure TMoon.SetLocation(value: TLocation); *)
+{@\\\}
+{@/// procedure TMoon.SetLocation(value: TLocation);}
 procedure TMoon.SetLocation(value: TLocation);
 begin
   Location.assign(value);
   end;
-(*@\\\000000031A*)
+{@\\\000000031A}
 
 
-(*$ifdef delphi_lt_4 *)
-(*@/// procedure TMoon.WMSize(var Message: TWMSize); *)
+{$ifdef delphi_lt_4}
+{@/// procedure TMoon.WMSize(var Message: TWMSize);}
 procedure TMoon.WMSize(var Message: TWMSize);
 begin
   inherited;
@@ -809,11 +904,11 @@ begin
     Height := FMaxHeight;
     end;
   end;
-(*@\\\*)
-(*$endif *)
-(*@\\\0000000901*)
-(*@/// class TLocation(TPersistent) *)
-(*@/// procedure TLocation.Assign(Source: Tpersistent); *)
+{@\\\}
+{$endif}
+{@\\\0000000901}
+{@/// class TLocation(TPersistent)}
+{@/// procedure TLocation.Assign(Source: Tpersistent);}
 procedure TLocation.Assign(Source: Tpersistent);
 begin
   if (source is TLocation) then begin
@@ -826,37 +921,37 @@ begin
     end;
   inherited Assign(source);
   end;
-(*@\\\0000000801*)
-(*@/// procedure TLocation.SetLatitude(value:extended); *)
+{@\\\0000000801}
+{@/// procedure TLocation.SetLatitude(value:extended);}
 procedure TLocation.SetLatitude(value:extended);
 begin
   FLatitude:=value;
   changed;
   end;
-(*@\\\0000000201*)
-(*@/// procedure TLocation.SetLongitude(value:extended); *)
+{@\\\0000000201}
+{@/// procedure TLocation.SetLongitude(value:extended);}
 procedure TLocation.SetLongitude(value:extended);
 begin
   FLongitude:=value;
   changed;
   end;
-(*@\\\*)
-(*@/// procedure TLocation.changed; *)
+{@\\\}
+{@/// procedure TLocation.changed;}
 procedure TLocation.changed;
 begin
   if assigned(OnChange) then OnChange(self);
   end;
-(*@\\\*)
-(*@\\\*)
-(*@\\\0002001116001116*)
-(*@/// initialization *)
-(*$ifdef ver80 *)
+{@\\\}
+{@\\\}
+{@\\\0002001116001116}
+{@/// initialization}
+{$ifdef ver80}
 begin
-(*$else *)
+{$else}
 initialization
-(*$endif *)
+{$endif}
   ApolloDate:=EncodeDate(1969,7,20)+EncodeTime(20,17,43,0);
-(*@\\\*)
-(*$ifdef delphi_ge_2 *) (*$warnings off *) (*$endif *)
+{@\\\}
+{$ifdef delphi_ge_2} {$warnings off} {$endif}
 end.
-(*@\\\0001000011*)
+{@\\\0001000011}

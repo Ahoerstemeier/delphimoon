@@ -1,0 +1,51 @@
+package tmoon_d7;
+
+{$R *.res}
+{$ALIGN 8}
+{$ASSERTIONS OFF}
+{$BOOLEVAL OFF}
+{$DEBUGINFO ON}
+{$EXTENDEDSYNTAX ON}
+{$IMPORTEDDATA ON}
+{$IOCHECKS ON}
+{$LOCALSYMBOLS ON}
+{$LONGSTRINGS ON}
+{$OPENSTRINGS ON}
+{$OPTIMIZATION ON}
+{$OVERFLOWCHECKS OFF}
+{$RANGECHECKS OFF}
+{$REFERENCEINFO OFF}
+{$SAFEDIVIDE OFF}
+{$STACKFRAMES OFF}
+{$TYPEDADDRESS OFF}
+{$VARSTRINGCHECKS ON}
+{$WRITEABLECONST OFF}
+{$MINENUMSIZE 1}
+{$IMAGEBASE $42200000}
+{$DESCRIPTION 'TMoon for Delphi 7'}
+{$IMPLICITBUILD OFF}
+
+requires
+  rtl,
+  vcl,
+  designide,
+  vclactnband,
+  vclx,
+  visualclx;
+
+contains
+  ah_ide in '..\ah_ide.pas',
+  ah_math in '..\ah_math.pas',
+  ah_tool in '..\ah_tool.pas',
+  moon in '..\moon.pas',
+  moon_aux in '..\moon_aux.pas',
+  moon_el1 in '..\moon_el1.pas',
+  moon_elp in '..\moon_elp.pas',
+  moon_reg in '..\moon_reg.pas',
+  moonbrwn in '..\moonbrwn.pas',
+  mooncomp in '..\mooncomp.pas',
+  moonmini in '..\moonmini.pas',
+  moonres in '..\moonres.pas',
+  vsop in '..\vsop.pas';
+
+end.

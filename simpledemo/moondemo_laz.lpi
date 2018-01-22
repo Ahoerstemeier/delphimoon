@@ -4,9 +4,6 @@
     <Version Value="11"/>
     <PathDelim Value="\"/>
     <General>
-      <Flags>
-        <UseDefaultCompilerOptions Value="True"/>
-      </Flags>
       <SessionStorage Value="InProjectDir"/>
       <MainUnit Value="0"/>
       <Title Value="moondemo_laz"/>
@@ -44,7 +41,10 @@
       <Unit1>
         <Filename Value="mdmain.pas"/>
         <IsPartOfProject Value="True"/>
+        <ComponentName Value="Form1"/>
         <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="mdMain"/>
       </Unit1>
     </Units>
   </ProjectOptions>

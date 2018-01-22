@@ -32,6 +32,7 @@ type
     RadioGroup3: TRadioGroup;
     Panel1: TPanel;
     ColorDialog1: TColorDialog;
+    cbTransparent: TCheckBox;
     procedure ScrollBar2Change(Sender: TObject);
     procedure ScrollBar1Change(Sender: TObject);
     procedure RadioGroup1Click(Sender: TObject);
@@ -41,6 +42,7 @@ type
     procedure RadioGroup3Click(Sender: TObject);
     procedure Panel1Click(Sender: TObject);
     procedure FormCreate(Sender: TObject);
+    procedure cbTransparentClick(Sender: TObject);
   private
     { Private-Deklarationen }
     MonthCalendar1: {$ifdef fpc}TCalendar{$else}TMonthCalendar{$endif};
@@ -127,6 +129,11 @@ begin
     Top := 8;
     OnClick := MonthCalendar1Click;
   end;
+end;
+
+procedure TForm1.cbTransparentClick(Sender: TObject);
+begin
+  Moon1.Transparent := cbTransparent.Checked;
 end;
 
 end.

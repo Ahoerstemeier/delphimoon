@@ -31,7 +31,7 @@ object Form1: TForm1
   end
   object Label1: TLabel
     Left = 24
-    Top = 168
+    Top = 184
     Width = 69
     Height = 13
     Caption = 'Rotation angle'
@@ -96,7 +96,7 @@ object Form1: TForm1
   end
   object ScrollBar3: TScrollBar
     Left = 24
-    Top = 184
+    Top = 200
     Width = 161
     Height = 17
     LargeChange = 15
@@ -141,6 +141,15 @@ object Form1: TForm1
     Height = 25
     TabOrder = 6
     OnClick = Panel1Click
+  end
+  object cbTransparent: TCheckBox
+    Left = 24
+    Top = 152
+    Width = 97
+    Height = 17
+    Caption = 'Transparent'
+    TabOrder = 7
+    OnClick = cbTransparentClick
   end
   object ColorDialog1: TColorDialog
     Left = 152

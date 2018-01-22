@@ -31,15 +31,20 @@ procedure Register;
 implementation
 
 procedure Register;
-{$ifndef delphi_5}  { were predefined in Delphi 5 only }
 const
+{$ifdef fpc}
+  PALETTE = 'Misc';
+{$else}
+  PALETTE = 'Custom';
+{$endif}
+{$ifndef delphi_5}  { were predefined in Delphi 5 only }
   TInputCategory = 'Input';
   TVisualCategory = 'Visual';
   TMiscellaneousCategory = 'Miscellaneous';
 {$endif}
 begin
   RegisterPropertyEditor(TypeInfo(TDateTime),NIL,'',t_ah_datetimeproperty);
-  RegisterComponents('Custom', [TMoon]);
+  RegisterComponents(PALETTE, [TMoon]);
 {$ifdef propertycategory}
   RegisterPropertiesInCategory(TInputCategory, TMoon,
     ['Date']);

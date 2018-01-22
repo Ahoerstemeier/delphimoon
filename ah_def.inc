@@ -2,14 +2,51 @@
 
 {@/// Compiler switches for version checks}
 
-// fpc/Lazarus should behave at least like Delphi 7
-{$ifdef fpc}
-  {$define ver150}
+// Quick-and-dirty work-around for new Delphi versions
+{$ifdef fpc}     // Lazarus/FPC 
+  {$define delphi_2007}
+{$endif}
+{$ifdef ver320}  // RAD Studio 10.2 Tokyo
+  {$define delphi_2007}
+{$endif}
+{$ifdef ver310}  // RAD Studio 10.1 Berlin
+  {$define delphi_2007}
+{$endif}
+{$ifdef ver300}  // RAD Studio 10.0 Seattle
+  {$define delphi_2007}
+{$endif}         
+{$ifdef ver290}  // Delphi XE8
+  {$define delphi_2007}
+{$endif}
+{$ifdef ver280}  // Delphi XE7
+  {$define delphi_2007}
+{$endif}
+{$ifdef ver270}  // Delphi XE6
+  {$define delphi_2007}
+{$endif}
+{$ifdef ver260}  // Delphi XE5
+  {$define delphi_2007}
+{$endif}
+{$ifdef ver250}  // Delphi XE4
+  {$define delphi_2007}
+{$endif}
+{$ifdef ver240}  // Delphi XE3
+  {$define delphi_2007}
+{$endif}
+{$ifdef ver230}  // Delphi XE2
+  {$define delphi_2007}
+{$endif}
+{$ifdef ver220}  // Delphi XE
+  {$define delphi_2007}
+{$endif}
+{$ifdef ver210}  // Delphi 2010
+  {$define delphi_2007}
+{$endif}
+{$ifdef ver200}  // Delphi 2009
+  {$define delphi_2007}
 {$endif}
 
-{$ifdef ver230}
-  {$define delphi_xe2}
-{$else}
+// Old delphi versions
 {$ifdef ver190}
   {$define delphi_2007}
 {$else}
@@ -61,12 +98,6 @@
       {$endif}
     {$endif}
   {$endif}
-{$endif}
-{$endif}
-
-// Quick and dirty fix for new delphi versions
-{$ifdef delphi_xe2}
-  {$define delphi_2007}
 {$endif}
 
 {$ifdef delphi_1}

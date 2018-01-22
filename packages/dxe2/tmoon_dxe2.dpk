@@ -5,7 +5,7 @@ package tmoon_dxe2;
 {$ALIGN 8}
 {$ASSERTIONS OFF}
 {$BOOLEVAL OFF}
-{$DEBUGINFO ON}
+{$DEBUGINFO OFF}
 {$EXTENDEDSYNTAX ON}
 {$IMPORTEDDATA ON}
 {$IOCHECKS ON}
@@ -25,7 +25,7 @@ package tmoon_dxe2;
 {$IMAGEBASE $42200000}
 {$DEFINE DEBUG}
 {$ENDIF IMPLICITBUILDING}
-{$DESCRIPTION 'TMoon for Delphi XE2'}
+{$DESCRIPTION 'TMoon for Delphi 7'}
 {$IMPLICITBUILD OFF}
 
 requires
@@ -37,7 +37,6 @@ requires
 contains
   ah_ide in '..\..\ah_ide.pas',
   ah_math in '..\..\ah_math.pas',
-  ah_tool in '..\..\ah_tool.pas',
   moon in '..\..\moon.pas',
   moon_aux in '..\..\moon_aux.pas',
   moon_el1 in '..\..\moon_el1.pas',

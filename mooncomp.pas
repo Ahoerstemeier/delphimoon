@@ -499,6 +499,9 @@ var
   transcolor: TColor;
   current_angle: integer;
 begin
+ {$ifdef fpc}
+  FBmp.Clear;
+ {$endif}
   tempbmp:=NIL;
   try
     tempbmp:=TBitmap.Create;
@@ -538,7 +541,6 @@ begin
     tempbmp.transparentmode:=tmAuto;
     FBMP.Canvas.Draw(0,0,tempbmp);
     draw_moon(FBMP.canvas,FMoonSize);
-
     case FRotate of
       rot_location:
         current_angle:=round(MoonBrightLimbPositionAngleZenith(fdate,
@@ -594,6 +596,7 @@ var
   xm,scale: extended;
   xmax,xmin:integer;
   offset_x,offset_y,radius: integer;
+  c: TColor;
 begin
 
 { FLimbAngle = 0   -> Full Moon
@@ -637,7 +640,8 @@ var
 begin
   if fApollo and (ApolloDate<fdate) and
     ((FLimbAngle<=90-ApolloLongitude) or
-     (FLimbAngle>=270-ApolloLongitude)) then begin
+     (FLimbAngle>=270-ApolloLongitude)) then
+  begin
     apollo_x:=-size_moon[Size].radius*sin_d(ApolloLongitude)+size_moon[Size].offset_x-size_moon[Size].max_x div 2;
     apollo_y:=size_moon[Size].offset_y-size_moon[Size].max_y div 2;
     x:=round( apollo_x*cos_d(angle)-apollo_y*sin_d(angle)+size_moon[Size].max_x div 2);

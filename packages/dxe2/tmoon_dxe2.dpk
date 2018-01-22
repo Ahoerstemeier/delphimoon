@@ -25,7 +25,7 @@ package tmoon_dxe2;
 {$IMAGEBASE $42200000}
 {$DEFINE DEBUG}
 {$ENDIF IMPLICITBUILDING}
-{$DESCRIPTION 'TMoon for Delphi 7'}
+{$DESCRIPTION 'TMoon for Delphi XE2'}
 {$IMPLICITBUILD OFF}
 
 requires
@@ -35,18 +35,18 @@ requires
   vclactnband;
 
 contains
-  ah_ide in '..\ah_ide.pas',
-  ah_math in '..\ah_math.pas',
-  ah_tool in '..\ah_tool.pas',
-  moon in '..\moon.pas',
-  moon_aux in '..\moon_aux.pas',
-  moon_el1 in '..\moon_el1.pas',
-  moon_elp in '..\moon_elp.pas',
-  moon_reg in '..\moon_reg.pas',
-  moonbrwn in '..\moonbrwn.pas',
-  mooncomp in '..\mooncomp.pas',
-  moonmini in '..\moonmini.pas',
-  moonres in '..\moonres.pas',
-  vsop in '..\vsop.pas';
+  ah_ide in '..\..\ah_ide.pas',
+  ah_math in '..\..\ah_math.pas',
+  ah_tool in '..\..\ah_tool.pas',
+  moon in '..\..\moon.pas',
+  moon_aux in '..\..\moon_aux.pas',
+  moon_el1 in '..\..\moon_el1.pas',
+  moon_elp in '..\..\moon_elp.pas',
+  moon_reg in '..\..\moon_reg.pas',
+  moonbrwn in '..\..\moonbrwn.pas',
+  mooncomp in '..\..\mooncomp.pas',
+  moonmini in '..\..\moonmini.pas',
+  moonres in '..\..\moonres.pas',
+  vsop in '..\..\vsop.pas';
 
 end.

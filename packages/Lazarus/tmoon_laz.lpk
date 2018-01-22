@@ -9,8 +9,8 @@
       <Version Value="11"/>
       <PathDelim Value="\"/>
       <SearchPaths>
-        <IncludeFiles Value=".."/>
-        <OtherUnitFiles Value=".."/>
+        <IncludeFiles Value="../.."/>
+        <OtherUnitFiles Value="..../"/>
         <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
       </SearchPaths>
       <Parsing>
@@ -27,43 +27,43 @@ For documentation, contact information etc. read the help file supplied with the
     <Version Major="2" Minor="1"/>
     <Files Count="10">
       <Item1>
-        <Filename Value="..\moon_aux.pas"/>
+        <Filename Value="..\..\moon_aux.pas"/>
         <UnitName Value="moon_aux"/>
       </Item1>
       <Item2>
-        <Filename Value="..\ah_def.inc"/>
+        <Filename Value="..\..\ah_def.inc"/>
         <Type Value="Include"/>
       </Item2>
       <Item3>
-        <Filename Value="..\ah_math.pas"/>
+        <Filename Value="..\..\ah_math.pas"/>
         <UnitName Value="ah_math"/>
       </Item3>
       <Item4>
-        <Filename Value="..\elp_full.pas"/>
+        <Filename Value="..\..\elp_full.pas"/>
         <Type Value="Include"/>
       </Item4>
       <Item5>
-        <Filename Value="..\moon_elp.pas"/>
+        <Filename Value="..\..\moon_elp.pas"/>
         <UnitName Value="moon_elp"/>
       </Item5>
       <Item6>
-        <Filename Value="..\vsop.pas"/>
+        <Filename Value="..\..\vsop.pas"/>
         <UnitName Value="vsop"/>
       </Item6>
       <Item7>
-        <Filename Value="..\moon.pas"/>
+        <Filename Value="..\..\moon.pas"/>
         <UnitName Value="moon"/>
       </Item7>
       <Item8>
-        <Filename Value="..\mooncomp.pas"/>
+        <Filename Value="..\..\mooncomp.pas"/>
         <UnitName Value="mooncomp"/>
       </Item8>
       <Item9>
-        <Filename Value="..\ah_ide.pas"/>
+        <Filename Value="..\..\ah_ide.pas"/>
         <UnitName Value="ah_ide"/>
       </Item9>
       <Item10>
-        <Filename Value="..\moon_reg.pas"/>
+        <Filename Value="..\..\moon_reg.pas"/>
         <HasRegisterProc Value="True"/>
         <UnitName Value="moon_reg"/>
       </Item10>

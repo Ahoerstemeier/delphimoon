@@ -7,6 +7,9 @@
   {$define ver150}
 {$endif}
 
+{$ifdef ver230}
+  {$define delphi_xe2}
+{$else}
 {$ifdef ver190}
   {$define delphi_2007}
 {$else}
@@ -58,6 +61,12 @@
       {$endif}
     {$endif}
   {$endif}
+{$endif}
+{$endif}
+
+// Quick and dirty fix for new delphi versions
+{$ifdef delphi_xe2}
+  {$define delphi_2007}
 {$endif}
 
 {$ifdef delphi_1}

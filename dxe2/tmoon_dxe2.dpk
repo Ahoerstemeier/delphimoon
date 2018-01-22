@@ -1,6 +1,7 @@
-package tmoon_d7;
+package tmoon_dxe2;
 
 {$R *.res}
+{$IFDEF IMPLICITBUILDING This IFDEF should not be used by users}
 {$ALIGN 8}
 {$ASSERTIONS OFF}
 {$BOOLEVAL OFF}
@@ -11,17 +12,19 @@ package tmoon_d7;
 {$LOCALSYMBOLS ON}
 {$LONGSTRINGS ON}
 {$OPENSTRINGS ON}
-{$OPTIMIZATION ON}
+{$OPTIMIZATION OFF}
 {$OVERFLOWCHECKS OFF}
 {$RANGECHECKS OFF}
 {$REFERENCEINFO OFF}
 {$SAFEDIVIDE OFF}
-{$STACKFRAMES OFF}
+{$STACKFRAMES ON}
 {$TYPEDADDRESS OFF}
 {$VARSTRINGCHECKS ON}
 {$WRITEABLECONST OFF}
 {$MINENUMSIZE 1}
 {$IMAGEBASE $42200000}
+{$DEFINE DEBUG}
+{$ENDIF IMPLICITBUILDING}
 {$DESCRIPTION 'TMoon for Delphi 7'}
 {$IMPLICITBUILD OFF}
 
@@ -29,13 +32,12 @@ requires
   rtl,
   vcl,
   designide,
-  vclactnband,
-  vclx,
-  visualclx;
+  vclactnband;
 
 contains
   ah_ide in '..\ah_ide.pas',
   ah_math in '..\ah_math.pas',
+  ah_tool in '..\ah_tool.pas',
   moon in '..\moon.pas',
   moon_aux in '..\moon_aux.pas',
   moon_el1 in '..\moon_el1.pas',

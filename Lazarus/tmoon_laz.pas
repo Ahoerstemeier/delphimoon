@@ -9,7 +9,7 @@ interface
 
 uses
   moon_aux, ah_math, moon_elp, vsop, moon, mooncomp, ah_ide, moon_reg, 
-  ah_tool, LazarusPackageIntf;
+  LazarusPackageIntf;
 
 implementation
 

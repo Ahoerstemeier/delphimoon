@@ -19,8 +19,7 @@ uses
   vsop_nep,
   pluto,
   sysutils,
-  classes,
-  windows;
+  classes;
 (*@\\\*)
 
 type

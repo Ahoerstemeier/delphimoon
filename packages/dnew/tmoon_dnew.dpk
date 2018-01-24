@@ -1,0 +1,51 @@
+package tmoon_dnew;
+
+{$R *.res}
+{$IFDEF IMPLICITBUILDING This IFDEF should not be used by users}
+{$ALIGN 8}
+{$ASSERTIONS ON}
+{$BOOLEVAL OFF}
+{$DEBUGINFO ON}
+{$EXTENDEDSYNTAX ON}
+{$IMPORTEDDATA ON}
+{$IOCHECKS ON}
+{$LOCALSYMBOLS ON}
+{$LONGSTRINGS ON}
+{$OPENSTRINGS ON}
+{$OPTIMIZATION OFF}
+{$OVERFLOWCHECKS OFF}
+{$RANGECHECKS OFF}
+{$REFERENCEINFO ON}
+{$SAFEDIVIDE OFF}
+{$STACKFRAMES ON}
+{$TYPEDADDRESS OFF}
+{$VARSTRINGCHECKS ON}
+{$WRITEABLECONST OFF}
+{$MINENUMSIZE 1}
+{$IMAGEBASE $400000}
+{$DEFINE DEBUG}
+{$ENDIF IMPLICITBUILDING}
+{$DESCRIPTION 'TMoon for new Delphi versions (after 2007)'}
+{$IMPLICITBUILD OFF}
+
+requires
+  rtl,
+  vcl,
+  designide,
+  vclactnband;
+
+contains
+  ah_ide in '..\..\ah_ide.pas',
+  ah_math in '..\..\ah_math.pas',
+  moon in '..\..\moon.pas',
+  moon_aux in '..\..\moon_aux.pas',
+  moon_el1 in '..\..\moon_el1.pas',
+  moon_elp in '..\..\moon_elp.pas',
+  moon_reg in '..\..\moon_reg.pas',
+  moonbrwn in '..\..\moonbrwn.pas',
+  mooncomp in '..\..\mooncomp.pas',
+  moonmini in '..\..\moonmini.pas',
+  moonres in '..\..\moonres.pas',
+  vsop in '..\..\vsop.pas';
+
+end.

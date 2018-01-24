@@ -10,11 +10,13 @@ uses
   location in 'location.pas' {frm_locations},
   jewish in 'jewish.pas' {frm_jewish};
 
-(*$ifdef ver80 *)
+(*
+{ifdef ver80}
   {$R moontool.R16}
-(*$else *)
+{$else}
   {$R moontool.r32}
-(*$endif *)
+{$endif}
+*)
 
 begin
 (*$ifndef ver80 *)

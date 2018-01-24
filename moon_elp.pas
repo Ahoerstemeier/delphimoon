@@ -1,6 +1,10 @@
 unit moon_elp;
 
- {$i ah_def.inc }
+{$ifdef fpc}
+  {$mode delphi}
+{$endif}
+
+{$i ah_def.inc }
 
 (*$b-*)   { I may make use of the shortcut boolean eval }
 (*$define meeus *)

@@ -4,26 +4,30 @@ unit ah_tool;
 { components. In case you have several version of this file always use the   }
 { latest one. Please check the file readme.txt of the component you found    }
 { this file at for more detailed info on usage and distributing.             }
-(*@/// interface *)
+{@/// interface }
 interface
 
-(*$b- *)
-  (*$i ah_def.inc *)
+{$b- }
+{$i ah_def.inc }
 
 uses
-(*$ifdef delphi_1 *)
+{$ifdef fpc}
+  LCLIntf, LCLType, LMessages,
+{$else}
+ {$ifdef delphi_1 }
   winprocs,
   wintypes,
-(*$else *)
+ {$else }
   windows,
-(*$endif *)
+ {$endif }
   messages,
+{$endif}
   sysutils,
   classes,
   controls,
   forms;
 
-(*@/// String utility functions *)
+{@/// String utility functions }
 { Find n'th occurence of a substring, from left or from right }
 function posn(const s,t:string; count:integer):integer;
 
@@ -34,14 +38,14 @@ function poscn(c:char; const s:string; n: integer):integer;
 function exchange_s(const prior,after: string; const s:string):string;
 
 { Delphi 1 didn't know these, but they are useful/necessary for D2/D3 }
-(*$ifdef delphi_1 *)
+{$ifdef delphi_1 }
 function trim(const s:string):string;
 procedure setlength(var s:string; l: byte);
-(*$endif *)
+{$endif }
 
 { Write a string into a stream }
 procedure String2Stream(stream:TMemorystream; const s:string);
-(*@\\\0000001101*)
+{@\\\0000001101}
 
 { The offset to UTC/GMT in minutes of the local time zone }
 function TimeZoneBias:longint;
@@ -53,34 +57,43 @@ function text2html(const s:string):string;
 function min(x,y: longint):longint;
 function max(x,y: longint):longint;
 
-(*@/// The routines to make the applications events use a list of methods *)
-(*$ifndef delphi_ge_3 *)
+{@/// The routines to make the applications events use a list of methods }
+{$ifndef delphi_ge_3 }
 procedure AddShowHintProc(proc:TShowHintEvent);
 procedure RemoveShowHintProc(proc:TShowHintEvent);
-(*$endif *)
+{$endif }
 procedure AddIdleProc(proc:TIdleEvent);
 procedure RemoveIdleProc(proc:TIdleEvent);
-(*@\\\*)
+{@\\\}
 
-(*@/// Make Stream and Clipboard work together *)
+{$ifndef fpc}
+{@/// Make Stream and Clipboard work together }
 procedure Stream2Clipboard(stream:TStream; format:integer);
 procedure Clipboard2Stream(stream:TStream; format:integer);
-(*@\\\*)
+{@\\\}
 
-(*@/// Windows Resources and Languages *)
-(*$ifdef delphi_gt_1 *)
+{@/// Windows Resources and Languages }
+{$ifdef delphi_gt_1 }
 function LoadStrEx(id:word; languageid: word):string;
-(*$endif *)
+{$endif }
 function LoadStr(id:word):string;
-(*@\\\*)
+{$else}
+function LoadStr(s: String):string;
+{$endif}
+{@\\\}
 
 function ScrollBarVisible(control: TWinControl; vertical: boolean):boolean;
-(*@\\\*)
-(*@/// implementation *)
+{@\\\}
+{@/// implementation }
 implementation
 
-(*@/// Some string utility functions *)
-(*@/// function posn(const s,t:string; count:integer):integer; *)
+{$ifdef fpc}
+uses
+  contnrs;
+{$endif}
+
+{@/// Some string utility functions }
+{@/// function posn(const s,t:string; count:integer):integer; }
 function posn(const s,t:string; count:integer):integer;
 
 { find the count'th occurence of the substring,
@@ -121,8 +134,8 @@ begin
   else
     result:=0;
   end;
-(*@\\\*)
-(*@/// function exchange_s(const prior,after: string; const s:string):string; *)
+{@\\\}
+{@/// function exchange_s(const prior,after: string; const s:string):string; }
 function exchange_s(const prior,after: string; const s:string):string;
 var
   h,p: integer;
@@ -135,8 +148,8 @@ begin
     result:=copy(result,1,h-1)+after+copy(result,h+p,length(result));
     end;
   end;
-(*@\\\*)
-(*@/// function poscn(c:char; const s:string; n: integer):integer; *)
+{@\\\}
+{@/// function poscn(c:char; const s:string; n: integer):integer; }
 function poscn(c:char; const s:string; n: integer):integer;
 
 { Find the n'th occurence of a character different to c,
@@ -170,8 +183,8 @@ begin
     end;
   poscn:=0;
   end;
-(*@\\\*)
-(*@/// function filename_of(const s:string):string; *)
+{@\\\}
+{@/// function filename_of(const s:string):string; }
 function filename_of(const s:string):string;
 var
   t:integer;
@@ -187,70 +200,75 @@ begin
       result:=s;
     end;
   end;
-(*@\\\*)
-(*$ifdef delphi_1 *)
-(*@/// function trim(const s:string):string; *)
+{@\\\}
+{$ifdef delphi_1 }
+{@/// function trim(const s:string):string; }
 function trim(const s:string):string;
 var
   h: integer;
 begin
-  (* trim from left *)
+  { trim from left }
   h:=poscn(' ',s,1);
   if h>0 then
     result:=copy(s,h,length(s))
   else
     result:=s;
-  (* trim from right *)
+  { trim from right }
   h:=poscn(' ',result,-1);
   if h>0 then
     result:=copy(result,1,h);
   end;
-(*@\\\*)
-(*@/// procedure setlength(var s:string; l: byte); *)
+{@\\\}
+{@/// procedure setlength(var s:string; l: byte); }
 procedure setlength(var s:string; l: byte);
 begin
   s[0]:=char(l);
   end;
-(*@\\\*)
-(*$endif *)
-(*@/// procedure String2Stream(stream:TMemorystream; const s:string); *)
+{@\\\}
+{$endif }
+{@/// procedure String2Stream(stream:TMemorystream; const s:string); }
 procedure String2Stream(stream:TMemorystream; const s:string);
 begin
   stream.write(s[1],length(s));
   end;
-(*@\\\*)
-(*@\\\*)
+{@\\\}
+{@\\\}
 
-(*@/// function min(x,y: longint):longint; *)
+{@/// function min(x,y: longint):longint; }
 function min(x,y: longint):longint;
 begin
   if x<y then result:=x
          else result:=y;
   end;
-(*@\\\*)
-(*@/// function max(x,y: longint):longint; *)
+{@\\\}
+{@/// function max(x,y: longint):longint; }
 function max(x,y: longint):longint;
 begin
   if x>y then result:=x
          else result:=y;
   end;
-(*@\\\*)
+{@\\\}
 
-(*@/// function TimeZoneBias:longint;          // in minutes ! *)
+{@/// function TimeZoneBias:longint;          // in minutes ! }
 function TimeZoneBias:longint;
-(*$ifdef delphi_1 *)
+{$ifdef fpc}
+begin
+  Result := GetLocalTimeOffset;
+end;
+{$else}
+{$ifdef delphi_1 }
 const
   TIME_ZOME_ID_INVALID = -1;
-(*$endif *)
-(*$ifndef delphi_ge_4 *)
+{$endif }
+{$ifndef delphi_ge_4 }
 const
   TIME_ZONE_ID_UNKNOWN  = 0;
   TIME_ZONE_ID_STANDARD = 1;
   TIME_ZONE_ID_DAYLIGHT = 2;
-(*$endif *)
-(*@/// 16 bit way: try a 32bit API call via thunking layer, if that fails try the TZ *)
-(*$ifdef delphi_1 *)
-(*@/// function GetEnvVar(const s:string):string; *)
+{$endif }
+{@/// 16 bit way: try a 32bit API call via thunking layer, if that fails try the TZ }
+{$ifdef delphi_1 }
+{@/// function GetEnvVar(const s:string):string; }
 function GetEnvVar(const s:string):string;
 var
   L: Word;
@@ -267,9 +285,9 @@ begin
     end;
   GetEnvVar := '';
   end;
-(*@\\\*)
+{@\\\}
 
-(*@/// function day_in_month(month,year,weekday: word; count: integer):TDateTime; *)
+{@/// function day_in_month(month,year,weekday: word; count: integer):TDateTime; }
 function day_in_month(month,year,weekday: word; count: integer):TDateTime;
 var
   h: integer;
@@ -293,18 +311,18 @@ begin
       end;
     end;
   end;
-(*@\\\*)
-(*@/// function DayLight_Start:TDateTime;     // american way ! *)
+{@\\\}
+{@/// function DayLight_Start:TDateTime;     // american way ! }
 function DayLight_Start:TDateTime;
 var
   y,m,d: word;
 begin
   DecodeDate(now,y,m,d);
   result:=day_in_month(4,y,1,1);
-  (* for european one: day_in_month(3,y,1,-1) *)
+  { for european one: day_in_month(3,y,1,-1) }
   end;
-(*@\\\*)
-(*@/// function DayLight_End:TDateTime;       // american way ! *)
+{@\\\}
+{@/// function DayLight_End:TDateTime;       // american way ! }
 function DayLight_End:TDateTime;
 var
   y,m,d: word;
@@ -312,9 +330,9 @@ begin
   DecodeDate(now,y,m,d);
   result:=day_in_month(10,y,1,-1);
   end;
-(*@\\\*)
-type    (* stolen from windows.pas *)
-  (*@/// TSystemTime = record ... end; *)
+{@\\\}
+type    { stolen from windows.pas }
+  {@/// TSystemTime = record ... end; }
   PSystemTime = ^TSystemTime;
   TSystemTime = record
     wYear: Word;
@@ -326,18 +344,18 @@ type    (* stolen from windows.pas *)
     wSecond: Word;
     wMilliseconds: Word;
   end;
-  (*@\\\*)
-  (*@/// TTimeZoneInformation = record ... end; *)
+  {@\\\}
+  {@/// TTimeZoneInformation = record ... end; }
   TTimeZoneInformation = record
     Bias: Longint;
-    StandardName: array[0..31] of word;  (* wchar *)
+    StandardName: array[0..31] of word;  { wchar }
     StandardDate: TSystemTime;
     StandardBias: Longint;
-    DaylightName: array[0..31] of word;  (* wchar *)
+    DaylightName: array[0..31] of word;  { wchar }
     DaylightDate: TSystemTime;
     DaylightBias: Longint;
     end;
-  (*@\\\*)
+  {@\\\}
 var
   tz_info: TTimeZoneInformation;
   LL32:function (LibFileName: PChar; handle: longint; special: longint):Longint;
@@ -354,7 +372,7 @@ begin
   @FL32:=GetProcAddress(hdll,'FreeLibrary32W');
   @GA32:=GetProcAddress(hdll,'GetProcAddress32W');
   @CP32:=GetProcAddress(hdll,'CallProc32W');
-  (*@/// if possible then   call GetTimeZoneInformation via Thunking *)
+  {@/// if possible then   call GetTimeZoneInformation via Thunking }
   if (@LL32<>NIL) and
      (@FL32<>NIL) and
      (@GA32<>NIL) and
@@ -369,25 +387,25 @@ begin
       end;
     FL32(hDll32);                                    { and free the 32bit dll }
     end
-  (*@\\\0030000801000B01000801*)
-  (*@/// else  calculate the bias out of the TZ environment variable *)
+  {@\\\0030000801000B01000801}
+  {@/// else  calculate the bias out of the TZ environment variable }
   else begin
     s:=GetEnvVar('TZ');
     while (length(s)>0) and (not(s[1] in ['+','-','0'..'9'])) do
       s:=copy(s,2,length(s));
     case s[1] of
-      (*@/// '+': *)
+      {@/// '+': }
       '+': begin
         sign:=1;
         s:=copy(s,2,length(s));
         end;
-      (*@\\\*)
-      (*@/// '-': *)
+      {@\\\}
+      {@/// '-': }
       '-': begin
         sign:=-1;
         s:=copy(s,2,length(s));
         end;
-      (*@\\\*)
+      {@\\\}
       else sign:=1;
       end;
     try
@@ -401,7 +419,7 @@ begin
         result:=0;
         end;
       end;
-    (*@/// if s[1]=':' then    minutes offset *)
+    {@/// if s[1]=':' then    minutes offset }
     if s[1]=':' then begin
       try
         result:=result+strtoint(copy(s,2,2));
@@ -414,8 +432,8 @@ begin
           end;
         end;
       end;
-    (*@\\\*)
-    (*@/// if s[1]=':' then    seconds offset - ignored *)
+    {@\\\}
+    {@/// if s[1]=':' then    seconds offset - ignored }
     if s[1]=':' then begin
       try
         strtoint(copy(s,2,2));
@@ -428,21 +446,21 @@ begin
           end;
         end;
       end;
-    (*@\\\*)
+    {@\\\}
     result:=result*sign;
-    (*@/// if length(s)>0 then daylight saving activated, calculate it *)
+    {@/// if length(s)>0 then daylight saving activated, calculate it }
     if length(s)>0 then begin
-      (* forget about the few hours on the start/end day *)
+      { forget about the few hours on the start/end day }
       if (now>daylight_start) and (now<DayLight_End+1) then
         result:=result-60;
       end;
-    (*@\\\*)
+    {@\\\}
     end;
-  (*@\\\*)
+  {@\\\}
   end;
-(*@\\\0000001B01*)
-(*@/// 32 bit way: API call GetTimeZoneInformation *)
-(*$else *)
+{@\\\0000001B01}
+{@/// 32 bit way: API call GetTimeZoneInformation }
+{$else }
 var
   tz_info: TTimeZoneInformation;
 begin
@@ -453,11 +471,12 @@ begin
     else result:=0;
     end;
   end;
-(*$endif *)
-(*@\\\000C000601000901000901*)
-(*@\\\0002000D01000D01*)
+{$endif }
+{$endif}
+{@\\\000C000601000901000901}
+{@\\\0002000D01000D01}
 
-(*@/// function text2html(const s:string):string; *)
+{@/// function text2html(const s:string):string; }
 function text2html(const s:string):string;
 var
   i: integer;
@@ -466,8 +485,8 @@ begin
   result:='';
   for i:=1 to length(s) do begin
     case s[i] of
-      (*@/// iso latin 1 *)
-      (*$ifdef iso_latin1 *)
+      {@/// iso latin 1 }
+      {$ifdef iso_latin1 }
             '&' : t:='&amp;';
             '<' : t:='&lt;';
             '>' : t:='&gt;';
@@ -475,7 +494,7 @@ begin
             '¡' : t:='&iexcl;';
             '¢' : t:='&cent;';
             '£' : t:='&pound;';
-            '¤' : t:='&curren;';   (* &euro; ??? *)
+            '¤' : t:='&curren;';   { &euro; ??? }
             '¥' : t:='&yen;';
             '¦' : t:='&brvbar;';
             '§' : t:='&sect;';
@@ -567,16 +586,17 @@ begin
             'ý' : t:='&yacute;';
             'þ' : t:='&thorn;';
             #255: t:='&yuml;';
-      (*$endif *)
-      (*@\\\000000650C*)
+      {$endif }
+      {@\\\000000650C}
       else  t:=s[i];
       end;
     result:=result+t;
     end;
   end;
-(*@\\\*)
+{@\\\}
 
-(*@/// To have OnShowHint/OnIdle lists instead of single methods *)
+{$ifndef fpc}
+{@/// To have OnShowHint/OnIdle lists instead of single methods }
 { These are just a few help tools for the Application.OnShowHint and      }
 { Application.OnIdle methods - Borland didn't thought of the need to      }
 { put more than one method in these places, so I had to do it myself.     }
@@ -586,7 +606,7 @@ begin
 { the event list...                                                       }
 { Some nice internals how to work with method pointer are presented here. }
 
-(*@/// TObjectList = class(TList)       // A list which frees it's objects *)
+{@/// TObjectList = class(TList)       // A list which frees it's objects }
 type
   TObjectList = class(TList)
   public
@@ -605,7 +625,7 @@ type
     end;
 
 { TObjectList }
-(*@/// destructor TObjectList.Destroy; *)
+{@/// destructor TObjectList.Destroy; }
 destructor TObjectList.Destroy;
 var
   i: integer;
@@ -615,43 +635,44 @@ begin
   inherited destroy;
   Clear;
 end;
-(*@\\\*)
-(*@/// procedure TObjectList.Delete(Index:Integer); *)
+{@\\\}
+{@/// procedure TObjectList.Delete(Index:Integer); }
 procedure TObjectList.Delete(Index:Integer);
 begin
   TObject(items[index]).Free;
   inherited delete(index);
   end;
-(*@\\\*)
-(*@/// function TObjectList.Remove(Item:Pointer):Integer; *)
+{@\\\}
+{@/// function TObjectList.Remove(Item:Pointer):Integer; }
 function TObjectList.Remove(Item:Pointer):Integer;
 begin
   Result := IndexOf(Item);
   if Result <> -1 then Delete(Result);
   end;
-(*@\\\*)
-(*@\\\*)
+{@\\\}
+{@\\\}
+{$endif}
 
 type
   TMethodPointer = procedure of object;
-  (*@/// TMethod = class(TObject)       // Object with just one methodpointer *)
+  {@/// TMethod = class(TObject)       // Object with just one methodpointer }
   TMethod = class(TObject)
   public
     methodpointer: TMethodPointer;
     end;
-  (*@\\\*)
+  {@\\\}
 
-(*$ifdef delphi_ge_3 *)
+{$ifdef delphi_ge_3 }
 var
-(*$else *)
+{$else }
 const
-(*$endif *)
-(*$ifndef delphi_ge_3 *)
+{$endif }
+{$ifndef delphi_ge_3 }
   ShowHintProcs: TObjectList =NIL;
-(*$endif *)
+{$endif }
   IdleProcs: TObjectList     =NIL;
 
-(*@/// TDummyObject = class(TObject)    // A dummy object for the Application events *)
+{@/// TDummyObject = class(TObject)    // A dummy object for the Application events }
 { TDummyObject }
 
 { A little dummy object which provides the methods to be put in the     }
@@ -662,23 +683,23 @@ const
 
 type
   TDummyObject=class(TObject)
-(*$ifndef delphi_ge_3 *)
-(*$ifdef shortstring *)
+{$ifndef delphi_ge_3 }
+{$ifdef shortstring }
   procedure ShowHint(var HintStr: string; var CanShow: Boolean; var HintInfo: THintInfo);
-(*$else *)
+{$else }
   procedure ShowHint(var HintStr: ansistring; var CanShow: Boolean; var HintInfo: THintInfo);
-(*$endif *)
-(*$endif *)
+{$endif }
+{$endif }
   procedure DoIdle(sender: TObject; var done:Boolean);
   end;
-(*$ifndef delphi_ge_3 *)
-(*@/// procedure TDummyObject.ShowHint(var HintStr: string; var CanShow: Boolean; var HintInfo: THintInfo); *)
+{$ifndef delphi_ge_3 }
+{@/// procedure TDummyObject.ShowHint(var HintStr: string; var CanShow: Boolean; var HintInfo: THintInfo); }
 
-(*$ifdef shortstring *)
+{$ifdef shortstring }
 procedure TDummyObject.ShowHint(var HintStr: string; var CanShow: Boolean; var HintInfo: THintInfo);
-(*$else *)
+{$else }
 procedure TDummyObject.ShowHint(var HintStr: ansistring; var CanShow: Boolean; var HintInfo: THintInfo);
-(*$endif *)
+{$endif }
 var
   i:integer;
 begin
@@ -687,9 +708,9 @@ begin
       TShowHintEvent(TMethod(ShowHintProcs.Items[i]).methodpointer)(HintStr,CanShow,HintInfo);
       end;
   end;
-(*@\\\*)
-(*$endif *)
-(*@/// procedure TDummyObject.DoIdle(sender: TObject; var done:Boolean); *)
+{@\\\}
+{$endif }
+{@/// procedure TDummyObject.DoIdle(sender: TObject; var done:Boolean); }
 procedure TDummyObject.DoIdle(sender: TObject; var done:Boolean);
 var
   i:integer;
@@ -699,20 +720,20 @@ begin
   for i:=IdleProcs.Count-1 downto 0 do
     if IdleProcs.Items[i]<>NIL then begin
       TIdleEvent(TMethod(IdleProcs.Items[i]).methodpointer)(sender, temp_done);
-      done:=done and temp_done;   (* done when all idle procs say done *)
+      done:=done and temp_done;   { done when all idle procs say done }
       end;
   end;
-(*@\\\*)
-(*@\\\0000000301*)
+{@\\\}
+{@\\\0000000301}
 
-(*$ifdef delphi_ge_3 *)
+{$ifdef delphi_ge_3 }
 var
-(*$else *)
+{$else }
 const
-(*$endif *)
+{$endif }
   Dummy: TDummyObject        =NIL;
 
-(*@/// Compare two method pointers *)
+{@/// Compare two method pointers }
 function compare_method(proc1,proc2:TMethodpointer):boolean;
 
 { A method pointer is just a record of two pointers, one the procedure }
@@ -720,20 +741,20 @@ function compare_method(proc1,proc2:TMethodpointer):boolean;
 { parameter of the procedure                                           }
 
 type
-  (*@/// T_Method=packed record *)
+  {@/// T_Method=packed record }
   T_Method=packed record
     proc: Pointer;
     self: TObject;
     end;
-  (*@\\\*)
+  {@\\\}
 begin
   result:=(T_Method(proc1).proc=T_Method(proc2).proc) and
           (T_Method(proc1).self=T_Method(proc2).self);
   end;
-(*@\\\*)
-(*@/// Include and remove the Methodpointer from the according lists *)
-(*$ifndef delphi_ge_3 *)
-(*@/// procedure AddShowHintProc(proc:TShowHintEvent); *)
+{@\\\}
+{@/// Include and remove the Methodpointer from the according lists }
+{$ifndef delphi_ge_3 }
+{@/// procedure AddShowHintProc(proc:TShowHintEvent); }
 procedure AddShowHintProc(proc:TShowHintEvent);
 var
   method: TMethod;
@@ -744,8 +765,8 @@ begin
   showhintprocs.add(method);
   Application.OnShowHint:=dummy.ShowHint;
   end;
-(*@\\\0000000501*)
-(*@/// procedure RemoveShowHintProc(proc:TShowHintEvent); *)
+{@\\\0000000501}
+{@/// procedure RemoveShowHintProc(proc:TShowHintEvent); }
 procedure RemoveShowHintProc(proc:TShowHintEvent);
 var
   i: integer;
@@ -757,9 +778,9 @@ begin
                       TMethodpointer(proc))  then
       showhintprocs.delete(i);
   end;
-(*@\\\*)
-(*$endif *)
-(*@/// procedure AddIdleProc(proc:TIdleEvent); *)
+{@\\\}
+{$endif }
+{@/// procedure AddIdleProc(proc:TIdleEvent); }
 procedure AddIdleProc(proc:TIdleEvent);
 var
   method: TMethod;
@@ -770,8 +791,8 @@ begin
   idleprocs.add(method);
   Application.OnIdle:=dummy.DoIdle;
   end;
-(*@\\\*)
-(*@/// procedure RemoveIdleProc(proc:TIdleEvent); *)
+{@\\\}
+{@/// procedure RemoveIdleProc(proc:TIdleEvent); }
 procedure RemoveIdleProc(proc:TIdleEvent);
 var
   i: integer;
@@ -783,14 +804,15 @@ begin
                       TMethodpointer(proc))  then
       idleprocs.delete(i);
   end;
-(*@\\\*)
-(*@\\\000000062B*)
-(*@\\\0000002101*)
+{@\\\}
+{@\\\000000062B}
+{@\\\0000002101}
 
-(*@/// Make Stream and Clipboard work together *)
-(*@/// function GetPointer(index: integer; memblock: THandle):pointer; *)
+{$ifndef fpc}
+{@/// Make Stream and Clipboard work together }
+{@/// function GetPointer(index: integer; memblock: THandle):pointer; }
 function GetPointer(index: integer; memblock: THandle):pointer;
-(*$ifdef delphi_1 *)
+{$ifdef delphi_1 }
 var
   selector, offset: word;
   P: pointer;
@@ -800,16 +822,19 @@ begin
   p:=GlobalLock(Selector);
   result:=Ptr(selector,offset);
   end;
-(*$else *)
+{$else }
 begin
   result:=pointer(longint(GlobalLock(memblock))+index);
   end;
-(*$endif *)
-(*@\\\0000000212*)
-(*@/// procedure Stream2Clipboard(stream:TStream; format:integer); *)
+{$endif }
+{$endif}
+{@\\\0000000212}
+
+{$ifndef fpc}
+{@/// procedure Stream2Clipboard(stream:TStream; format:integer); }
 procedure Stream2Clipboard(stream:TStream; format:integer);
 const
-  max_write = $8000;    (* must obey ($10000 mod max_write = 0) for Delphi 1 *)
+  max_write = $8000;    { must obey ($10000 mod max_write = 0) for Delphi 1 }
 var
   size: longint;
   s: word;
@@ -842,11 +867,14 @@ begin
   if FClipboardWindow<>Application.Handle then
     DeallocateHWnd(FClipboardWindow);
   end;
-(*@\\\0000001601*)
-(*@/// procedure Clipboard2Stream(stream:TStream; format:integer); *)
+{@\\\0000001601}
+{$endif}
+
+{$ifndef fpc}
+{@/// procedure Clipboard2Stream(stream:TStream; format:integer); }
 procedure Clipboard2Stream(stream:TStream; format:integer);
 const
-  max_read = $8000;   (* must obey ($10000 mod max_read = 0) for Delphi 1 *)
+  max_read = $8000;   { must obey ($10000 mod max_read = 0) for Delphi 1 }
 var
   size: longint;
   curpos: longint;
@@ -872,37 +900,39 @@ begin
   if FClipboardWindow<>Application.Handle then
     DeallocateHWnd(FClipboardWindow);
   end;
-(*@\\\0000000C01*)
-(*@\\\0000000301*)
+{@\\\0000000C01}
+{@\\\0000000301}
+{$endif}
 
-(*@/// Windows Resources and Languages *)
-(*$ifdef delphi_gt_1 *)
-(*@/// function makelangid(language,sublanguage: word):longint; *)
+{@/// Windows Resources and Languages }
+{$ifndef fpc}
+{$ifdef delphi_gt_1 }
+{@/// function makelangid(language,sublanguage: word):longint; }
 function makelangid(language,sublanguage: word):longint;
 begin
   result:=((language and $3FF) or ((sublanguage and $3F) shl 10)) and $FFFF;
   end;
-(*@\\\*)
-(*@/// function primarylangid(language:word):word; *)
+{@\\\}
+{@/// function primarylangid(language:word):word; }
 function primarylangid(language:word):word;
 begin
   result:=language and $3FF;
   end;
-(*@\\\*)
-(*@/// function sublangid(language:word):word; *)
+{@\\\}
+{@/// function sublangid(language:word):word; }
 function sublangid(language:word):word;
 begin
   result:=(language shr 10) and $3F;
   end;
-(*@\\\*)
-(*@/// function langidfromlcid(lcid:longint):word; *)
+{@\\\}
+{@/// function langidfromlcid(lcid:longint):word; }
 function langidfromlcid(lcid:longint):word;
 begin
   result:=lcid and $FFFF;
   end;
-(*@\\\*)
+{@\\\}
 
-(*@/// function MyLoadStringInternal(Instance: THandle; Id: word; languageid: word):string; *)
+{@/// function MyLoadStringInternal(Instance: THandle; Id: word; languageid: word):string; }
 function MyLoadStringInternal(Instance: THandle; Id: word; languageid: word):string;
 var
   h,h1: THandle;
@@ -929,8 +959,8 @@ begin
   else
     result:='';
   end;
-(*@\\\*)
-(*@/// function MyLoadString(Instance: THandle; Id: word; languageid: word):string; *)
+{@\\\}
+{@/// function MyLoadString(Instance: THandle; Id: word; languageid: word):string; }
 function MyLoadString(Instance: THandle; Id: word; languageid: word):string;
 begin
   result:=MyLoadStringInternal(Instance,id,languageid);
@@ -941,29 +971,37 @@ begin
   if result='' then
     result:=MyLoadStringInternal(Instance,id,makelangid(lang_neutral,sublang_neutral));
   end;
-(*@\\\*)
-(*@/// function LoadStrEx(id:word; languageid: word):string; *)
+{@\\\}
+{@/// function LoadStrEx(id:word; languageid: word):string; }
 function LoadStrEx(id:word; languageid: word):string;
 begin
   result:=MyLoadString(HInstance,id,languageid);
   end;
-(*@\\\*)
-(*$endif *)
-(*@/// function LoadStr(id:word):string; *)
+{@\\\}
+{$endif }
+{@/// function LoadStr(id:word):string; }
 function LoadStr(id:word):string;
 begin
-  (*$ifdef delphi_gt_1 *)
+  {$ifdef delphi_gt_1 }
   result:=MyLoadString(HInstance,id,GetUserDefaultLangId);
-  (*$else *)
+  {$else }
   result:=sysutils.loadstr(id);
-  (*$endif *)
+  {$endif }
   end;
-(*@\\\000000070B*)
-(*@\\\*)
+{@\\\000000070B}
+{@\\\}
+{$else}
+{ just a convenience function to save a lot of ifdefs }
+function LoadStr(s: String): String;
+begin
+  Result := s;
+end;
 
-(*@/// function ScrollBarVisible(control: TWinControl; vertical: boolean):boolean; *)
+{$endif}
+
+{@/// function ScrollBarVisible(control: TWinControl; vertical: boolean):boolean; }
 function ScrollBarVisible(control: TWinControl; vertical: boolean):boolean;
-(*$ifdef delphi_1 *)
+{$ifdef delphi_1 }
 var
   code: integer;
   min,max: integer;
@@ -975,7 +1013,7 @@ begin
   GetScrollRange(control.handle,code,min,max);
   result:=(min<>max);
   end;
-(*$else *)
+{$else }
 var
   code: integer;
   ScrollInfo: TScrollInfo;
@@ -991,13 +1029,13 @@ begin
   else
     result:=false;
   end;
-(*$endif *)
-(*@\\\*)
+{$endif }
+{@\\\}
 
-(*@/// procedure DoneUnit;  // The cleanup of the unit, called in finalization *)
+{@/// procedure DoneUnit;  // The cleanup of the unit, called in finalization }
 procedure DoneUnit; far;
 begin
-(*$ifndef delphi_ge_3 *)
+{$ifndef delphi_ge_3 }
 { For design mode: relink the OnShowHint back to it's default value;   }
 { only needed since with Delphi 3 packages the finalization may be     }
 { called without Delphi itself is closed                               }
@@ -1013,7 +1051,7 @@ begin
       ShowHintProcs.delete(0);
   ShowHintProcs.Free;
   ShowHintProcs:=NIL;
-(*$endif *)
+{$endif }
   if IdleProcs<>NIL then
     while IdleProcs.Count>0 do
       IdleProcs.delete(0);
@@ -1023,42 +1061,42 @@ begin
   Dummy:=NIL;
 
   end;
-(*@\\\0000001C01*)
-(*@\\\0000000801*)
-(*@/// initialization *)
-(*$ifndef delphi_ge_3 *)
+{@\\\0000001C01}
+{@\\\0000000801}
+{@/// initialization }
+{$ifndef delphi_ge_3 }
 var
   t:TShowHintEvent;
-(*$endif *)
-(*$ifdef delphi_1 *)
+{$endif }
+{$ifdef delphi_1 }
 begin
-(*$else *)
+{$else }
 initialization
 begin
-(*$endif *)
+{$endif }
   Dummy:=TDummyObject.Create;
   IdleProcs:=TObjectList.Create;
 
-  (* Since Delphi 3 there is the CM_HINTSHOW instead,
-     so this isn't needed anymore *)
-(*$ifndef delphi_ge_3 *)
+  { Since Delphi 3 there is the CM_HINTSHOW instead,
+     so this isn't needed anymore }
+{$ifndef delphi_ge_3 }
   ShowHintProcs:=TObjectList.Create;
   t:=application.OnShowHint;
   if assigned(t) then      { D1 can't do a assigned of a property          }
     AddShowHintProc(t);    { In design mode the OnShowHint is responsible  }
                            { for the hints of the component palette so I   }
                            { need to remember this                         }
-(*$endif *)
-(*@\\\*)
-(*@/// finalization *)
-(*$ifdef delphi_1 *)
+{$endif }
+{@\\\}
+{@/// finalization }
+{$ifdef delphi_1 }
   AddExitProc(DoneUnit);
-(*$else *)
+{$else }
   end;
 finalization
   DoneUnit;
-(*$endif *)
-(*@\\\0000000201*)
-(*$ifdef delphi_ge_2 *) (*$warnings off *) (*$endif *)
+{$endif }
+{@\\\0000000201}
+{$ifdef delphi_ge_2 } {$warnings off } {$endif }
 end.
-(*@\\\0001000011000801*)
+{@\\\0001000011000801}

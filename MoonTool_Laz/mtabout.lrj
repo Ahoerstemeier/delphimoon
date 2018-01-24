@@ -1,0 +1,8 @@
+{"version":1,"strings":[
+{"hash":222942476,"name":"tfrmabout.caption","sourcebytes":[65,98,111,117,116,32,77,111,111,110,116,111,111,108],"value":"About Moontool"},
+{"hash":11067,"name":"tfrmabout.btnok.caption","sourcebytes":[38,79,75],"value":"&OK"},
+{"hash":101614499,"name":"tfrmabout.lblmain.caption","sourcebytes":[77,111,111,110,116,111,111,108,32,102,111,114,32,87,105,110,100,111,119,115],"value":"Moontool for Windows"},
+{"hash":222873570,"name":"tfrmabout.lblcopyright.caption","sourcebytes":[40,99,41,32,49,57,57,55,45,50,48,48,49,32,65,110,100,114,101,97,115,32,72,195,182,114,115,116,101,109,101,105,101,114],"value":"(c) 1997-2001 Andreas H\u00F6rstemeier"},
+{"hash":64526205,"name":"tfrmabout.lblurl.caption","sourcebytes":[104,116,116,112,58,47,47,119,119,119,46,104,111,101,114,115,116,101,109,101,105,101,114,46,99,111,109],"value":"http://www.hoerstemeier.com"},
+{"hash":242679826,"name":"tfrmabout.lblref.caption","sourcebytes":[98,97,115,101,100,32,117,112,111,110,32,116,104,101,32,112,114,111,103,114,97,109,13,10,98,121,32,74,111,104,110,32,87,97,108,107,101,114],"value":"based upon the program\r\nby John Walker"}
+]}

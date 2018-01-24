@@ -1,0 +1,582 @@
+object frmLocations: TfrmLocations
+  Left = 237
+  Height = 345
+  Top = 130
+  Width = 461
+  AutoSize = True
+  BorderIcons = [biSystemMenu]
+  BorderStyle = bsSingle
+  Caption = 'Locations'
+  ClientHeight = 345
+  ClientWidth = 461
+  Color = clBtnFace
+  Font.Color = clWindowText
+  OnCreate = FormCreate
+  OnShow = FormShow
+  ShowHint = True
+  LCLVersion = '1.9.0.0'
+  object btnUp: TSpeedButton
+    AnchorSideTop.Control = lbxLocation
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    Left = 435
+    Height = 22
+    Top = 8
+    Width = 22
+    Anchors = [akTop, akRight]
+    BorderSpacing.Right = 4
+    Glyph.Data = {
+      36040000424D3604000000000000360000002800000010000000100000000100
+      2000000000000004000064000000640000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0004000000740000008000000080000000800000008000000080000000800000
+      0080000000800000008000000080000000740000000400000000000000000000
+      00000000003C000000F3000000B7000000800000008000000080000000800000
+      008000000080000000B7000000F30000003C0000000000000000000000000000
+      0000000000000000003C000000E70000003C0000000000000000000000000000
+      00000000003C000000E70000003C000000000000000000000000000000000000
+      000000000000000000000000003C000000E70000003C00000000000000000000
+      003C000000E70000003C00000000000000000000000000000000000000000000
+      00000000000000000000000000000000003C000000E70000003C0000003C0000
+      00E70000003C0000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000003C000000E7000000E70000
+      003C000000000000000000000000000000000000000000000000000000000000
+      000000000000000000000000000000000000000000000000003C0000003C0000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000
+    }
+    OnClick = btnUpClick
+  end
+  object btnDown: TSpeedButton
+    AnchorSideTop.Control = btnUp
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = btnUp
+    AnchorSideRight.Side = asrBottom
+    Left = 435
+    Height = 22
+    Top = 30
+    Width = 22
+    Anchors = [akTop, akRight]
+    Glyph.Data = {
+      36040000424D3604000000000000360000002800000010000000100000000100
+      2000000000000004000064000000640000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000004000000040000
+      0000000000000000000000000000000000000000000000000000000000000000
+      00000000000000000000000000000000000000000004000000AB000000AB0000
+      0004000000000000000000000000000000000000000000000000000000000000
+      000000000000000000000000000000000004000000AB000000AB000000AB0000
+      00AB000000040000000000000000000000000000000000000000000000000000
+      0000000000000000000000000004000000AB000000AB00000004000000040000
+      00AB000000AB0000000400000000000000000000000000000000000000000000
+      00000000000000000004000000AB000000AB0000000400000000000000000000
+      0004000000AB000000AB00000004000000000000000000000000000000000000
+      000000000004000000AB000000AB000000040000000000000000000000000000
+      000000000004000000AB000000AB000000040000000000000000000000000000
+      0004000000AB000000FF000000FF000000FF000000FF000000FF000000FF0000
+      00FF000000FF000000FF000000FF000000AB0000000400000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000
+    }
+    OnClick = btnDownClick
+  end
+  object btnNew: TSpeedButton
+    AnchorSideTop.Control = btnDown
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = btnUp
+    AnchorSideRight.Side = asrBottom
+    Left = 435
+    Height = 22
+    Top = 56
+    Width = 22
+    Anchors = [akTop, akRight]
+    BorderSpacing.Top = 4
+    Glyph.Data = {
+      36040000424D3604000000000000360000002800000010000000100000000100
+      2000000000000004000064000000640000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      000000000000000000000000000000000008000000340000006C0000006C0000
+      0034000000080000000000000000000000000000000000000000000000000000
+      0000000000000000000000000054000000E7000000CF0000009B0000009B0000
+      00CF000000EB0000006000000000000000000000000000000000000000000000
+      0000000000000000009B000000D7000000380000000000000000000000000000
+      000000000038000000D7000000A3000000000000000000000000000000000000
+      000000000058000000D70000000C000000000000000000000000000000000000
+      0000000000000000000C000000D7000000600000000000000000000000000000
+      0008000000EB0000003800000000000000000000000000000080000000800000
+      0000000000000000000000000038000000EB0000000800000000000000000000
+      0034000000CF0000000000000000000000000000000000000080000000800000
+      0000000000000000000000000000000000CF0000003400000000000000000000
+      006C0000009B00000000000000000000008000000080000000BF000000BF0000
+      00800000008000000000000000000000009B0000006C00000000000000000000
+      006C0000009B00000000000000000000008000000080000000BF000000BF0000
+      00800000008000000000000000000000009B0000006400000000000000000000
+      0034000000CF0000000000000000000000000000000000000080000000800000
+      0000000000000000000000000000000000CF0000003000000000000000000000
+      0008000000E70000003800000000000000000000000000000080000000800000
+      0000000000000000000000000038000000E70000000400000000000000000000
+      00000000004C000000D70000000C000000000000000000000000000000000000
+      0000000000000000000C000000D7000000540000000000000000000000000000
+      0000000000000000008B000000D7000000380000000000000000000000000000
+      000000000038000000D70000009B000000000000000000000000000000000000
+      000000000000000000000000004C000000E7000000CF0000009B0000009B0000
+      00CF000000EB0000005800000000000000000000000000000000000000000000
+      000000000000000000000000000000000008000000340000006C0000006C0000
+      0034000000080000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000
+    }
+    OnClick = btnNewClick
+  end
+  object lbl_Longitude: TLabel
+    AnchorSideLeft.Control = lblName
+    AnchorSideTop.Control = edtLongDeg
+    AnchorSideTop.Side = asrCenter
+    Left = 8
+    Height = 15
+    Top = 224
+    Width = 57
+    Caption = 'Longitude:'
+    ParentColor = False
+  end
+  object lblLatitude: TLabel
+    AnchorSideLeft.Control = lblName
+    AnchorSideTop.Control = edtLatDeg
+    AnchorSideTop.Side = asrCenter
+    Left = 8
+    Height = 15
+    Top = 251
+    Width = 46
+    Caption = 'Latitude:'
+    ParentColor = False
+  end
+  object btnDel: TSpeedButton
+    AnchorSideTop.Control = btnNew
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = btnUp
+    AnchorSideRight.Side = asrBottom
+    Left = 435
+    Height = 22
+    Top = 78
+    Width = 22
+    Anchors = [akTop, akRight]
+    Glyph.Data = {
+      36040000424D3604000000000000360000002800000010000000100000000100
+      2000000000000004000064000000640000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      000000000000000000000000000000000008000000340000006C0000006C0000
+      0034000000080000000000000000000000000000000000000000000000000000
+      0000000000000000000000000054000000E7000000CF0000009B0000009B0000
+      00CF000000EB0000006000000000000000000000000000000000000000000000
+      0000000000000000009B000000D7000000380000000000000000000000000000
+      000000000038000000D7000000A3000000000000000000000000000000000000
+      000000000058000000D70000000C000000000000000000000000000000000000
+      0000000000000000000C000000D7000000600000000000000000000000000000
+      0008000000EB0000003800000000000000000000000000000000000000000000
+      0000000000000000000000000038000000EB0000000800000000000000000000
+      0034000000CF0000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000CF0000003400000000000000000000
+      006C0000009B0000000000000000000000800000008000000080000000800000
+      00800000008000000000000000000000009B0000006C00000000000000000000
+      006C0000009B0000000000000000000000800000008000000080000000800000
+      00800000008000000000000000000000009B0000006400000000000000000000
+      0034000000CF0000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000CF0000003000000000000000000000
+      0008000000E70000003800000000000000000000000000000000000000000000
+      0000000000000000000000000038000000E70000000400000000000000000000
+      00000000004C000000D70000000C000000000000000000000000000000000000
+      0000000000000000000C000000D7000000540000000000000000000000000000
+      0000000000000000008B000000D7000000380000000000000000000000000000
+      000000000038000000D70000009B000000000000000000000000000000000000
+      000000000000000000000000004C000000E7000000CF0000009B0000009B0000
+      00CF000000EB0000005800000000000000000000000000000000000000000000
+      000000000000000000000000000000000008000000340000006C0000006C0000
+      0034000000080000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000
+    }
+    OnClick = btnDelClick
+  end
+  object lblAltitude: TLabel
+    AnchorSideLeft.Control = lblName
+    AnchorSideTop.Control = edtAltitude
+    AnchorSideTop.Side = asrCenter
+    Left = 8
+    Height = 15
+    Top = 278
+    Width = 45
+    Caption = 'Altitude:'
+    ParentColor = False
+  end
+  object lbxLocation: TListBox
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = Owner
+    AnchorSideRight.Control = btnUp
+    Left = 8
+    Height = 177
+    Top = 8
+    Width = 423
+    Anchors = [akTop, akLeft, akRight]
+    BorderSpacing.Left = 8
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 4
+    ItemHeight = 0
+    OnClick = lbxLocationClick
+    TabOrder = 0
+  end
+  object edtName: TEdit
+    AnchorSideLeft.Control = lbl_Longitude
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = lbxLocation
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    Left = 81
+    Height = 23
+    Top = 193
+    Width = 372
+    Anchors = [akTop, akLeft, akRight]
+    BorderSpacing.Left = 16
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 8
+    OnChange = edtChange
+    TabOrder = 1
+  end
+  object btnOK: TButton
+    AnchorSideTop.Control = btnCancel
+    AnchorSideRight.Control = btnCancel
+    Left = 299
+    Height = 25
+    Top = 313
+    Width = 75
+    Anchors = [akTop, akRight]
+    BorderSpacing.Right = 4
+    Caption = 'OK'
+    Default = True
+    ModalResult = 1
+    OnClick = btnOKClick
+    TabOrder = 2
+  end
+  object btnCancel: TButton
+    AnchorSideTop.Control = Bevel1
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    Left = 378
+    Height = 25
+    Top = 313
+    Width = 75
+    Anchors = [akTop, akRight]
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 8
+    BorderSpacing.Bottom = 8
+    Caption = 'Cancel'
+    ModalResult = 2
+    TabOrder = 3
+  end
+  object btnImport: TButton
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = btnCancel
+    Left = 8
+    Height = 25
+    Top = 313
+    Width = 75
+    BorderSpacing.Left = 8
+    BorderSpacing.Bottom = 8
+    Caption = 'Import'
+    OnClick = btnImportClick
+    TabOrder = 4
+  end
+  object edtLongDeg: TEdit
+    AnchorSideLeft.Control = edtName
+    AnchorSideTop.Control = edtName
+    AnchorSideTop.Side = asrBottom
+    Left = 81
+    Height = 23
+    Top = 220
+    Width = 40
+    Alignment = taRightJustify
+    BorderSpacing.Top = 4
+    OnChange = edtChange
+    TabOrder = 5
+  end
+  object edtLatDeg: TEdit
+    AnchorSideLeft.Control = edtName
+    AnchorSideTop.Control = edtLongDeg
+    AnchorSideTop.Side = asrBottom
+    Left = 81
+    Height = 23
+    Top = 247
+    Width = 40
+    Alignment = taRightJustify
+    BorderSpacing.Top = 4
+    OnChange = edtChange
+    TabOrder = 6
+  end
+  object edtLongMin: TEdit
+    AnchorSideLeft.Control = lblLongDeg
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = edtLongDeg
+    Left = 153
+    Height = 23
+    Top = 220
+    Width = 40
+    Alignment = taRightJustify
+    BorderSpacing.Left = 8
+    OnChange = edtChange
+    TabOrder = 7
+  end
+  object edtLatMin: TEdit
+    AnchorSideLeft.Control = lblLatDeg
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = edtLatDeg
+    Left = 153
+    Height = 23
+    Top = 247
+    Width = 40
+    Alignment = taRightJustify
+    BorderSpacing.Left = 8
+    OnChange = edtChange
+    TabOrder = 8
+  end
+  object edtLongSec: TEdit
+    AnchorSideLeft.Control = lblLongMin
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = edtLongDeg
+    Left = 225
+    Height = 23
+    Top = 220
+    Width = 40
+    Alignment = taRightJustify
+    BorderSpacing.Left = 8
+    OnChange = edtChange
+    TabOrder = 9
+  end
+  object edtLatSec: TEdit
+    AnchorSideLeft.Control = lblLatMin
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = edtLatDeg
+    Left = 225
+    Height = 23
+    Top = 247
+    Width = 40
+    Alignment = taRightJustify
+    BorderSpacing.Left = 8
+    OnChange = edtChange
+    TabOrder = 10
+  end
+  object lblLongSec: TLabel
+    AnchorSideLeft.Control = edtLongSec
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = edtLongDeg
+    AnchorSideTop.Side = asrCenter
+    Left = 269
+    Height = 15
+    Top = 224
+    Width = 17
+    BorderSpacing.Left = 4
+    Caption = 'sec'
+    ParentColor = False
+  end
+  object lblLatSec: TLabel
+    AnchorSideLeft.Control = edtLatSec
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = edtLatDeg
+    AnchorSideTop.Side = asrCenter
+    Left = 269
+    Height = 15
+    Top = 251
+    Width = 17
+    BorderSpacing.Left = 4
+    Caption = 'sec'
+    ParentColor = False
+  end
+  object lblLongDeg: TLabel
+    AnchorSideLeft.Control = edtLongDeg
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = edtLongDeg
+    AnchorSideTop.Side = asrCenter
+    Left = 125
+    Height = 15
+    Top = 224
+    Width = 20
+    BorderSpacing.Left = 4
+    Caption = 'deg'
+    ParentColor = False
+  end
+  object lblLatDeg: TLabel
+    AnchorSideLeft.Control = edtLatDeg
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = edtLatDeg
+    AnchorSideTop.Side = asrCenter
+    Left = 125
+    Height = 15
+    Top = 251
+    Width = 20
+    BorderSpacing.Left = 4
+    Caption = 'deg'
+    ParentColor = False
+  end
+  object lblName: TLabel
+    AnchorSideLeft.Control = lbxLocation
+    AnchorSideTop.Control = edtName
+    AnchorSideTop.Side = asrCenter
+    Left = 8
+    Height = 15
+    Top = 197
+    Width = 35
+    Caption = 'Name:'
+    ParentColor = False
+  end
+  object lblLatMin: TLabel
+    AnchorSideLeft.Control = edtLatMin
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = edtLatDeg
+    AnchorSideTop.Side = asrCenter
+    Left = 197
+    Height = 15
+    Top = 251
+    Width = 20
+    BorderSpacing.Left = 4
+    Caption = 'deg'
+    ParentColor = False
+  end
+  object lblLongMin: TLabel
+    AnchorSideLeft.Control = edtLongMin
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = edtLongDeg
+    AnchorSideTop.Side = asrCenter
+    Left = 197
+    Height = 15
+    Top = 224
+    Width = 20
+    BorderSpacing.Left = 4
+    Caption = 'deg'
+    ParentColor = False
+  end
+  object cbxLongSign: TComboBox
+    AnchorSideLeft.Control = lblLongSec
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = edtLongDeg
+    AnchorSideTop.Side = asrCenter
+    Left = 294
+    Height = 23
+    Top = 220
+    Width = 56
+    BorderSpacing.Left = 8
+    BorderSpacing.Right = 8
+    ItemHeight = 15
+    Items.Strings = (
+      'W'
+      'E'
+    )
+    OnChange = edtChange
+    Style = csDropDownList
+    TabOrder = 11
+  end
+  object cbxLatSign: TComboBox
+    AnchorSideLeft.Control = lblLatSec
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = edtLatDeg
+    AnchorSideTop.Side = asrCenter
+    Left = 294
+    Height = 23
+    Top = 247
+    Width = 56
+    BorderSpacing.Left = 8
+    BorderSpacing.Right = 8
+    ItemHeight = 15
+    Items.Strings = (
+      'N'
+      'S'
+    )
+    OnChange = edtChange
+    Style = csDropDownList
+    TabOrder = 12
+  end
+  object lblAltitudeUnit: TLabel
+    AnchorSideLeft.Control = edtAltitude
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = edtAltitude
+    AnchorSideTop.Side = asrCenter
+    Left = 125
+    Height = 15
+    Top = 278
+    Width = 11
+    BorderSpacing.Left = 4
+    Caption = 'm'
+    ParentColor = False
+  end
+  object edtAltitude: TEdit
+    AnchorSideLeft.Control = edtName
+    AnchorSideTop.Control = edtLatDeg
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = edtLatDeg
+    AnchorSideRight.Side = asrBottom
+    Left = 81
+    Height = 23
+    Top = 274
+    Width = 40
+    Alignment = taRightJustify
+    Anchors = [akTop, akLeft, akRight]
+    BorderSpacing.Top = 4
+    MaxLength = 4
+    OnChange = edtChange
+    TabOrder = 13
+    Text = '   0'
+  end
+  object Bevel1: TBevel
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = edtAltitude
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    Left = 8
+    Height = 3
+    Top = 305
+    Width = 445
+    Anchors = [akTop, akLeft, akRight]
+    BorderSpacing.Left = 8
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 8
+    Shape = bsTopLine
+  end
+  object dlg: TOpenDialog
+    Filter = 'STSplus city files (*.cty)|*.cty'
+    Options = [ofPathMustExist, ofFileMustExist]
+    left = 88
+    top = 40
+  end
+end

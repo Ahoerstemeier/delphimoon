@@ -149,8 +149,7 @@ uses
   Translations,
   {$endif}
   Math, mtStrings, mtConst, mtUtils,
-  mtAbout, //, mtMoreDataForm,
-  mtLocation, mtUTCForm, mtJulianForm, mtJewishForm;
+  mtAbout, mtMoreDataForm, mtLocation, mtUTCForm, mtJulianForm, mtJewishForm;
 
 {$ifdef fpc}
   {$R *.lfm}
@@ -355,11 +354,9 @@ begin
   if frmJewish.ShowModal = mrOk then begin
     FStartTime := frmJewish.Date - (now - FFirstNow) - bias;
     UpdateValues;
-    (*
     if frmMoreData = nil then
       frmMoreData := TfrmMoreData.Create(Application);
     frmMoreData.StartTime := FStartTime;
-    *)
   end;
 end;
 
@@ -374,11 +371,9 @@ begin
   if frmJulian.ShowModal = mrOk then begin
     FStartTime := frmJulian.Date - (now - FFirstNow) - bias;
     UpdateValues;
-    (*
     if frmMoreData = nil then
       frmMoreData := TfrmMoreData.Create(Application);
     frmMoredata.StartTime := FStartTime;
-    *)
   end;
 end;
 
@@ -405,11 +400,9 @@ end;
 
 procedure TMainForm.mnuMoreDataClick(Sender: TObject);
 begin
-(*
   if frmMoreData = nil then
     frmMoreData := TfrmMoreData.Create(Application);
   frmMoreData.Show;
-  *)
 end;
 
 procedure TMainForm.mnuRotateClick(Sender: TObject);
@@ -471,11 +464,9 @@ begin
   if frmUTC.ShowModal = mrOk then begin
     FStartTime := frmUTC.Date - (now - FFirstNow) - bias;
     UpdateLayout;
-    (*
     if frmMoreData = nil then
       frmMoreData := TfrmMoreData.Create(Application);
     frmMoreData.StartTime := FStartTime;
-    *)
   end;
 end;
 

@@ -96,9 +96,9 @@ type
     FFirstNow: TDateTime;
     FStartTime: TDateTime;
     procedure SetStartTime(AValue: TDateTime);
-    procedure UpdateInfos;
-    procedure UpdatePositions;
+    procedure UpdateLayout;
     procedure UpdateStrings;
+    procedure UpdateValues;
   public
     property StartTime: TDateTime read FStartTime write SetStartTime;
   end;
@@ -158,12 +158,12 @@ end;
 
 procedure TfrmMoreData.locationChange(Sender: TObject);
 begin
-  UpdateInfos;
+  UpdateValues;
 end;
 
 procedure TfrmMoreData.PageControlChange(Sender: TObject);
 begin
-  UpdatePositions;
+//  UpdateLayout;
 end;
 
 procedure TfrmMoreData.SetStartTime(AValue: TDateTime);
@@ -171,7 +171,109 @@ begin
    FStartTime := AValue;
 end;
 
-procedure TfrmMoreData.UpdateInfos;
+procedure TfrmMoreData.UpdateLayout;
+begin
+end;
+
+(*
+
+  function FindAnchorControl(AParent: TWinControl; ALeft: Integer): TControl;
+  var
+    i: Integer;
+    w, wmax: Integer;
+  begin
+    Result := nil;
+    wmax := 0;
+    for i := 0 to AParent.ControlCount-1 do begin
+      if AParent.Controls[i].Left = ALeft then begin
+        w := AParent.Controls[i].Width;
+        if w > wmax then begin
+          wmax := w;
+          Result := AParent.Controls[i];
+        end;
+      end;
+    end;
+  end;
+
+var
+  wSun, wMoon, wCalendar: Integer;
+  c: TControl;
+begin
+  valSunRise.AnchorSideLeft.Control := FindAnchorControl(PgSun, lblSunRise.Left);
+  lblAphel.AnchorSideLeft.Control := FindAnchorControl(PgSun, valSunRise.Left);
+  valAphel.AnchorSideLeft.Control := FindAnchorControl(PgSun, lblAphel.Left);
+  c := FindAnchorControl(PgSun, valAphel.Left);
+  wSun := c.Left + c.Width + lblSunRise.Left;
+
+  valMoonRise.AnchorSideLeft.Control := FindAnchorControl(PgMoon, lblMoonRise.Left);
+  lblApogee.AnchorSideLeft.Control := FindAnchorControl(PgMoon, valMoonRise.Left);
+  valApogee.AnchorSideLeft.control := FindAnchorControl(PgMoon, lblApogee.Left);
+  c := FindAnchorControl(PgMoon, valApogee.Left);
+  wMoon := c.Left + c.Width + lblMoonRise.Left;
+
+  valEaster.AnchorSideLeft.Control := FindAnchorControl(PgCalendar, lblEaster.Left);
+  c := FindAnchorControl(PgCalendar, valEaster.Left);
+  wCalendar := c.Left + c.Width + lblEaster.Left;
+
+  Width := MaxValue([wSun, wMoon, wCalendar]) + 2*PageControl.Left;
+end;
+          *)
+
+procedure TfrmMoreData.UpdateStrings;
+var
+  z: TChineseZodiac;
+begin
+  Caption := SMoreData;
+  lblLatitude.Caption := SLatitude;
+  lblLongitude.Caption := SLongitude;
+  lblSpring.Caption := SSpring;
+  lblSummer.Caption := SSummer;
+  lblAutumn.Caption := SAutumn;
+  lblWinter.Caption := SWinter;
+  lblSunRise.Caption := SSunRise;
+  lblSunTransit.Caption := SSunTransit;
+  lblSunSet.Caption := SSunSet;
+  lblMoonRise.Caption := SMoonRise;
+  lblMoonTransit.Caption := SMoonTransit;
+  lblMoonSet.Caption := SMoonSet;
+  lblLocation.Caption := SLocation;
+  lblPerigee.Caption := SPerigee;
+  lblApogee.Caption := SApogee;
+  lblPerihel.Caption := SPerihel;
+  lblAphel.Caption := SAphel;
+  lblMoonEclipse.Caption := SMoonEclipse;
+  lblSunEclipse.Caption := SSunEclipse;
+  lblEaster.Caption := SEasterDate;
+  lblPesach.Caption := SPesachDate;
+  lblChinese.Caption := SChineseNewYear;
+  lblEasterJulian.Caption := SEasterDateOrthodox;
+  lblSunRektaszension.Caption := SRektaszension;
+  lblSunDeclination.Caption := SDeclination;
+  lblMoonRektaszension.Caption := SRektaszension;
+  lblMoonDeclination.Caption := SDeclination;
+  lblMoonZodiac.Caption := SZodiac;
+  lblSunZodiac.Caption := SZodiac;
+  pgSun.Caption := SSun;
+  pgMoon.Caption := SMoon;
+  pgCalendar.Caption := SCalendar;
+
+  ChineseZodiac[ch_rat] := SChineseZodiacRat;
+  ChineseZodiac[ch_ox] := SChineseZodiacOx;
+  ChineseZodiac[ch_tiger] := SChineseZodiacTiger;
+  ChineseZodiac[ch_rabbit] := SChineseZodiacRabbit;
+  ChineseZodiac[ch_dragon] := SChineseZodiacDragon;
+  ChineseZodiac[ch_snake] := SChineseZodiacSnake;
+  ChineseZodiac[ch_horse] := SChineseZodiacHorse;
+  ChineseZodiac[ch_Goat] := SChineseZodiacGoat;
+  ChineseZodiac[ch_monkey] := SChineseZodiacMonkey;
+  ChineseZodiac[ch_chicken] := SChineseZodiacChicken;
+  ChineseZodiac[ch_dog] := SChineseZodiacDog;
+  ChineseZodiac[ch_pig] := SChineseZodiacPig;
+
+  UpdateLayout;
+end;
+
+procedure TfrmMoreData.UpdateValues;
 var
   y,m,d: word;
   date: TDateTime;
@@ -367,104 +469,7 @@ begin
   except
   end;
 
-  UpdatePositions;
 end;
-
-procedure TfrmMoreData.UpdatePositions;
-
-  function FindAnchorControl(AParent: TWinControl; ALeft: Integer): TControl;
-  var
-    i: Integer;
-    w, wmax: Integer;
-  begin
-    Result := nil;
-    wmax := 0;
-    for i := 0 to AParent.ControlCount-1 do begin
-      if AParent.Controls[i].Left = ALeft then begin
-        w := AParent.Controls[i].Width;
-        if w > wmax then begin
-          wmax := w;
-          Result := AParent.Controls[i];
-        end;
-      end;
-    end;
-  end;
-
-var
-  wSun, wMoon, wCalendar: Integer;
-  c: TControl;
-begin
-  valSunRise.AnchorSideLeft.Control := FindAnchorControl(PgSun, lblSunRise.Left);
-  lblAphel.AnchorSideLeft.Control := FindAnchorControl(PgSun, valSunRise.Left);
-  valAphel.AnchorSideLeft.Control := FindAnchorControl(PgSun, lblAphel.Left);
-  c := FindAnchorControl(PgSun, valAphel.Left);
-  wSun := c.Left + c.Width + lblSunRise.Left;
-
-  valMoonRise.AnchorSideLeft.Control := FindAnchorControl(PgMoon, lblMoonRise.Left);
-  lblApogee.AnchorSideLeft.Control := FindAnchorControl(PgMoon, valMoonRise.Left);
-  valApogee.AnchorSideLeft.control := FindAnchorControl(PgMoon, lblApogee.Left);
-  c := FindAnchorControl(PgMoon, valApogee.Left);
-  wMoon := c.Left + c.Width + lblMoonRise.Left;
-
-  valEaster.AnchorSideLeft.Control := FindAnchorControl(PgCalendar, lblEaster.Left);
-  c := FindAnchorControl(PgCalendar, valEaster.Left);
-  wCalendar := c.Left + c.Width + lblEaster.Left;
-
-  Width := MaxValue([wSun, wMoon, wCalendar]) + 2*PageControl.Left;
-end;
-
-procedure TfrmMoreData.UpdateStrings;
-var
-  z: TChineseZodiac;
-begin
-  Caption := SMoreData;
-  lblLatitude.Caption := SLatitude;
-  lblLongitude.Caption := SLongitude;
-  lblSpring.Caption := SSpring;
-  lblSummer.Caption := SSummer;
-  lblAutumn.Caption := SAutumn;
-  lblWinter.Caption := SWinter;
-  lblSunRise.Caption := SSunRise;
-  lblSunTransit.Caption := SSunTransit;
-  lblSunSet.Caption := SSunSet;
-  lblMoonRise.Caption := SMoonRise;
-  lblMoonTransit.Caption := SMoonTransit;
-  lblMoonSet.Caption := SMoonSet;
-  lblLocation.Caption := SLocation;
-  lblPerigee.Caption := SPerigee;
-  lblApogee.Caption := SApogee;
-  lblPerihel.Caption := SPerihel;
-  lblAphel.Caption := SAphel;
-  lblMoonEclipse.Caption := SMoonEclipse;
-  lblSunEclipse.Caption := SSunEclipse;
-  lblEaster.Caption := SEasterDate;
-  lblPesach.Caption := SPesachDate;
-  lblChinese.Caption := SChineseNewYear;
-  lblEasterJulian.Caption := SEasterDateOrthodox;
-  lblSunRektaszension.Caption := SRektaszension;
-  lblSunDeclination.Caption := SDeclination;
-  lblMoonRektaszension.Caption := SRektaszension;
-  lblMoonDeclination.Caption := SDeclination;
-  lblMoonZodiac.Caption := SZodiac;
-  lblSunZodiac.Caption := SZodiac;
-  pgSun.Caption := SSun;
-  pgMoon.Caption := SMoon;
-  pgCalendar.Caption := SCalendar;
-
-  ChineseZodiac[ch_rat] := SChineseZodiacRat;
-  ChineseZodiac[ch_ox] := SChineseZodiacOx;
-  ChineseZodiac[ch_tiger] := SChineseZodiacTiger;
-  ChineseZodiac[ch_rabbit] := SChineseZodiacRabbit;
-  ChineseZodiac[ch_dragon] := SChineseZodiacDragon;
-  ChineseZodiac[ch_snake] := SChineseZodiacSnake;
-  ChineseZodiac[ch_horse] := SChineseZodiacHorse;
-  ChineseZodiac[ch_Goat] := SChineseZodiacGoat;
-  ChineseZodiac[ch_monkey] := SChineseZodiacMonkey;
-  ChineseZodiac[ch_chicken] := SChineseZodiacChicken;
-  ChineseZodiac[ch_dog] := SChineseZodiacDog;
-  ChineseZodiac[ch_pig] := SChineseZodiacPig;
-end;
-
 
 end.
 

@@ -10,7 +10,8 @@ uses
   mtUTCForm in 'mtutcform.pas' {frmUTC},
   mtJewishForm in 'mtjewishform.pas' {frmJewish},
   mtJulianForm in 'mtjulianform.pas' {frmJulian},
-  mtLocation in 'mtlocation.pas' {frmLocations};
+  mtLocation in 'mtlocation.pas' {frmLocations},
+  mtMoreDataForm in 'mtmoredataform.pas' {frmMoreData};
 
 {$ifdef fpc}
   {$R *.res}
@@ -25,5 +26,6 @@ begin
   Application.CreateForm(TfrmJewish, frmJewish);
   Application.CreateForm(TfrmJulian, frmJulian);
   Application.CreateForm(TfrmLocations, frmLocations);
+  Application.CreateForm(TfrmMoreData, frmMoreData);
   Application.Run;
 end.

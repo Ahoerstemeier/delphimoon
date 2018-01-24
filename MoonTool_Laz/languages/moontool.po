@@ -723,18 +723,13 @@ msgstr ""
 msgid "&OK"
 msgstr ""
 
-#: tfrmabout.caption
-msgctxt "tfrmabout.caption"
-msgid "About Moontool"
-msgstr ""
-
 #: tfrmabout.lblcopyright.caption
 msgid "(c) 1997-2001 Andreas Hörstemeier"
 msgstr ""
 
 #: tfrmabout.lblmain.caption
 msgctxt "tfrmabout.lblmain.caption"
-msgid "Moontool for Windows"
+msgid "Moontool"
 msgstr ""
 
 #: tfrmabout.lblref.caption

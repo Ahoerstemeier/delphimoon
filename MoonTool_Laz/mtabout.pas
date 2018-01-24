@@ -2,35 +2,19 @@ unit mtAbout;
 
 interface
 
- {$i ah_def.inc }
 uses
 {$ifdef fpc}
-  LCLIntf, LCLType, LMessages,
+  LCLIntf, LCLType,
 {$else}
  {$ifdef ver80}
-  winprocs,
-  wintypes,
+  WinProcs, WinTypes,
  {$else}
   Windows,
  {$endif}
-  Messages,
+  Messages, Consts, ShellApi,
 {$endif}
-  SysUtils,
-  Classes,
-  Graphics,
-  Controls,
-  Forms,
-  Dialogs,
-  StdCtrls,
-  ExtCtrls,
-{$ifndef fpc}
-  consts,
- {$ifdef delphi_ge_2}
-  shellapi,
- {$endif}
-{$endif}
-  mooncomp,
-  moon;
+  SysUtils, Classes, Graphics, Controls, Forms, Dialogs, StdCtrls, ExtCtrls,
+  MoonComp, Moon;
 
 type
   { TfrmAbout }
@@ -42,12 +26,13 @@ type
     lblRef: TLabel;
     lblURL: TLabel;
     Moon: TMoon;
-    TextPanel: TPanel;
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure lblURLClick(Sender: TObject);
     procedure lblURLMouseEnter(Sender: TObject);
     procedure lblURLMouseLeave(Sender: TObject);
+  private
+    procedure UpdateLayout;
   public
     procedure UpdateStrings;
   end;
@@ -58,16 +43,12 @@ var
 implementation
 
 uses
- {$ifdef fpc}
-  mtStrings,
- {$endif}
-  mtConst, mtUtils;
+  mtStrings, mtConst, Math;
 
 {$ifdef fpc}
   {$R *.lfm}
 {$else}
-  {$R *.lfm}
-  {$i moontool.inc }
+  {$R *.dfm}
 {$endif}
 
 
@@ -98,16 +79,43 @@ end;
 
 procedure TfrmAbout.lblURLMouseEnter(Sender: TObject);
 begin
-  lblURL.Font.Color := clBlue;
-  lblURL.Font.Style := [fsUnderline];
-  lblURL.Cursor := crHandPoint;
+//  lblURL.Font.Color := clBlue;
+//  lblURL.Font.Style := [fsUnderline];
+//  lblURL.Cursor := crHandPoint;
 end;
 
 procedure TfrmAbout.lblURLMouseLeave(Sender: TObject);
 begin
- lblURL.Font.Color := clBlack;
- lblURL.Font.Style := [];
- lblURL.cursor := crDefault;
+// lblURL.Font.Color := clBlack;
+// lblURL.Font.Style := [];
+// lblURL.cursor := crDefault;
+end;
+
+procedure TfrmAbout.UpdateLayout;
+const
+  DISTANCE = 16;
+var
+  w: Integer;
+  p: Integer;
+begin
+  w := Max(Max(Max(lblMain.Width, lblCopyright.Width), lblURL.Width), lblRef.Width);
+
+  p := Moon.Left + Moon.Width + DISTANCE + w div 2;
+
+  lblMain.Left := p - lblMain.Width div 2;
+  lblCopyright.Left := p - lblCopyright.Width div 2;
+  lblURL.Left := p - lblURL.Width div 2;
+  lblRef.Left := p - lblRef.Width div 2;
+  btnOK.Left := p - btnOK.Width div 2;
+
+  lblMain.Top := Moon.Top;
+  lblCopyright.Top := lblMain.Top + lblMain.Height + 8;
+  lblURL.Top := lblCopyright.Top + lblCopyright.Height;
+  lblRef.Top := lblURL.Top + lblURL.Height + 8;
+  btnOK.Top := lblRef.Top + lblRef.Height + 16;
+
+  ClientWidth := Moon.Left + Moon.Width + DISTANCE + w + DISTANCE;
+  ClientHeight := btnOK.Top + btnOK.Height + 8;
 end;
 
 procedure TfrmAbout.UpdateStrings;
@@ -116,6 +124,7 @@ begin
   btnOK.Caption := SOKButton;
   lblMain.Caption := SMoontoolAbout;
   lblRef.Caption := SBasedUpon;
+  UpdateLayout;
 end;
 
 end.

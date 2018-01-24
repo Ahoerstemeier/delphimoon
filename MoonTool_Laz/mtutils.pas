@@ -20,6 +20,7 @@ function TimeZoneBias: Integer;
 procedure GetFormatSettingsFromLangCode(ALang: String; var AFormatSettings: TFormatSettings);
 function GetOSLanguage: String;
 
+function GetMoonName(AMoon: TMoonName): String;
 function GetZodiacName(AZodiac: TZodiac): String;
 
 
@@ -120,8 +121,7 @@ begin
 end;
 {$endif}
 
-{$ifdef fpc}
-{$ifdef Windows}
+{$ifdef MSWindows}
 { This function determines the LCID from the language code.
   Works only for Windows. }
 function GetLCIDFromLangCode(ALang: String): Integer;
@@ -156,18 +156,35 @@ begin
      raise Exception.CreateFmt('Language "%s" not supported. Please add to GetLCIDFromLangCode.',[ALang]);
 end;
 {$endif}
-{$endif}
 
 procedure GetFormatSettingsFromLangCode(ALang: String;
   var AFormatSettings: TFormatSettings);
 begin
-  {$ifdef windows}
-  GetLocaleFormatSettings(GetLCIDFromLangCode(ALang),AFormatSettings);
+  {$ifdef mswindows}
+  GetLocaleFormatSettings(GetLCIDFromLangCode(ALang), AFormatSettings);
   {$else}
   AFormatSettings := FormatSettings;
   {$endif}
 end;
 
+function GetMoonName(AMoon: TMoonName): String;
+begin
+  case AMoon of
+    mn_wolf       : Result := SMoonNameWolf;
+    mn_snow       : Result := SMoonNameSnow;
+    mn_worm       : Result := SMoonNameWorm;
+    mn_pink       : Result := SMoonNamePink;
+    mn_flower     : Result := SMoonNameFlower;
+    mn_strawberry : Result := SMoonNameStrawberry;
+    mn_buck       : Result := SMoonNameBuck;
+    mn_sturgeon   : Result := SMoonNameSturgeon;
+    mn_harvest    : Result := SMoonNameHarvest;
+    mn_hunter     : Result := SMoonNameHunter;
+    mn_beaver     : Result := SMoonNameBeaver;
+    mn_cold       : Result := SMoonNameCold;
+    mn_blue       : Result := SMoonNameBlue;
+  end;
+end;
 
 function GetZodiacName(AZodiac: TZodiac): String;
 begin

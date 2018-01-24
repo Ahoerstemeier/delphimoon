@@ -2,16 +2,27 @@ unit mtMain;
 
 interface
 
+{$ifdef fpc}
+  {$define use_tray_icon}
+{$else}
+  {$ifdef ver230}
+    {$define d7}
+  {$endif}
+{$endif}
+
 uses
 {$ifdef fpc}
   LCLIntf, LCLType,
 {$else}
   Windows, Messages,
+ // {$ifdef d7} xpman, {$endif}
 {$endif}
   SysUtils, Classes, Graphics, Controls, Forms, Dialogs, ExtCtrls, StdCtrls,
   Menus, Clipbrd, IniFiles,
-{$ifndef fpc}
+{$ifdef use_tray_icon}
+ {$ifndef fpc}
   trayicon,
+ {$endif}
 {$endif}
   Moon, MoonComp;
 
@@ -45,7 +56,6 @@ type
     mnuLanguageEN: TMenuItem;
     mnuLanguage: TMenuItem;
     Moon: TMoon;
-    Panel1: TPanel;
     valAgeOfMoon: TLabel;
     valFirstQuart: TLabel;
     valFullMoon: TLabel;
@@ -91,7 +101,6 @@ type
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormShow(Sender: TObject);
-    procedure mnuMenuAboutClick(Sender: TObject);
     procedure mnuColorizeMoonClick(Sender: TObject);
     procedure mnuCopyClick(Sender: TObject);
     procedure mnuExitClick(Sender: TObject);
@@ -100,6 +109,7 @@ type
     procedure mnuJulianClick(Sender: TObject);
     procedure mnuLanguageClick(Sender: TObject);
     procedure mnuLocationsClick(Sender: TObject);
+    procedure mnuMenuAboutClick(Sender: TObject);
     procedure mnuMoreDataClick(Sender: TObject);
     procedure mnuRotateClick(Sender: TObject);
     procedure mnuSpeedUpClick(Sender: TObject);
@@ -113,12 +123,15 @@ type
     FFirstNow: TDateTime;
     FSpeed: Integer;
     FStartTime: TDateTime;
+   {$ifdef use_tray_icon}
     FTrayIcon: TTrayIcon;
+    procedure TrayDblClick(Sender: TObject);
+   {$endif}
     function HelpHandler(Command:word; Data:Longint; var CallHelp:Boolean): Boolean;
     procedure SelectLanguage(ALang: String);
-    procedure TrayDblClick(Sender: TObject);
-    procedure UpdateControls;
+    procedure UpdateLayout;
     procedure UpdateStrings;
+    procedure UpdateValues;
   public
   end;
 
@@ -133,20 +146,20 @@ uses
   htmlhelp,
   {$endif}
   {$ifdef fpc}
-  mtStrings, Translations,
+  Translations,
   {$endif}
-  mtConst, mtUtils,
-  mtAbout, mtMoreDataForm, mtJulianForm, mtUTCForm, mtLocation, mtJewishForm;
+  Math, mtStrings, mtConst, mtUtils,
+  mtAbout; //, mtMoreDataForm, mtJulianForm, mtUTCForm, mtLocation, mtJewishForm;
 
 {$ifdef fpc}
-  {$r *.lfm}
+  {$R *.lfm}
 {$else}
-  {$r *.dfm}
+  {$R *.dfm}
 {$endif}
 
 procedure LoadSettings(var rotate: integer; var color:boolean);
 var
-  iniFile : TIniFile;
+  iniFile : TCustomIniFile;
 begin
   iniFile := TMemIniFile.Create(MOONTOOL_INIFILE);
   try
@@ -189,14 +202,17 @@ var
   rotate: integer;
   use_color: boolean;
 begin
+  Timer.Enabled := false;
   Lang := GetOSLanguage;
 
   FFirstNow := now;
   FStartTime := now;
 
+  {$ifdef use_tray_icon}
   FTrayIcon := TTrayIcon.Create(self);
   FTrayIcon.OnDblClick := TrayDblClick;
   mnuTray.Visible := true;
+  {$endif}
 
   LoadSettings(rotate, use_color);
   if use_color then
@@ -212,8 +228,10 @@ begin
   mnuRotNorth.Checked := rotate = 0;
   mnuColorizeMoon.Checked := use_color;
 
-  Timer.OnTimer(nil);
+  UpdateValues;
+//  Timer.OnTimer(nil);
 
+  (*
   Application.Icon := Moon.Icon;
   if FileExists(HELPFILENAME) then begin
     Application.Helpfile := HELPFILENAME;
@@ -223,7 +241,7 @@ begin
   {$ifndef fpc}
   InvalidateRect(Application.Handle, nil, true);
   {$endif}
-
+    *)
   FLastPhaseValue := 199;
   mnuHelpTimezones.Enabled := Application.Helpfile <> '';
   HelpContext := HC_MAINFORM;
@@ -232,11 +250,13 @@ end;
 procedure TMainForm.FormShow(Sender: TObject);
 begin
   SelectLanguage(Lang);
+  Timer.Enabled := true;
 end;
 
 function TMainForm.HelpHandler(Command:word; Data:Longint; var CallHelp:Boolean): Boolean;
 // Call online-help
 begin
+(*
   {$ifdef windows}
   // Call HTML help (.chm file)
   htmlHelp.HtmlHelpA(0,
@@ -248,11 +268,12 @@ begin
   // Don't call regular help
   CallHelp := False;
   {$endif}
+  *)
 end;
 
 procedure TMainForm.TimerTimer(Sender: TObject);
 begin
-  UpdateControls;
+  UpdateValues;
 end;
 
 procedure TMainForm.mnuStopClick(Sender: TObject);
@@ -289,7 +310,7 @@ begin
   else
     Moon.MoonStyle := msClassic;
   FLastPhaseValue := 199;
-  UpdateControls;
+  UpdateValues;
 end;
 
 procedure TMainForm.mnuCopyClick(Sender: TObject);
@@ -326,6 +347,7 @@ procedure TMainForm.mnuJewishClick(Sender: TObject);
 var
   bias: TDateTime;
 begin
+(*
   if frmJewish = nil then
     frmJewish := TfrmJewish.Create(Application);
   bias := TimeZoneBias/(60*24);
@@ -337,12 +359,14 @@ begin
       frmMoreData := TfrmMoreData.Create(Application);
     frmMoreData.StartTime := FStartTime;
   end;
+  *)
 end;
 
 procedure TMainForm.mnuJulianClick(Sender: TObject);
 var
   bias: TDateTime;
 begin
+(*
   if frmJulian = nil then
     frmJulian := TfrmJulian.Create(Application);
   bias := TimeZoneBias / (60*24);
@@ -354,6 +378,7 @@ begin
       frmMoreData := TfrmMoreData.Create(Application);
     frmMoredata.StartTime := FStartTime;
   end;
+  *)
 end;
 
 procedure TMainForm.mnuLanguageClick(Sender: TObject);
@@ -362,24 +387,28 @@ var
   p: Integer;
   lang: String;
 begin
+(*
   if not (Sender is TMenuItem) then
     exit;
   s := TMenuItem(Sender).Caption;
   p := pos('-', s);
   lang := trim(Copy(s, 1, p-1));
   SelectLanguage(lang);
+  *)
 end;
 
 procedure TMainForm.mnuLocationsClick(Sender: TObject);
 begin
-  frmLocations.ShowModal;
+  //frmLocations.ShowModal;
 end;
 
 procedure TMainForm.mnuMoreDataClick(Sender: TObject);
 begin
+(*
   if frmMoreData = nil then
     frmMoreData := TfrmMoreData.Create(Application);
   frmMoreData.Show;
+  *)
 end;
 
 procedure TMainForm.mnuRotateClick(Sender: TObject);
@@ -393,7 +422,7 @@ begin
   mnuRotNorth.Checked := Moon.Rotation = rot_none;
   mnuRotSouth.Checked := Moon.Rotation = rot_180;
   FLastPhaseValue := 199;
-  UpdateControls;
+  UpdateValues;
 end;
 
 procedure TMainForm.mnuSpeedUpClick(Sender: TObject);
@@ -415,6 +444,7 @@ end;
 
 procedure TMainForm.mnuTrayClick(sender: TObject);
 begin
+{$ifdef use_tray_icon}
  {$ifdef fpc}
   Hide;
   FTrayIcon.Show;
@@ -423,12 +453,14 @@ begin
   Application.Minimize;
   ShowWindow(Application.Handle, SW_HIDE);
  {$endif}
+{$endif}
 end;
 
 procedure TMainForm.mnuUTCClick(Sender: TObject);
 var
   bias: TDateTime;
 begin
+(*
   if frmUTC = nil then
     frmUTC := TfrmUTC.Create(Application);
   bias := TimeZoneBias/(60*24);
@@ -440,6 +472,7 @@ begin
       frmMoreData := TfrmMoreData.Create(Application);
     frmMoreData.StartTime := FStartTime;
   end;
+  *)
 end;
 
 procedure TMainForm.SelectLanguage(ALang: string);
@@ -450,6 +483,7 @@ var
   fn: String;
   langdir: String;
 begin
+(*
   Lang := lowercase(ALang);
 
   // Update formatsettings (for month names etc)
@@ -461,9 +495,11 @@ begin
   Translations.TranslateResourceStrings(fn);
   //fn := langdir + 'lclstrconsts.' + Lang + '.po';
   // Translations.TranslateResourceStrings(fn);
-
+*)
   // Apply strings to form
   UpdateStrings;
+  UpdateLayout;
+  (*
 
   // Select the new language in the language menu
   for i:=0 to mnuLanguage.Count-1 do begin
@@ -476,8 +512,10 @@ begin
     s := lowercase(copy(s, 1, p-1));
     mnuLanguage.Items[i].Checked := (s = Lang);
   end;
+  *)
 end;
 
+{$ifdef use_tray_icon}
 procedure TMainForm.TrayDblClick(sender: TObject);
 begin
  {$ifdef fpc}
@@ -488,104 +526,112 @@ begin
   ShowWindow(Application.Handle, SW_SHOW);
   {$endif}
 end;
+{$endif}
 
-procedure TMainForm.UpdateControls;
+procedure TMainForm.UpdateLayout;
+const
+{$ifdef fpc}
+  OFFSET = 8;
+{$else}
+  OFFSET = 16;
+{$endif}
+  MOON_SIZE = 80;
 var
-  jetzt: TDateTime;
-  temp: TDateTime;
-  dist,age: extended;
-  s:string;
-  h,m,sec,ms: word;
-  bias: integer;
-  new_phase: integer;
-  lunation_value: integer;
+  i: integer;
+  labelPos, valuePos: Integer;
+  labelWidth: Integer;
+  valueWidth_Moon: Integer;
+  valueWidth_NoMoon: Integer;
+  valueWidth_Times: Integer;
+  lunationPos: Integer;
+  lunationLabelWidth: Integer;
+  lunationValueWidth: Integer;
 begin
-  bias := TimeZoneBias;
-  case FSpeed of
-    0: jetzt := (now - FFirstNow) + FStartTime;
-    1: jetzt := (now - FFirstNow) * 3600 + FStartTime;       // 1 hour per second
-    2: jetzt := (now - FFirstNow) * 3600 * 24 + FStartTime;  // 1 day per second
-  end;
-  if FSpeed = 0 then
-    valLocal.Caption := DateToString(jetzt)
-  else
-    valLocal.Caption := '';
-
-  jetzt := jetzt + bias/(60*24);
-  valUTC.Caption := DateToString(jetzt);
-  str(Julian_Date(jetzt):12:5, s);
-  valJulian.Caption := s;
-
-  try
-    temp := Last_Phase(jetzt, Newmoon);
-    lunation_value := Lunation(temp+1);
-    valNewMoon.Caption := UTCDateString(temp);
-    valFirstQuart.Caption := UTCDateString(Next_Phase(temp, FirstQuarter));
-    valFullMoon.Caption := UTCDateString(Next_Phase(temp, FullMoon));
-    if Is_Blue_Moon(lunation_value) then
-      lblfullMoon.Font.Color := clBlue
-    else
-      lblfullMoon.Font.Color := clWindowText;
-    case MoonName(lunation_value) of
-      mn_wolf:        lblfullMoon.Hint := SMoonNameWolf;
-      mn_snow:        lblfullMoon.Hint := SMoonNameSnow;
-      mn_worm:        lblfullMoon.Hint := SMoonNameWorm;
-      mn_pink:        lblfullMoon.Hint := SMoonNamePink;
-      mn_flower:      lblfullMoon.Hint := SMoonNameFlower;
-      mn_strawberry:  lblfullMoon.Hint := SMoonNameStrawberry;
-      mn_buck:        lblfullMoon.Hint := SMoonNameBuck;
-      mn_sturgeon:    lblfullMoon.Hint := SMoonNameSturgeon;
-      mn_harvest:     lblfullMoon.Hint := SMoonNameHarvest;
-      mn_hunter:      lblfullMoon.Hint := SMoonNameHunter;
-      mn_beaver:      lblfullMoon.Hint := SMoonNameBeaver;
-      mn_cold:        lblfullMoon.Hint := SMoonNameCold;
-      mn_blue:        lblfullMoon.Hint := SMoonNameBlue;
+  // Calc max width of first column and lunation columns
+  labelWidth := 0;
+  lunationLabelWidth := 0;
+  lunationValueWidth := 0;
+  for i:=0 to ControlCount - 1 do
+    case Controls[i].Tag of
+      1: labelWidth := Max(labelWidth, Controls[i].Width); // labels in 1st column
+      5: lunationLabelWidth := Max(lunationLabelWidth, Controls[i].Width);
+      6: lunationValueWidth := max(lunationValueWidth, Controls[i].Width);
     end;
-    valLastQuart.Caption := UTCDateString(Next_Phase(temp, LastQuarter));
-    valNextNewMoon.Caption := UTCDateString(Next_Phase(jetzt, NewMoon));
-    valLastLunation.Caption := IntToStr(lunation_value);
-    valNextLunation.Caption := IntToStr(lunation_value+1);
-  except
-    { ignore exception which might be raised if too close to October 1582 }
-  end;
 
-  dist := Moon_Distance(jetzt);
-  str(dist/EARTH_RADIUS:4:1, s);
-  valMoonDistance.Caption := IntToStr(round(dist))+' '+SKilometers+', '+s+' '+SEarthRadii+'.';
+  // Reposition first value column, get offset and width for the rest
+  labelPos := OFFSET;
+  valuePos := labelPos + labelWidth + OFFSET;
+  valueWidth_Moon := 0;
+  valueWidth_NoMoon := 0;
+  valueWidth_Times := 0;
+  for i:=0 to ControlCount - 1 do
+    case Controls[i].Tag of
+      1: Controls[i].Left := labelPos;
+      2: begin
+           Controls[i].Left := valuePos;
+           valueWidth_Moon := Max(valueWidth_Moon, Controls[i].Width);
+//           valueWidth_Moon := Max(valueWidth_Moon, valuePos + Controls[i].Width + 2*OFFSET + MOON_SIZE);
+         end;
+      3: begin
+           Controls[i].Left := valuePos;
+           valueWidth_NoMoon := Max(valueWidth_NoMoon, Controls[i].Width);
+//           valueWidth_NoMoon := Max(valueWidth_NoMoon, valuePos + Controls[i].Width + 2*OFFSET);
+         end;
+      4: begin
+           Controls[i].Left := valuePos;
+           valueWidth_Times := Max(valueWidth_Times, Controls[i].Width);
+         end;
+      5: lunationLabelWidth := max(lunationLabelWidth, Controls[i].Width);
+      6: lunationValueWidth := max(lunationValueWidth, Controls[i].Width);
+    end;
 
-  dist := Sun_Distance(jetzt);
-  str(dist:6:3, s);
-  valSunDistance.Caption := IntToStr(round(dist*AU))+' '+SKilometers+', '+s+' '+SAstronomicalUnits+'.';
+  // Position the Lunation labels and values
+  lunationPos := valuePos + valueWidth_Times + 2*OFFSET;
+  for i := 0 to ControlCount-1 do
+    case Controls[i].Tag of
+      5: Controls[i].Left := lunationPos;
+      6: Controls[i].Left := lunationPos + OFFSET + lunationLabelWidth;
+    end;
 
-  age := AgeOfMoonWalker(jetzt);
-  DecodeTime(age, h, m, sec, ms);
-  valAgeOfMoon.Caption := Format(SAgeOfMoonValue, [trunc(age), h, m]);
+  // Form width
+  labelPos := labelPos + OFFSET + labelWidth;  // badly named: it is the x where the values start
+  ClientWidth := Max(Max(
+        labelPos + valueWidth_Moon + 2*OFFSET + MOON_SIZE,
+        labelPos + valueWidth_NoMoon),
+        lunationPos + lunationValueWidth)
+    + OFFSET;
 
-  new_phase := round(Current_Phase(jetzt) * 100);
-  valPhase.Caption := IntToStr(new_phase) + '% ' + SPhaseHint;
+  ClientHeight := lblNextNewMoon.Top + lblNextNewMoon.Height + OFFSET;
 
-  Str(moon_diameter(jetzt)/3600:6:4, s);
-  valMoonSubtend.Caption := s + DEG_SYMBOL;
-
-  Str(sun_diameter(jetzt)/3600:6:4, s);
-  valSunSubtend.Caption := s + DEG_SYMBOL;
-
-  if new_phase <> FLastPhaseValue then begin
-    Moon.Date := jetzt;
-    Application.Icon := Moon.Icon;
-    {$ifndef fpc}
-    InvalidateRect(Application.Handle, nil, true);
-    {$endif}
-    FLastPhaseValue := new_phase;
-    if FTrayicon <> NIL then begin
-      FTrayicon.Icon := Moon.icon;
-      {$ifdef fpc}
-      FTrayicon.Hint := IntToStr(new_phase) + '%';
-      {$else}
-      FTrayIcon.ToolTip := IntToStr(new_phase) + '%';
-      {$endif}
+  // Moon icon
+  Moon.Top := LblJulian.Top;
+  Moon.Left := Width - MOON_SIZE - Moon.Top;
+  (*
+    if Controls[i].Tag in [2,3,4] then
+      Controls[i].Left := pos_x;
+    case Controls[i].tag of
+      2: size_x := Max(size_x, Controls[i].Left + Controls[i].Width + 2*OFFSET + MOON_SIZE);
+      3: size_x := Max(size_x, Controls[i].Left + Controls[i].Width + 2*OFFSET);
+      4: time_max_width := Max(time_max_width, Controls[i].Width);
     end;
   end;
+  pos_x := pos_x + time_max_width + 2*OFFSET;
+
+
+  // Reposition the second column, get width
+  for i:=0 to ControlCount-1 do
+    if Controls[i].Tag = 5 then begin
+      Controls[i].Left := pos_x;
+      size_x := Max(size_x, Controls[i].Left + Controls[i].Width + OFFSET + LUNATION_VALUE_SIZE);
+    end;
+
+  // reposition the second data row
+  for i:=0 to ControlCount-1 do
+    if Controls[i].Tag=6 then
+      Controls[i].Left := size_x - lunation_value_size;
+      Moon.Left := size_x - MOON_SIZE;
+  Width := size_x;
+  *)
 end;
 
 procedure TMainForm.UpdateStrings;
@@ -594,7 +640,7 @@ var
   maxwidth:Integer;
   C: TControl;
 begin
-//  UpdateControls;    { make sure the val_* are set }
+//  UpdateValues;    { make sure the val_* are set }
   Caption := SMoontool;
   lblAgeOfMoon.Caption := SAgeOfMoon;
   lblFirstQuart.Caption := SFirstQuarter;
@@ -639,21 +685,96 @@ begin
   mnuMenuAbout.Caption := SMenuAbout;
   mnuHelpTimezones.Caption := SMenuTimeZones;
   Application.Title := Caption;
-
-  C := nil;
-  maxWidth := 0;
-  for i:=0 to ControlCount-1 do
-    if (Controls[i] is TLabel) and (TLabel(Controls[i]).Left = lblJulian.Left) then
-    begin
-      w := Controls[i].Width;
-      if w > maxWidth then begin
-        maxWidth := w;
-        C := Controls[i];
-      end;
-    end;
-  if C <> nil then
-    valJulian.AnchorSideLeft.Control := C;
 end;
+
+procedure TMainForm.UpdateValues;
+var
+  jetzt, jetztUTC: TDateTime;
+  temp: TDateTime;
+  dist,age: extended;
+  s:string;
+  h,m,sec,ms: word;
+  bias: integer;
+  new_phase: integer;
+  lunation_value: integer;
+begin
+  bias := TimeZoneBias;
+  case FSpeed of
+    0: jetzt := (now - FFirstNow) + FStartTime;
+    1: jetzt := (now - FFirstNow) * 3600 + FStartTime;       // 1 hour per second
+    2: jetzt := (now - FFirstNow) * 3600 * 24 + FStartTime;  // 1 day per second
+  end;
+  if FSpeed = 0 then
+    valLocal.Caption := DateToString(jetzt)
+  else
+    valLocal.Caption := '';
+
+  jetzt := jetzt + bias/(60*24);
+  valUTC.Caption := DateToString(jetzt);
+  valJulian.Caption := Format('%.5n', [Julian_Date(jetzt)], LocalFormatSettings);
+
+  try
+    temp := Last_Phase(jetzt, Newmoon);
+    lunation_value := Lunation(temp+1);
+    valNewMoon.Caption := UTCDateString(temp);
+    valFirstQuart.Caption := UTCDateString(Next_Phase(temp, FirstQuarter));
+    valFullMoon.Caption := UTCDateString(Next_Phase(temp, FullMoon));
+    if Is_Blue_Moon(lunation_value) then
+      lblfullMoon.Font.Color := clBlue
+    else
+      lblfullMoon.Font.Color := clWindowText;
+    lblFullMoon.Hint := GetMoonName(TMoonName(lunation_value));
+    valLastQuart.Caption := UTCDateString(Next_Phase(temp, LastQuarter));
+    valNextNewMoon.Caption := UTCDateString(Next_Phase(jetzt, NewMoon));
+    valLastLunation.Caption := IntToStr(lunation_value);
+    valNextLunation.Caption := IntToStr(lunation_value+1);
+  except
+    { ignore exception which might be raised if too close to October 1582 }
+  end;
+
+  dist := Moon_Distance(jetzt);
+  valMoonDistance.Caption := Format('%.0n %s = %.1f %s', [
+    dist, SKilometers, dist/EARTH_RADIUS, SEarthRadii
+    ], LocalFormatSettings);
+
+  dist := Sun_Distance(jetzt);
+  valSunDistance.Caption := Format('%.0n %s = %.3f %s', [
+    dist*AU, SKilometers, dist, SAstronomicalUnits
+    ], LocalFormatSettings);
+
+  age := AgeOfMoonWalker(jetzt);
+  DecodeTime(age, h, m, sec, ms);
+  valAgeOfMoon.Caption := Format(SAgeOfMoonValue, [trunc(age), h, m]);
+
+  new_phase := round(Current_Phase(jetzt) * 100);
+  valPhase.Caption := IntToStr(new_phase) + '% ' + SPhaseHint;
+
+  Str(moon_diameter(jetzt)/3600:6:4, s);
+  valMoonSubtend.Caption := s + DEG_SYMBOL;
+
+  Str(sun_diameter(jetzt)/3600:6:4, s);
+  valSunSubtend.Caption := s + DEG_SYMBOL;
+
+  if new_phase <> FLastPhaseValue then begin
+    Moon.Date := jetzt;
+    Application.Icon := Moon.Icon;
+    {$ifndef fpc}
+    InvalidateRect(Application.Handle, nil, true);
+    {$endif}
+    FLastPhaseValue := new_phase;
+    {$ifdef use_tray_icon}
+    if FTrayicon <> NIL then begin
+      FTrayicon.Icon := Moon.icon;
+      {$ifdef fpc}
+      FTrayicon.Hint := IntToStr(new_phase) + '%';
+      {$else}
+      FTrayIcon.ToolTip := IntToStr(new_phase) + '%';
+      {$endif}
+    end;
+    {$endif}
+  end;
+end;
+
 
 initialization
   MOONTOOL_INIFILE := ExtractFilePath(ParamStr(0)) + MOONTOOL_INIFILE;

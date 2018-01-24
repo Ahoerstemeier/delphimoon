@@ -754,18 +754,15 @@ msgstr "Zodiac"
 msgid "&OK"
 msgstr "&OK"
 
-#: tfrmabout.caption
-msgctxt "tfrmabout.caption"
-msgid "About Moontool"
-msgstr "About Moontool"
-
 #: tfrmabout.lblcopyright.caption
 msgid "(c) 1997-2001 Andreas Hörstemeier"
 msgstr "(c) 1997-2001 Andreas Hörstemeier"
 
 #: tfrmabout.lblmain.caption
+#, fuzzy
+#| msgid "Moontool for Windows"
 msgctxt "tfrmabout.lblmain.caption"
-msgid "Moontool for Windows"
+msgid "Moontool"
 msgstr "Moontool for Windows"
 
 #: tfrmabout.lblref.caption

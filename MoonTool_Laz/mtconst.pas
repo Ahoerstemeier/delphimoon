@@ -1,4 +1,4 @@
-﻿unit mtConst;
+unit mtConst;
 
 {$ifdef fpc}
  {$mode delphi}
@@ -36,7 +36,7 @@ const
  {$ifdef unicode}
   DEG_SYMBOL = '°';
  {$else}
-  DEG_SYMBOL = #176:
+  DEG_SYMBOL = #176;
  {$endif}
   LineEnding = #13#10;
  {$endif}
@@ -48,6 +48,13 @@ var
   LocalFormatSettings: TFormatSettings;
 
 implementation
+
+initialization
+ {$ifdef fpc}
+  LocalFormatSettings := FormatSettings;
+ {$else}
+  GetLocaleFormatSettings(0, LocalFormatSettings);
+ {$endif}
 
 end.
 

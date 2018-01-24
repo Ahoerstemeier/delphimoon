@@ -1,4 +1,4 @@
-program moondemo_d7;
+program moondemo;
 
 uses
   Forms, Interfaces,

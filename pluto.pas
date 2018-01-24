@@ -17,8 +17,7 @@ uses
   ah_math,
   moon_aux,
   sysutils,
-  classes,
-  windows;
+  classes;
 (*@\\\0000000301*)
 
 type

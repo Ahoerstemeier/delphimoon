@@ -23,8 +23,7 @@ uses
   ah_math,
   moon_aux,
   sysutils,
-  classes,
-  windows;
+  classes;
 (*@\\\000000030C*)
 
 type

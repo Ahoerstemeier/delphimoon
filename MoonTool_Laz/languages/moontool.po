@@ -917,6 +917,11 @@ msgctxt "tfrmlocations.lbllongdeg.caption"
 msgid "deg"
 msgstr ""
 
+#: tfrmlocations.lbllongitude.caption
+msgctxt "tfrmlocations.lbllongitude.caption"
+msgid "Longitude:"
+msgstr ""
+
 #: tfrmlocations.lbllongmin.caption
 msgctxt "tfrmlocations.lbllongmin.caption"
 msgid "deg"
@@ -929,11 +934,6 @@ msgstr ""
 
 #: tfrmlocations.lblname.caption
 msgid "Name:"
-msgstr ""
-
-#: tfrmlocations.lbl_longitude.caption
-msgctxt "tfrmlocations.lbl_longitude.caption"
-msgid "Longitude:"
 msgstr ""
 
 #: tfrmmore.caption

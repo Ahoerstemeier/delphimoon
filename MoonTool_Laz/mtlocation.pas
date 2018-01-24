@@ -39,13 +39,13 @@ type
     lblLongSec: TLabel;
     lblLatSec: TLabel;
     lblLongDeg: TLabel;
-    lbxLocation: TListBox;
+    lbxLocations: TListBox;
     btnUp: TSpeedButton;
     btnDown: TSpeedButton;
     btnNew: TSpeedButton;
     btnDel: TSpeedButton;
     edtName: TEdit;
-    lbl_Longitude: TLabel;
+    lblLongitude: TLabel;
     lblLatitude: TLabel;
     lblAltitude: TLabel;
     btnOK: TButton;
@@ -61,10 +61,11 @@ type
     procedure edtChange(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
-    procedure lbxLocationClick(Sender: TObject);
+    procedure lbxLocationsClick(Sender: TObject);
   private
     FLocations: TList;
     FChanging: Integer;
+    procedure UpdateLayout;
     procedure UpdateStrings;
   end;
 
@@ -84,22 +85,19 @@ var
 implementation
 
 uses
-{$ifdef fpc}
-  mtStrings,
-{$endif}
-  mtConst;
+  Math,
+  mtStrings, mtConst;
 
 {$ifdef fpc}
   {$R *.lfm}
 {$else}
-  {$R *.lfm}
-  {$i moontool.inc }
+  {$R *.dfm}
 {$endif}
 
 procedure LoadLocations(const AFilename: string;
   var ALocations:TList; var ACurrent:integer);
 var
-  iniFile : TIniFile;
+  iniFile : TCustomIniFile;
   h: TLocation;
   s: string;
   nr: integer;
@@ -139,7 +137,7 @@ end;
 procedure SaveLocations(const AFilename: string;
   ALocations: TList; ACurrent:integer);
 var
-  iniFile : TIniFile;
+  iniFile : TCustomIniFile;
   i, nr: integer;
   s: String;
   loc: TLocation;
@@ -246,84 +244,149 @@ begin
   if isNeg then ADegs := -ADegs;
 end;
 
-function StrToDegree(AValue: string): extended;
+
+{ TfrmLocations }
+
+procedure TfrmLocations.btnDelClick(Sender: TObject);
 var
-  p, sgn, len: integer;
-  sd, sm, ss: string;
-  fs: TFormatSettings;
-  d, m, s: Double;
+  p: integer;
 begin
-  AValue := trim(AValue);
-
-  len := Length(AValue);
-  if len = 0 then
-    raise Exception.Create('StrToDegree: Empty string');
-
-  fs := DefaultFormatSettings;
-  if fs.DecimalSeparator = ',' then
-    fs.DecimalSeparator := '.';
-
-  if AValue[1] = '-' then begin
-    sgn := -1;
-    Delete(AValue, 1, 1);
-  end else
-    sgn := +1;
-
-  p := pos(':', AValue);
-  if p = 0 then begin
-    // fractional coordinates
-    if TryStrToFloat(trim(AValue), Result) then
-      exit;
-    if TryStrToFloat(trim(AValue), Result, fs) then
-      exit;
-    raise Exception.Create('Invalid number passed to StrToDegree');
+  p := lbxLocations.ItemIndex;
+  if p > -1 then begin
+    TObject(FLocations[p]).free;
+    FLocations.Delete(p);
+    lbxLocations.Items.Delete(p);
+    lbxLocations.ItemIndex := p-1;
+    lbxlocationsClick(nil);
   end;
-
-  sm := '';
-  ss := '';
-  d := 0;
-  m := 0;
-  s := 0;
-
-  // degree part
-  sd := trim(Copy(AValue, 1, p-1));
-  AValue := trim(Copy(AValue, p+1, MaxInt));
-  if not TryStrToFloat(sd, d) then
-    d := StrToFloat(sd, fs);
-
-  // minute and second parts
-  p := pos(':', AValue);
-  if p > 0 then
-  begin
-    sm := Copy(AValue, 1, p-1);
-    ss := trim(Copy(AValue, p+1, MaxInt));
-  end else begin
-    sm := AValue;
-    ss := '';
-  end;
-
-  if (sm <> '') and not TryStrToFloat(sm, m) then begin
-    m := StrToFloat(sm, fs);
-    if (m < 0) or (m >= 60) then
-      raise Exception.Create('Invalid number in StrToDegree');
-  end;
-  if (ss <> '') and not TryStrToFloat(ss, s) then begin
-    s := StrToFloat(ss, fs);
-    if (s < 0) or (s >= 60) then
-      raise Exception.Create('Invalid number in StrToDegree');
-  end;
-
-  Result := (d + m/60 + s /3600) * sgn;
 end;
 
-procedure TfrmLocations.lbxLocationClick(Sender: TObject);
+procedure TfrmLocations.btnDownClick(Sender: TObject);
+var
+  p: integer;
+begin
+  p := lbxLocations.ItemIndex;
+  if (p > 0) and (p < lbxLocations.Items.Count-1) then begin
+    FLocations.Move(p, p+1);
+    lbxLocations.Items.Move(p, p+1);
+    lbxLocations.ItemIndex := p + 1;
+    lbxLocationsClick(nil);
+  end;
+end;
+
+procedure TfrmLocations.btnImportClick(Sender: TObject);
+var
+  i: Integer;
+  current: String;
+begin
+  if dlg.execute then
+    case dlg.filterindex of
+      1:  begin
+            Screen.Cursor := crHourglass;
+            try
+              if lbxLocations.ItemIndex = -1 then
+                current := ''
+              else
+                current := lbxLocations.Items[lbxLocations.ItemIndex];
+              FreeLocations(FLocations);
+              LoadSTSPlusCityFile(dlg.FileName, FLocations);
+              if FLocations <> nil then begin
+                lbxLocations.Items.BeginUpdate;
+                try
+                  lbxLocations.Items.Clear;
+                  for i:=0 to FLocations.Count-1 do
+                    lbxLocations.Items.Add(TLocation(FLocations[i]).Name);
+                finally
+                  lbxLocations.Items.EndUpdate;
+                  if current <> '' then
+                    lbxLocations.ItemIndex := lbxLocations.Items.IndexOf(current);
+                end;
+              end;
+            finally
+              Screen.Cursor := crDefault;
+            end;
+          end;
+    end;
+end;
+
+procedure TfrmLocations.btnNewClick(Sender: TObject);
+var
+  p: integer;
+  h: TLocation;
+begin
+  h := TLocation.Create;
+  h.Name := SNewLocation;
+  p := FLocations.Add(h);
+  lbxLocations.Items.Add(h.Name);
+  lbxLocations.ItemIndex := p;
+  lbxLocationsClick(nil);
+end;
+
+procedure TfrmLocations.btnOKClick(Sender: TObject);
+begin
+  SaveLocations(MOONTOOL_INIFILE, FLocations, lbxLocations.ItemIndex);
+end;
+
+procedure TfrmLocations.btnUpClick(Sender: TObject);
+var
+  p: integer;
+begin
+  p := lbxLocations.ItemIndex;
+  if (p > 0) then begin
+    FLocations.Move(p, p-1);
+    lbxLocations.Items.Move(p, p-1);
+    lbxLocations.ItemIndex := p - 1;
+    lbxLocationsClick(nil);
+  end;
+end;
+
+procedure TfrmLocations.edtChange(Sender: TObject);
+const
+  SGN: Array[0..1] of Integer = (+1, -1);
+var
+  p: integer;
+  h: TLocation;
+  d,m,s: Integer;
+begin
+  if (FChanging <> 0) then
+    exit;
+  p := lbxLocations.ItemIndex;
+  if p > -1 then begin
+    h := TLocation(FLocations[p]);
+    h.Name := edtName.Text;
+
+    if TryStrToInt(edtLongDeg.Text, d) and TryStrToInt(edtLongMin.Text, m) and
+       TryStrToInt(edtLongSec.Text, s) and (cbxLongSign.ItemIndex > -1)
+    then
+      h.Longitude := (d + m/60 + s/3600) * SGN[cbxLongSign.ItemIndex]
+    else
+      raise Exception.Create('Invalid number in longitude');
+
+    if TryStrToInt(edtLatDeg.Text, d) and TryStrToInt(edtLatMin.Text, m) and
+       TryStrToInt(edtLatSec.Text, s) and (cbxLatSign.ItemIndex > -1)
+    then
+      h.Latitude := (d + m/60 + s/3600) * SGN[cbxLatSign.ItemIndex]
+    else
+      raise Exception.Create('Invalid number in latitude');
+
+    if TryStrToInt(trim(edtAltitude.Text), d) then
+      h.Height := d
+    else
+      raise Exception.Create('Invalid number in altitude');
+
+    lbxLocations.Items[p] := h.Name;
+    lbxLocations.ItemIndex := p;
+  end;
+end;
+
+procedure TfrmLocations.lbxLocationsClick(Sender: TObject);
 var
   h: TLocation;
   d, m, s:Integer;
 begin
-  if lbxLocation.ItemIndex > -1 then begin
+  if lbxLocations.ItemIndex > -1 then begin
     inc(FChanging);
-    h := TLocation(FLocations.Items[lbxLocation.ItemIndex]);
+    h := TLocation(FLocations.Items[lbxLocations.ItemIndex]);
     try
       edtName.Text := h.Name;
 
@@ -359,125 +422,8 @@ begin
     edtAltitude.Text := '';
     btnUp.enabled := false;
   end;
-  btnDown.Enabled := (lbxLocation.ItemIndex > 0) and
-                     (lbxLocation.ItemIndex < lbxLocation.Items.Count - 1)
-end;
-
-procedure TfrmLocations.edtChange(Sender: TObject);
-const
-  SGN: Array[0..1] of Integer = (+1, -1);
-var
-  p: integer;
-  h: TLocation;
-  d,m,s: Integer;
-begin
-  if (FChanging <> 0) then
-    exit;
-  p := lbxLocation.ItemIndex;
-  if p > -1 then begin
-    h := TLocation(FLocations[p]);
-    h.Name := edtName.Text;
-
-    if TryStrToInt(edtLongDeg.Text, d) and TryStrToInt(edtLongMin.Text, m) and
-       TryStrToInt(edtLongSec.Text, s) and (cbxLongSign.ItemIndex > -1)
-    then
-      h.Longitude := (d + m/60 + s/3600) * SGN[cbxLongSign.ItemIndex]
-    else
-      raise Exception.Create('Invalid number in longitude');
-
-    if TryStrToInt(edtLatDeg.Text, d) and TryStrToInt(edtLatMin.Text, m) and
-       TryStrToInt(edtLatSec.Text, s) and (cbxLatSign.ItemIndex > -1)
-    then
-      h.Latitude := (d + m/60 + s/3600) * SGN[cbxLatSign.ItemIndex]
-    else
-      raise Exception.Create('Invalid number in latitude');
-
-    if TryStrToInt(trim(edtAltitude.Text), d) then
-      h.Height := d
-    else
-      raise Exception.Create('Invalid number in altitude');
-
-    lbxLocation.Items[p] := h.Name;
-    lbxLocation.ItemIndex := p;
-  end;
-end;
-
-procedure TfrmLocations.btnDelClick(Sender: TObject);
-var
-  p: integer;
-begin
-  p := lbxLocation.ItemIndex;
-  if p > -1 then begin
-    TObject(FLocations[p]).free;
-    FLocations.Delete(p);
-    lbxLocation.Items.Delete(p);
-    lbxLocation.ItemIndex := p-1;
-    lbxlocationClick(nil);
-  end;
-end;
-
-procedure TfrmLocations.btnUpClick(Sender: TObject);
-var
-  p: integer;
-begin
-  p := lbxLocation.ItemIndex;
-  if (p > 0) then begin
-    FLocations.Move(p, p-1);
-    lbxLocation.Items.Move(p, p-1);
-    lbxLocation.ItemIndex := p - 1;
-    lbxlocationClick(nil);
-  end;
-end;
-
-procedure TfrmLocations.btnDownClick(Sender: TObject);
-var
-  p: integer;
-begin
-  p := lbxLocation.ItemIndex;
-  if (p > 0) and (p < lbxLocation.Items.Count-1) then begin
-    FLocations.Move(p, p+1);
-    lbxLocation.Items.Move(p, p+1);
-    lbxLocation.ItemIndex := p + 1;
-    lbxlocationClick(nil);
-  end;
-end;
-
-procedure TfrmLocations.btnNewClick(Sender: TObject);
-var
-  p: integer;
-  h: TLocation;
-begin
-  h := TLocation.Create;
-  h.Name := SNewLocation;
-  p := FLocations.Add(h);
-  lbxLocation.Items.Add(h.Name);
-  lbxLocation.ItemIndex := p;
-  lbxlocationClick(nil);
-end;
-
-procedure TfrmLocations.btnOKClick(Sender: TObject);
-begin
-  SaveLocations(MOONTOOL_INIFILE, FLocations, lbxLocation.ItemIndex);
-end;
-
-procedure TfrmLocations.FormShow(Sender: TObject);
-var
-  current, i: integer;
-begin
-  UpdateStrings;
-  FreeLocations(FLocations);
-  LoadLocations(MOONTOOL_INIFILE, FLocations, current);
-  lbxLocation.Items.BeginUpdate;
-  try
-    lbxLocation.Items.Clear;
-    if FLocations <> nil then
-      for i:=0 to FLocations.Count-1 do
-        lbxLocation.Items.Add(TLocation(FLocations[i]).Name);
-  finally
-    lbxLocation.Items.EndUpdate;
-  end;
-  lbxLocation.ItemIndex := current;
-  lbxlocationClick(nil);
+  btnDown.Enabled := (lbxLocations.ItemIndex > 0) and
+                     (lbxLocations.ItemIndex < lbxLocations.Items.Count - 1)
 end;
 
 procedure TfrmLocations.FormCreate(Sender: TObject);
@@ -485,39 +431,88 @@ begin
   HelpContext := HC_LOCATIONS;
 end;
 
-procedure TfrmLocations.btnImportClick(Sender: TObject);
+procedure TfrmLocations.FormShow(Sender: TObject);
 var
-  i: Integer;
-  current: String;
+  current, i: integer;
 begin
-  if dlg.execute then
-    case dlg.filterindex of
-      1:  begin
-            Screen.Cursor := crHourglass;
-            try
-              if lbxLocation.ItemIndex = -1 then
-                current := ''
-              else
-                current := lbxLocation.Items[lbxLocation.ItemIndex];
-              FreeLocations(FLocations);
-              LoadSTSPlusCityFile(dlg.FileName, FLocations);
-              if FLocations <> nil then begin
-                lbxLocation.Items.BeginUpdate;
-                try
-                  lbxLocation.Items.Clear;
-                  for i:=0 to FLocations.Count-1 do
-                    lbxLocation.Items.Add(TLocation(FLocations[i]).Name);
-                finally
-                  lbxLocation.Items.EndUpdate;
-                  if current <> '' then
-                    lbxLocation.ItemIndex := lbxLocation.Items.IndexOf(current);
-                end;
-              end;
-            finally
-              Screen.Cursor := crDefault;
-            end;
-          end;
-    end;
+  UpdateStrings;
+  UpdateLayout;
+
+  FreeLocations(FLocations);
+  LoadLocations(MOONTOOL_INIFILE, FLocations, current);
+  lbxLocations.Items.BeginUpdate;
+  try
+    lbxLocations.Items.Clear;
+    if FLocations <> nil then
+      for i:=0 to FLocations.Count-1 do
+        lbxLocations.Items.Add(TLocation(FLocations[i]).Name);
+  finally
+    lbxLocations.Items.EndUpdate;
+  end;
+  lbxLocations.ItemIndex := current;
+  lbxLocationsClick(nil);
+end;
+
+procedure TfrmLocations.Updatelayout;
+const
+  DISTANCE = 8;
+  BTN_DISTANCE = 4;
+var
+  w: Integer;
+  i: Integer;
+begin
+  w := Max(Max(lblLongitude.Width, lblLatitude.Width), lblAltitude.Width);
+
+  lblName.Left := lbxLocations.Left;
+  lblLongitude.Left := lbxLocations.Left;
+  lblLatitude.Left := lbxLocations.Left;
+  lblAltitude.Left := lbxLocations.Left;
+
+  edtName.Left := lblName.Left + DISTANCE + w;
+  edtLongDeg.Left := edtName.Left;
+  edtLatDeg.Left := edtName.Left;
+  edtAltitude.Left := edtName.Left;
+
+  lblLongDeg.Left := edtLongDeg.Left + edtLongDeg.Width + DISTANCE;
+  lblLatDeg.Left := lblLongDeg.Left;
+  lblAltitudeUnit.Left := lblLongDeg.Left;
+
+  edtLongMin.Left := lblLongDeg.Left + lblLongDeg.Width + DISTANCE;
+  edtLatMin.Left := edtLongMin.Left;
+
+  lblLongMin.Left := edtLongMin.Left + edtLongMin.Width + DISTANCE;
+  lblLatMin.Left := lblLongMin.Left;
+
+  edtLongSec.Left := lblLongMin.Left + lblLongMin.Width + DISTANCE;
+  edtLatSec.Left := edtLongSec.Left;
+
+  lblLongSec.Left := edtLongSec.Left + edtLongSec.Width + DISTANCE;
+  lblLatSec.Left := lblLongSec.Left;
+
+  cbxLongSign.Left := lblLongSec.Left + lblLongSec.Width + DISTANCE;
+  cbxLatSign.Left := cbxLongSign.Left;
+
+  edtName.Width := cbxLatSign.Left + cbxLatSign.Width - edtName.Left;
+
+  btnUp.Left := edtName.Left + edtName.Width - btnUp.Width;
+  btnDown.Left := btnUp.Left;
+  btnNew.Left := btnUp.Left;
+  btnDel.Left := btnUp.Left;
+
+  lbxLocations.Width := btnUp.Left - BTN_DISTANCE - lbxLocations.Left;
+
+  btnImport.Left := lbxLocations.Left;
+  btnCancel.Left := edtName.Left + edtName.Width - btnCancel.Width;
+  btnOK.Left := btnCancel.Left - DISTANCE - btnOK.Width;
+
+  ClientWidth := edtName.Left + edtName.Width + lblName.Left;
+
+  // Vertically Center labels within their FocusControls
+  for i:=0 to ControlCount-1 do
+    if Controls[i] is TLabel then
+      with TLabel(Controls[i]) do
+        if FocusControl <> nil then
+          Top := FocusControl.Top + (FocusControl.Height - Height) div 2;
 end;
 
 procedure TfrmLocations.UpdateStrings;
@@ -526,7 +521,7 @@ begin
   btnOK.Caption := SOKButton;
   btnCancel.Caption := SCancelButton;
   lblLatitude.Caption := SLatitude;
-  lbl_Longitude.Caption := SLongitude;
+  lblLongitude.Caption := SLongitude;
   lblAltitude.Caption := SAltitude;
   lblLongDeg.Caption := SDegreeAbbrev;
   lblLatDeg.Caption := SDegreeAbbrev;

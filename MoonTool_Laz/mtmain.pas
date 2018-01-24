@@ -149,8 +149,8 @@ uses
   Translations,
   {$endif}
   Math, mtStrings, mtConst, mtUtils,
-  mtAbout, //, mtMoreDataForm, mtLocation,
-  mtUTCForm, mtJulianForm, mtJewishForm;
+  mtAbout, //, mtMoreDataForm,
+  mtLocation, mtUTCForm, mtJulianForm, mtJewishForm;
 
 {$ifdef fpc}
   {$R *.lfm}
@@ -400,7 +400,7 @@ end;
 
 procedure TMainForm.mnuLocationsClick(Sender: TObject);
 begin
-  //frmLocations.ShowModal;
+  frmLocations.ShowModal;
 end;
 
 procedure TMainForm.mnuMoreDataClick(Sender: TObject);

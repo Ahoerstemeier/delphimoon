@@ -6,7 +6,7 @@ uses
   {$ifdef fpc}
   LCLIntf, LCLType,
   {$else}
-  WinTypes, WinProcs, Messages,
+  Windows, Messages,
   {$endif}
   SysUtils, Classes, Graphics, Controls,
   Forms, Dialogs, ExtCtrls, StdCtrls,
@@ -111,16 +111,12 @@ implementation
 
 uses
   Math,
-{$ifdef fpc}
-  mtStrings,
-{$endif}
-  mtConst, mtUtils;
+  mtStrings, mtConst, mtUtils;
 
 {$ifdef FPC}
  {$R *.lfm}
 {$else}
- {$R *.lfm}
-{$i moontool.inc }
+ {$R *.dfm}
 {$endif}
 
 var

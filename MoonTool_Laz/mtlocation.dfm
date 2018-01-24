@@ -1,26 +1,31 @@
 object frmLocations: TfrmLocations
   Left = 301
-  Height = 345
   Top = 76
-  Width = 358
   BorderIcons = [biSystemMenu]
   BorderStyle = bsSingle
   Caption = 'Locations'
   ClientHeight = 345
   ClientWidth = 358
   Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'MS Sans Serif'
+  Font.Style = []
+  OldCreateOrder = True
+  ShowHint = True
   OnCreate = FormCreate
   OnShow = FormShow
-  ShowHint = True
-  LCLVersion = '1.9.0.0'
+  DesignSize = (
+    358
+    345)
+  PixelsPerInch = 96
+  TextHeight = 13
   object btnUp: TSpeedButton
-    AnchorSideRight.Side = asrBottom
     Left = 332
-    Height = 22
     Top = 8
     Width = 22
-    BorderSpacing.Right = 4
+    Height = 22
     Glyph.Data = {
       36040000424D3604000000000000360000002800000010000000100000000100
       2000000000000004000064000000640000000000000000000000000000000000
@@ -55,17 +60,14 @@ object frmLocations: TfrmLocations
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
-      0000000000000000000000000000000000000000000000000000
-    }
+      0000000000000000000000000000000000000000000000000000}
     OnClick = btnUpClick
   end
   object btnDown: TSpeedButton
-    AnchorSideTop.Side = asrBottom
-    AnchorSideRight.Side = asrBottom
     Left = 332
-    Height = 22
     Top = 30
     Width = 22
+    Height = 22
     Glyph.Data = {
       36040000424D3604000000000000360000002800000010000000100000000100
       2000000000000004000064000000640000000000000000000000000000000000
@@ -100,18 +102,14 @@ object frmLocations: TfrmLocations
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
-      0000000000000000000000000000000000000000000000000000
-    }
+      0000000000000000000000000000000000000000000000000000}
     OnClick = btnDownClick
   end
   object btnNew: TSpeedButton
-    AnchorSideTop.Side = asrBottom
-    AnchorSideRight.Side = asrBottom
     Left = 332
-    Height = 22
     Top = 56
     Width = 22
-    BorderSpacing.Top = 4
+    Height = 22
     Glyph.Data = {
       36040000424D3604000000000000360000002800000010000000100000000100
       2000000000000004000064000000640000000000000000000000000000000000
@@ -146,37 +144,34 @@ object frmLocations: TfrmLocations
       000000000000000000000000000000000008000000340000006C0000006C0000
       0034000000080000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
-      0000000000000000000000000000000000000000000000000000
-    }
+      0000000000000000000000000000000000000000000000000000}
     OnClick = btnNewClick
   end
   object lblLongitude: TLabel
-    AnchorSideTop.Side = asrCenter
     Left = 8
-    Height = 15
     Top = 224
-    Width = 57
+    Width = 50
+    Height = 13
     Caption = 'Longitude:'
+    Color = clBtnFace
     FocusControl = edtLongDeg
     ParentColor = False
   end
   object lblLatitude: TLabel
-    AnchorSideTop.Side = asrCenter
     Left = 8
-    Height = 15
     Top = 251
-    Width = 46
+    Width = 41
+    Height = 13
     Caption = 'Latitude:'
+    Color = clBtnFace
     FocusControl = edtLatDeg
     ParentColor = False
   end
   object btnDel: TSpeedButton
-    AnchorSideTop.Side = asrBottom
-    AnchorSideRight.Side = asrBottom
     Left = 332
-    Height = 22
     Top = 78
     Width = 22
+    Height = 22
     Glyph.Data = {
       36040000424D3604000000000000360000002800000010000000100000000100
       2000000000000004000064000000640000000000000000000000000000000000
@@ -211,315 +206,240 @@ object frmLocations: TfrmLocations
       000000000000000000000000000000000008000000340000006C0000006C0000
       0034000000080000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
-      0000000000000000000000000000000000000000000000000000
-    }
+      0000000000000000000000000000000000000000000000000000}
     OnClick = btnDelClick
   end
   object lblAltitude: TLabel
-    AnchorSideTop.Side = asrCenter
     Left = 9
-    Height = 15
     Top = 272
-    Width = 45
+    Width = 38
+    Height = 13
     Caption = 'Altitude:'
+    Color = clBtnFace
     FocusControl = edtAltitude
     ParentColor = False
   end
+  object lblLongSec: TLabel
+    Left = 269
+    Top = 224
+    Width = 17
+    Height = 13
+    Caption = 'sec'
+    Color = clBtnFace
+    FocusControl = edtLongSec
+    ParentColor = False
+  end
+  object lblLatSec: TLabel
+    Left = 269
+    Top = 251
+    Width = 17
+    Height = 13
+    Caption = 'sec'
+    Color = clBtnFace
+    FocusControl = edtLatSec
+    ParentColor = False
+  end
+  object lblLongDeg: TLabel
+    Left = 125
+    Top = 224
+    Width = 18
+    Height = 13
+    Caption = 'deg'
+    Color = clBtnFace
+    FocusControl = edtLongDeg
+    ParentColor = False
+  end
+  object lblLatDeg: TLabel
+    Left = 125
+    Top = 251
+    Width = 18
+    Height = 13
+    Caption = 'deg'
+    Color = clBtnFace
+    FocusControl = edtLatDeg
+    ParentColor = False
+  end
+  object lblName: TLabel
+    Left = 8
+    Top = 197
+    Width = 31
+    Height = 13
+    Caption = 'Name:'
+    Color = clBtnFace
+    FocusControl = edtName
+    ParentColor = False
+  end
+  object lblLatMin: TLabel
+    Left = 197
+    Top = 251
+    Width = 18
+    Height = 13
+    Caption = 'deg'
+    Color = clBtnFace
+    FocusControl = edtLatMin
+    ParentColor = False
+  end
+  object lblLongMin: TLabel
+    Left = 197
+    Top = 224
+    Width = 18
+    Height = 13
+    Caption = 'deg'
+    Color = clBtnFace
+    FocusControl = edtLongMin
+    ParentColor = False
+  end
+  object lblAltitudeUnit: TLabel
+    Left = 125
+    Top = 278
+    Width = 8
+    Height = 13
+    Caption = 'm'
+    Color = clBtnFace
+    ParentColor = False
+  end
+  object Bevel1: TBevel
+    Left = 8
+    Top = 305
+    Width = 342
+    Height = 3
+    Anchors = [akLeft, akTop, akRight]
+    Shape = bsTopLine
+  end
   object lbxLocations: TListBox
     Left = 8
-    Height = 177
     Top = 8
     Width = 320
-    BorderSpacing.Left = 8
-    BorderSpacing.Top = 8
-    BorderSpacing.Right = 4
-    ItemHeight = 0
-    OnClick = lbxLocationsClick
+    Height = 177
+    ItemHeight = 13
     TabOrder = 0
+    OnClick = lbxLocationsClick
   end
   object edtName: TEdit
-    AnchorSideLeft.Control = lblLongitude
-    AnchorSideLeft.Side = asrBottom
-    AnchorSideTop.Control = lbxLocations
-    AnchorSideTop.Side = asrBottom
-    AnchorSideRight.Side = asrBottom
     Left = 81
-    Height = 23
     Top = 193
     Width = 271
-    BorderSpacing.Left = 16
-    BorderSpacing.Top = 8
-    BorderSpacing.Right = 8
-    OnChange = edtChange
+    Height = 21
     TabOrder = 1
+    OnChange = edtChange
   end
   object btnOK: TButton
     Left = 196
-    Height = 25
     Top = 313
     Width = 75
-    BorderSpacing.Right = 4
+    Height = 25
     Caption = 'OK'
     Default = True
     ModalResult = 1
-    OnClick = btnOKClick
     TabOrder = 12
+    OnClick = btnOKClick
   end
   object btnCancel: TButton
-    AnchorSideRight.Side = asrBottom
     Left = 275
-    Height = 25
     Top = 313
     Width = 75
-    BorderSpacing.Top = 8
-    BorderSpacing.Right = 8
-    BorderSpacing.Bottom = 8
+    Height = 25
     Caption = 'Cancel'
     ModalResult = 2
     TabOrder = 13
   end
   object btnImport: TButton
     Left = 8
-    Height = 25
     Top = 312
     Width = 75
-    BorderSpacing.Left = 8
-    BorderSpacing.Bottom = 8
+    Height = 25
     Caption = 'Import'
-    OnClick = btnImportClick
     TabOrder = 11
+    OnClick = btnImportClick
   end
   object edtLongDeg: TEdit
-    AnchorSideTop.Side = asrBottom
     Left = 81
-    Height = 23
     Top = 220
     Width = 40
-    Alignment = taRightJustify
-    BorderSpacing.Top = 4
-    OnChange = edtChange
+    Height = 21
     TabOrder = 2
+    OnChange = edtChange
   end
   object edtLatDeg: TEdit
-    AnchorSideTop.Side = asrBottom
     Left = 81
-    Height = 23
     Top = 247
     Width = 40
-    Alignment = taRightJustify
-    BorderSpacing.Top = 4
-    OnChange = edtChange
+    Height = 21
     TabOrder = 6
+    OnChange = edtChange
   end
   object edtLongMin: TEdit
-    AnchorSideLeft.Side = asrBottom
     Left = 153
-    Height = 23
     Top = 220
     Width = 40
-    Alignment = taRightJustify
-    BorderSpacing.Left = 8
-    OnChange = edtChange
+    Height = 21
     TabOrder = 3
+    OnChange = edtChange
   end
   object edtLatMin: TEdit
-    AnchorSideLeft.Side = asrBottom
     Left = 153
-    Height = 23
     Top = 247
     Width = 40
-    Alignment = taRightJustify
-    BorderSpacing.Left = 8
-    OnChange = edtChange
+    Height = 21
     TabOrder = 7
+    OnChange = edtChange
   end
   object edtLongSec: TEdit
-    AnchorSideLeft.Side = asrBottom
     Left = 225
-    Height = 23
     Top = 220
     Width = 40
-    Alignment = taRightJustify
-    BorderSpacing.Left = 8
-    OnChange = edtChange
+    Height = 21
     TabOrder = 4
+    OnChange = edtChange
   end
   object edtLatSec: TEdit
-    AnchorSideLeft.Side = asrBottom
     Left = 225
-    Height = 23
     Top = 247
     Width = 40
-    Alignment = taRightJustify
-    BorderSpacing.Left = 8
-    OnChange = edtChange
+    Height = 21
     TabOrder = 8
-  end
-  object lblLongSec: TLabel
-    AnchorSideLeft.Side = asrBottom
-    AnchorSideTop.Side = asrCenter
-    Left = 269
-    Height = 15
-    Top = 224
-    Width = 17
-    BorderSpacing.Left = 4
-    Caption = 'sec'
-    FocusControl = edtLongSec
-    ParentColor = False
-  end
-  object lblLatSec: TLabel
-    AnchorSideLeft.Side = asrBottom
-    AnchorSideTop.Side = asrCenter
-    Left = 269
-    Height = 15
-    Top = 251
-    Width = 17
-    BorderSpacing.Left = 4
-    Caption = 'sec'
-    FocusControl = edtLatSec
-    ParentColor = False
-  end
-  object lblLongDeg: TLabel
-    AnchorSideLeft.Side = asrBottom
-    AnchorSideTop.Side = asrCenter
-    Left = 125
-    Height = 15
-    Top = 224
-    Width = 20
-    BorderSpacing.Left = 4
-    Caption = 'deg'
-    FocusControl = edtLongDeg
-    ParentColor = False
-  end
-  object lblLatDeg: TLabel
-    AnchorSideLeft.Side = asrBottom
-    AnchorSideTop.Side = asrCenter
-    Left = 125
-    Height = 15
-    Top = 251
-    Width = 20
-    BorderSpacing.Left = 4
-    Caption = 'deg'
-    FocusControl = edtLatDeg
-    ParentColor = False
-  end
-  object lblName: TLabel
-    AnchorSideTop.Side = asrCenter
-    Left = 8
-    Height = 15
-    Top = 197
-    Width = 35
-    Caption = 'Name:'
-    FocusControl = edtName
-    ParentColor = False
-  end
-  object lblLatMin: TLabel
-    AnchorSideLeft.Control = edtLatMin
-    AnchorSideLeft.Side = asrBottom
-    AnchorSideTop.Control = edtLatDeg
-    AnchorSideTop.Side = asrCenter
-    Left = 197
-    Height = 15
-    Top = 251
-    Width = 20
-    BorderSpacing.Left = 4
-    Caption = 'deg'
-    FocusControl = edtLatMin
-    ParentColor = False
-  end
-  object lblLongMin: TLabel
-    AnchorSideLeft.Side = asrBottom
-    AnchorSideTop.Side = asrCenter
-    Left = 197
-    Height = 15
-    Top = 224
-    Width = 20
-    BorderSpacing.Left = 4
-    Caption = 'deg'
-    FocusControl = edtLongMin
-    ParentColor = False
+    OnChange = edtChange
   end
   object cbxLongSign: TComboBox
-    AnchorSideLeft.Side = asrBottom
-    AnchorSideTop.Side = asrCenter
     Left = 294
-    Height = 23
     Top = 220
     Width = 56
-    BorderSpacing.Left = 8
-    BorderSpacing.Right = 8
-    ItemHeight = 15
+    Height = 21
+    Style = csDropDownList
+    ItemHeight = 13
+    TabOrder = 5
+    OnChange = edtChange
     Items.Strings = (
       'W'
-      'E'
-    )
-    OnChange = edtChange
-    Style = csDropDownList
-    TabOrder = 5
+      'E')
   end
   object cbxLatSign: TComboBox
-    AnchorSideLeft.Side = asrBottom
-    AnchorSideTop.Side = asrCenter
     Left = 294
-    Height = 23
     Top = 247
     Width = 56
-    BorderSpacing.Left = 8
-    BorderSpacing.Right = 8
-    ItemHeight = 15
+    Height = 21
+    Style = csDropDownList
+    ItemHeight = 13
+    TabOrder = 9
+    OnChange = edtChange
     Items.Strings = (
       'N'
-      'S'
-    )
-    OnChange = edtChange
-    Style = csDropDownList
-    TabOrder = 9
-  end
-  object lblAltitudeUnit: TLabel
-    AnchorSideLeft.Side = asrBottom
-    AnchorSideTop.Side = asrCenter
-    Left = 125
-    Height = 15
-    Top = 278
-    Width = 11
-    BorderSpacing.Left = 4
-    Caption = 'm'
-    ParentColor = False
+      'S')
   end
   object edtAltitude: TEdit
-    AnchorSideTop.Side = asrBottom
-    AnchorSideRight.Side = asrBottom
     Left = 81
-    Height = 23
     Top = 274
     Width = 40
-    Alignment = taRightJustify
-    BorderSpacing.Top = 4
+    Height = 21
     MaxLength = 4
-    OnChange = edtChange
     TabOrder = 10
     Text = '   0'
-  end
-  object Bevel1: TBevel
-    AnchorSideLeft.Control = Owner
-    AnchorSideTop.Control = edtAltitude
-    AnchorSideTop.Side = asrBottom
-    AnchorSideRight.Control = Owner
-    AnchorSideRight.Side = asrBottom
-    Left = 8
-    Height = 3
-    Top = 305
-    Width = 342
-    Anchors = [akTop, akLeft, akRight]
-    BorderSpacing.Left = 8
-    BorderSpacing.Top = 8
-    BorderSpacing.Right = 8
-    Shape = bsTopLine
+    OnChange = edtChange
   end
   object dlg: TOpenDialog
     Filter = 'STSplus city files (*.cty)|*.cty'
     Options = [ofPathMustExist, ofFileMustExist]
-    left = 88
-    top = 40
+    Left = 88
+    Top = 40
   end
 end

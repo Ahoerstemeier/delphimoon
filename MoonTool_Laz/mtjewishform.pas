@@ -6,12 +6,7 @@ uses
 {$ifdef fpc}
   LCLIntf, LCLType, LMessages,
 {$else}
- {$ifdef ver80 }
-  winprocs, wintypes,
- {$else }
-  Windows,
- {$endif }
-  Messages, consts,
+  Windows, Messages, Consts,
 {$endif}
   SysUtils, Classes, Graphics, Controls, Forms, Dialogs, StdCtrls, moon;
 
@@ -48,8 +43,9 @@ type
     FDate: TDateTime;
     FChanging: Integer;
     procedure SetDate(AValue: TDateTime);
-    procedure UpdateControls;
+    procedure UpdateLayout;
     procedure UpdateStrings;
+    procedure UpdateValues;
   public
     property Date: TDateTime read FDate write SetDate;
   end;
@@ -61,23 +57,17 @@ var
 implementation
 
 uses
- {$ifdef fpc}
-  mtStrings,
- {$endif}
-  mtConst, mtUtils;
+  mtStrings, mtConst, mtUtils;
 
 {$ifdef fpc}
  {$R *.lfm}
 {$else}
- {$R *.lfm}
- {$i moontool.inc }
+ {$R *.dfm}
 {$endif}
-
-//{$i ah_def.inc }
 
 procedure TfrmJewish.btnNowClick(Sender: TObject);
 begin
-  SetDate(now);
+  SetDate(Now());
 end;
 
 procedure TfrmJewish.ChristianChange(Sender: TObject);
@@ -91,7 +81,7 @@ begin
      TryStrToInt(edtDay.Text, d) and
      TryEncodeDate(y, cbxMonth.ItemIndex+1, d, FDate) then
   begin
-    UpdateControls;
+    UpdateValues;
     btnOK.Enabled := true;
   end else begin
     lblJulian.Caption := SInvalid;
@@ -109,7 +99,7 @@ end;
 procedure TfrmJewish.FormShow(Sender: TObject);
 begin
   UpdateStrings;
-  UpdateControls;
+  UpdateValues;
 end;
 
 procedure TfrmJewish.JewishChange(Sender: TObject);
@@ -126,7 +116,7 @@ begin
   begin
     try
       FDate := EncodeDateJewish(y, cbxMonthJewish.itemindex+1, d);
-      UpdateControls;
+      UpdateValues;
       valid := true;
     except
     end;
@@ -138,27 +128,18 @@ end;
 procedure TfrmJewish.SetDate(AValue: TDateTime);
 begin
   FDate := AValue;
-  UpdateControls;
+  UpdateValues;
 end;
 
-procedure TfrmJewish.UpdateControls;
-var
-  y, m, d: word;
+procedure TfrmJewish.UpdateLayout;
 begin
-  inc(FChanging);
-  try
-    DecodeDateCorrect(FDate, y, m, d);
-    edtYear.Text := IntToStr(y);
-    cbxMonth.ItemIndex := m - 1;
-    edtDay.Text := IntToStr(d);
-    DecodeDateJewish(date, y, m, d);
-    edtYearJewish.Text := IntToStr(y);
-    cbxMonthJewish.ItemIndex := m - 1;
-    edtDayJewish.Text := IntToStr(d);
-    lblJulian.Caption := FloatToStrF(Julian_date(int(FDate)), ffFixed, 12, 5);
-  finally
-    dec(FChanging);
-  end;
+  CenterAboveControl(lblYear, edtYear);
+  CenterAboveControl(lblMonth, cbxMonth);
+  CenterAboveControl(lblDay, edtDay);
+
+  CenterAboveControl(lblYearJewish, edtYearJewish);
+  CenterAboveControl(lblMonthJewish, cbxMonthJewish);
+  CenterAboveControl(lblDayJewish, edtDayJewish);
 end;
 
 procedure TfrmJewish.UpdateStrings;
@@ -186,6 +167,28 @@ begin
   cbxMonthJewish.Items.Clear;
   for i:=1 to 13 do
     cbxMonthJewish.Items.Add(Jewish_Month_Name[i]);
+
+  UpdateLayout;
+end;
+
+procedure TfrmJewish.UpdateValues;
+var
+  y, m, d: word;
+begin
+  inc(FChanging);
+  try
+    DecodeDateCorrect(FDate, y, m, d);
+    edtYear.Text := IntToStr(y);
+    cbxMonth.ItemIndex := m - 1;
+    edtDay.Text := IntToStr(d);
+    DecodeDateJewish(date, y, m, d);
+    edtYearJewish.Text := IntToStr(y);
+    cbxMonthJewish.ItemIndex := m - 1;
+    edtDayJewish.Text := IntToStr(d);
+    lblJulian.Caption := FloatToStrF(Julian_date(int(FDate)), ffFixed, 12, 5);
+  finally
+    dec(FChanging);
+  end;
 end;
 
 end.

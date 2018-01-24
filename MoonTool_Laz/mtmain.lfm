@@ -1,12 +1,13 @@
 object MainForm: TMainForm
   Left = 365
-  Height = 554
+  Height = 324
   Top = 126
   Width = 377
   AutoSize = True
   BorderIcons = [biSystemMenu, biMinimize]
+  BorderStyle = bsSingle
   Caption = 'Moontool'
-  ClientHeight = 534
+  ClientHeight = 304
   ClientWidth = 377
   Color = clBtnFace
   Font.Color = clWindowText

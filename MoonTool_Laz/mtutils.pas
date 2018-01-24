@@ -7,7 +7,7 @@ unit mtUtils;
 interface
 
 uses
-  Classes, SysUtils, Moon;
+  Classes, SysUtils, Moon, Controls, StdCtrls;
 
 function DateToString(ADateTime: TDateTime): string;
 function UTCDateString(ADateTime: TDateTime): string;
@@ -23,6 +23,7 @@ function GetOSLanguage: String;
 function GetMoonName(AMoon: TMoonName): String;
 function GetZodiacName(AZodiac: TZodiac): String;
 
+procedure CenterAboveControl(ALabel: TLabel; AControl: TWinControl);
 
 implementation
 
@@ -203,6 +204,17 @@ begin
     z_pisces      : Result := SPisces;
   end;
 end;
+
+
+procedure CenterAboveControl(ALabel: TLabel; AControl: TWinControl);
+begin
+  ALabel.Autosize := false;
+  ALabel.Autosize := false;
+  ALabel.Left := AControl.Left;
+  ALabel.Width := AControl.Width;
+  ALabel.Top := AControl.Top - ALabel.Height - 1;
+end;
+
 
 end.
 

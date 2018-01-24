@@ -1314,6 +1314,10 @@ msgctxt "tfrmutc.btnok.caption"
 msgid "OK"
 msgstr ""
 
+#: tfrmutc.caption
+msgid "Set universal time"
+msgstr ""
+
 #: tfrmutc.edtday.text
 msgctxt "tfrmutc.edtday.text"
 msgid "1"
@@ -1342,6 +1346,11 @@ msgstr ""
 #: tfrmutc.grpjulian.caption
 msgctxt "tfrmutc.grpjulian.caption"
 msgid "Julian date"
+msgstr ""
+
+#: tfrmutc.grputc.caption
+msgctxt "tfrmutc.grputc.caption"
+msgid "Universal time"
 msgstr ""
 
 #: tfrmutc.lblday.caption

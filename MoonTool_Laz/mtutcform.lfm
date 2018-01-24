@@ -4,7 +4,7 @@ object frmUTC: TfrmUTC
   Top = 143
   Width = 299
   BorderIcons = [biSystemMenu]
-  BorderStyle = bsSingle
+  BorderStyle = bsDialog
   Caption = 'Set universal time'
   ClientHeight = 263
   ClientWidth = 299
@@ -15,77 +15,71 @@ object frmUTC: TfrmUTC
   LCLVersion = '1.9.0.0'
   object grpUTC: TGroupBox
     Left = 8
-    Height = 145
+    Height = 136
     Top = 8
     Width = 281
     Caption = 'Universal time'
-    ClientHeight = 125
+    ClientHeight = 116
     ClientWidth = 277
     TabOrder = 0
     object lblYear: TLabel
-      Left = 8
-      Height = 13
-      Top = 16
-      Width = 57
+      Left = 16
+      Height = 15
+      Top = 8
+      Width = 22
       Alignment = taCenter
-      AutoSize = False
       Caption = 'Year'
       ParentColor = False
     end
     object lblMonth: TLabel
-      Left = 72
-      Height = 13
-      Top = 16
-      Width = 129
+      Left = 112
+      Height = 15
+      Top = 8
+      Width = 36
       Alignment = taCenter
-      AutoSize = False
       Caption = 'Month'
       ParentColor = False
     end
     object lblDay: TLabel
-      Left = 208
-      Height = 13
-      Top = 16
-      Width = 57
+      Left = 216
+      Height = 15
+      Top = 8
+      Width = 20
       Alignment = taCenter
-      AutoSize = False
       Caption = 'Day'
       ParentColor = False
     end
     object lblHour: TLabel
-      Left = 8
-      Height = 13
-      Top = 72
-      Width = 57
+      Left = 16
+      Height = 15
+      Top = 64
+      Width = 27
       Alignment = taCenter
-      AutoSize = False
       Caption = 'Hour'
       ParentColor = False
     end
     object lblSec: TLabel
-      Left = 208
-      Height = 13
-      Top = 72
-      Width = 57
+      Left = 216
+      Height = 15
+      Top = 64
+      Width = 39
       Alignment = taCenter
-      AutoSize = False
       Caption = 'Second'
       ParentColor = False
     end
     object lblMin: TLabel
-      Left = 104
-      Height = 13
-      Top = 72
-      Width = 57
+      Left = 115
+      Height = 15
+      Top = 64
+      Width = 38
       Alignment = taCenter
-      AutoSize = False
       Caption = 'Minute'
       ParentColor = False
     end
     object edtYear: TEdit
       Left = 16
       Height = 23
-      Top = 32
+      Top = 24
       Width = 41
       Alignment = taRightJustify
       OnChange = anyChange
@@ -95,7 +89,7 @@ object frmUTC: TfrmUTC
     object cbxMonth: TComboBox
       Left = 72
       Height = 23
-      Top = 32
+      Top = 24
       Width = 129
       ItemHeight = 15
       OnChange = anyChange
@@ -105,7 +99,7 @@ object frmUTC: TfrmUTC
     object edtDay: TEdit
       Left = 216
       Height = 23
-      Top = 32
+      Top = 24
       Width = 41
       Alignment = taRightJustify
       OnChange = anyChange
@@ -115,7 +109,7 @@ object frmUTC: TfrmUTC
     object edtHour: TEdit
       Left = 16
       Height = 23
-      Top = 88
+      Top = 80
       Width = 41
       Alignment = taRightJustify
       OnChange = anyChange
@@ -125,7 +119,7 @@ object frmUTC: TfrmUTC
     object edtMin: TEdit
       Left = 112
       Height = 23
-      Top = 88
+      Top = 80
       Width = 41
       Alignment = taRightJustify
       OnChange = anyChange
@@ -135,7 +129,7 @@ object frmUTC: TfrmUTC
     object edtSec: TEdit
       Left = 216
       Height = 23
-      Top = 88
+      Top = 80
       Width = 41
       Alignment = taRightJustify
       OnChange = anyChange
@@ -162,7 +156,7 @@ object frmUTC: TfrmUTC
     end
   end
   object btnNow: TButton
-    Left = 40
+    Left = 8
     Height = 25
     Top = 232
     Width = 75

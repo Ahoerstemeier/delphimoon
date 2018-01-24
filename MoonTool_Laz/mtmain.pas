@@ -149,7 +149,8 @@ uses
   Translations,
   {$endif}
   Math, mtStrings, mtConst, mtUtils,
-  mtAbout; //, mtMoreDataForm, mtJulianForm, mtUTCForm, mtLocation, mtJewishForm;
+  mtAbout, //, mtMoreDataForm, mtLocation,
+  mtUTCForm, mtJulianForm, mtJewishForm;
 
 {$ifdef fpc}
   {$R *.lfm}
@@ -347,38 +348,38 @@ procedure TMainForm.mnuJewishClick(Sender: TObject);
 var
   bias: TDateTime;
 begin
-(*
   if frmJewish = nil then
     frmJewish := TfrmJewish.Create(Application);
   bias := TimeZoneBias/(60*24);
   frmJewish.Date := FStartTime + (now - FFirstNow) + bias;
   if frmJewish.ShowModal = mrOk then begin
     FStartTime := frmJewish.Date - (now - FFirstNow) - bias;
-    UpdateControls;
+    UpdateValues;
+    (*
     if frmMoreData = nil then
       frmMoreData := TfrmMoreData.Create(Application);
     frmMoreData.StartTime := FStartTime;
+    *)
   end;
-  *)
 end;
 
 procedure TMainForm.mnuJulianClick(Sender: TObject);
 var
   bias: TDateTime;
 begin
-(*
   if frmJulian = nil then
     frmJulian := TfrmJulian.Create(Application);
   bias := TimeZoneBias / (60*24);
   frmJulian.Date := FStartTime + (now - FFirstNow) + bias;
   if frmJulian.ShowModal = mrOk then begin
     FStartTime := frmJulian.Date - (now - FFirstNow) - bias;
-    UpdateControls;
+    UpdateValues;
+    (*
     if frmMoreData = nil then
       frmMoreData := TfrmMoreData.Create(Application);
     frmMoredata.StartTime := FStartTime;
+    *)
   end;
-  *)
 end;
 
 procedure TMainForm.mnuLanguageClick(Sender: TObject);
@@ -426,6 +427,8 @@ begin
 end;
 
 procedure TMainForm.mnuSpeedUpClick(Sender: TObject);
+const
+  INTERVALS: array[0..2] of Integer = (1000, 1000, 100);
 var
   i: Integer;
 begin
@@ -435,6 +438,7 @@ begin
     FSpeed := 1
   else if Sender = mnuVeryFastMode then
     FSpeed := 2;
+  Timer.Interval := INTERVALS[FSpeed];
 
   for i:=0 to mnuSpeed.Count-1 do
     mnuSpeed.Items[i].Checked := (mnuSpeed.Items[i] = Sender);
@@ -460,19 +464,19 @@ procedure TMainForm.mnuUTCClick(Sender: TObject);
 var
   bias: TDateTime;
 begin
-(*
   if frmUTC = nil then
     frmUTC := TfrmUTC.Create(Application);
-  bias := TimeZoneBias/(60*24);
+  bias := TimeZoneBias / (60*24);
   frmUTC.Date := FStartTime + (now - FFirstNow) + bias;
   if frmUTC.ShowModal = mrOk then begin
     FStartTime := frmUTC.Date - (now - FFirstNow) - bias;
-    UpdateControls;
+    UpdateLayout;
+    (*
     if frmMoreData = nil then
       frmMoreData := TfrmMoreData.Create(Application);
     frmMoreData.StartTime := FStartTime;
+    *)
   end;
-  *)
 end;
 
 procedure TMainForm.SelectLanguage(ALang: string);
@@ -483,8 +487,8 @@ var
   fn: String;
   langdir: String;
 begin
-(*
   Lang := lowercase(ALang);
+  (*
 
   // Update formatsettings (for month names etc)
   GetFormatSettingsFromLangCode(Lang, LocalFormatSettings);
@@ -570,12 +574,10 @@ begin
       2: begin
            Controls[i].Left := valuePos;
            valueWidth_Moon := Max(valueWidth_Moon, Controls[i].Width);
-//           valueWidth_Moon := Max(valueWidth_Moon, valuePos + Controls[i].Width + 2*OFFSET + MOON_SIZE);
          end;
       3: begin
            Controls[i].Left := valuePos;
            valueWidth_NoMoon := Max(valueWidth_NoMoon, Controls[i].Width);
-//           valueWidth_NoMoon := Max(valueWidth_NoMoon, valuePos + Controls[i].Width + 2*OFFSET);
          end;
       4: begin
            Controls[i].Left := valuePos;
@@ -600,38 +602,11 @@ begin
         labelPos + valueWidth_NoMoon),
         lunationPos + lunationValueWidth)
     + OFFSET;
-
   ClientHeight := lblNextNewMoon.Top + lblNextNewMoon.Height + OFFSET;
 
   // Moon icon
   Moon.Top := LblJulian.Top;
   Moon.Left := Width - MOON_SIZE - Moon.Top;
-  (*
-    if Controls[i].Tag in [2,3,4] then
-      Controls[i].Left := pos_x;
-    case Controls[i].tag of
-      2: size_x := Max(size_x, Controls[i].Left + Controls[i].Width + 2*OFFSET + MOON_SIZE);
-      3: size_x := Max(size_x, Controls[i].Left + Controls[i].Width + 2*OFFSET);
-      4: time_max_width := Max(time_max_width, Controls[i].Width);
-    end;
-  end;
-  pos_x := pos_x + time_max_width + 2*OFFSET;
-
-
-  // Reposition the second column, get width
-  for i:=0 to ControlCount-1 do
-    if Controls[i].Tag = 5 then begin
-      Controls[i].Left := pos_x;
-      size_x := Max(size_x, Controls[i].Left + Controls[i].Width + OFFSET + LUNATION_VALUE_SIZE);
-    end;
-
-  // reposition the second data row
-  for i:=0 to ControlCount-1 do
-    if Controls[i].Tag=6 then
-      Controls[i].Left := size_x - lunation_value_size;
-      Moon.Left := size_x - MOON_SIZE;
-  Width := size_x;
-  *)
 end;
 
 procedure TMainForm.UpdateStrings;
@@ -640,7 +615,6 @@ var
   maxwidth:Integer;
   C: TControl;
 begin
-//  UpdateValues;    { make sure the val_* are set }
   Caption := SMoontool;
   lblAgeOfMoon.Caption := SAgeOfMoon;
   lblFirstQuart.Caption := SFirstQuarter;

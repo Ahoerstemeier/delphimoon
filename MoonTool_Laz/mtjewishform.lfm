@@ -4,7 +4,7 @@ object frmJewish: TfrmJewish
   Top = 113
   Width = 296
   BorderIcons = [biSystemMenu]
-  BorderStyle = bsSingle
+  BorderStyle = bsDialog
   Caption = 'Jewish date'
   ClientHeight = 283
   ClientWidth = 296
@@ -24,31 +24,28 @@ object frmJewish: TfrmJewish
     TabOrder = 0
     object lblYear: TLabel
       Left = 8
-      Height = 13
+      Height = 15
       Top = 8
-      Width = 57
+      Width = 22
       Alignment = taCenter
-      AutoSize = False
       Caption = 'Year'
       ParentColor = False
     end
     object lblMonth: TLabel
       Left = 72
-      Height = 13
+      Height = 15
       Top = 8
-      Width = 129
+      Width = 36
       Alignment = taCenter
-      AutoSize = False
       Caption = 'Month'
       ParentColor = False
     end
     object lblDay: TLabel
       Left = 208
-      Height = 13
+      Height = 15
       Top = 8
-      Width = 57
+      Width = 20
       Alignment = taCenter
-      AutoSize = False
       Caption = 'Day'
       ParentColor = False
     end
@@ -102,7 +99,7 @@ object frmJewish: TfrmJewish
     end
   end
   object btnNow: TButton
-    Left = 38
+    Left = 8
     Height = 25
     Top = 248
     Width = 75
@@ -141,11 +138,10 @@ object frmJewish: TfrmJewish
     TabOrder = 5
     object lblYearJewish: TLabel
       Left = 8
-      Height = 13
+      Height = 15
       Top = 8
-      Width = 57
+      Width = 22
       Alignment = taCenter
-      AutoSize = False
       Caption = 'Year'
       ParentColor = False
     end
@@ -161,11 +157,10 @@ object frmJewish: TfrmJewish
     end
     object lblDayJewish: TLabel
       Left = 208
-      Height = 13
+      Height = 15
       Top = 8
-      Width = 57
+      Width = 20
       Alignment = taCenter
-      AutoSize = False
       Caption = 'Day'
       ParentColor = False
     end

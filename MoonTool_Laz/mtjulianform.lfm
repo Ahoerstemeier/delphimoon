@@ -49,7 +49,7 @@ object frmJulian: TfrmJulian
     end
   end
   object btnNow: TButton
-    Left = 62
+    Left = 8
     Height = 25
     Top = 120
     Width = 75

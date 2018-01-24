@@ -871,6 +871,7 @@ msgid "Set julian date"
 msgstr "Julianisches Datum setzen"
 
 #: tfrmjulian.grputc.caption
+msgctxt "tfrmjulian.grputc.caption"
 msgid "Universal time"
 msgstr "Universal-Zeit"
 
@@ -1331,6 +1332,10 @@ msgctxt "tfrmutc.btnok.caption"
 msgid "OK"
 msgstr "OK"
 
+#: tfrmutc.caption
+msgid "Set universal time"
+msgstr ""
+
 #: tfrmutc.edtday.text
 msgctxt "tfrmutc.edtday.text"
 msgid "1"
@@ -1360,6 +1365,12 @@ msgstr ""
 msgctxt "tfrmutc.grpjulian.caption"
 msgid "Julian date"
 msgstr "Julianisches datum"
+
+#: tfrmutc.grputc.caption
+#, fuzzy
+msgctxt "tfrmutc.grputc.caption"
+msgid "Universal time"
+msgstr "Universal-Zeit"
 
 #: tfrmutc.lblday.caption
 msgctxt "tfrmutc.lblday.caption"

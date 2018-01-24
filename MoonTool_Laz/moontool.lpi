@@ -100,14 +100,12 @@
         <UnitName Value="mtJewishForm"/>
       </Unit7>
       <Unit8>
-        <Filename Value="mtconst.pas"/>
+        <Filename Value="mtConst.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="mtConst"/>
       </Unit8>
       <Unit9>
-        <Filename Value="mtutils.pas"/>
+        <Filename Value="mtUtils.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="mtUtils"/>
       </Unit9>
       <Unit10>
         <Filename Value="mtstrings.pas"/>

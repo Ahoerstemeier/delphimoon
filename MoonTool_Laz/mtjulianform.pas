@@ -6,12 +6,7 @@ uses
 {$ifdef fpc}
   LCLType, LCLIntf, LMessages,
 {$else}
- {$ifdef ver80 }
-  winprocs, wintypes,
- {$else }
-  Windows,
- {$endif }
-  Messages, consts,
+  Windows, Messages, Consts,
 {$endif}
   SysUtils, Classes, Graphics, Controls, Forms, Dialogs, StdCtrls,
   moon, mtMain;
@@ -35,8 +30,9 @@ type
   private
     FDate: TDateTime;
     procedure SetDate(AValue: TDateTime);
-    procedure UpdateControls;
+    procedure UpdateLayout;
     procedure UpdateStrings;
+    procedure UpdateValues;
   public
     property Date: TDateTime read FDate write SetDate;
   end;
@@ -48,19 +44,16 @@ var
 implementation
 
 uses
-{$ifdef fpc}
-  mtStrings,
-{$endif}
-  mtConst, mtUtils;
+  mtStrings, mtConst, mtUtils;
 
 {$ifdef fpc}
   {$R *.lfm}
 {$else}
-  {$R *.lfm}
-  {$i moontool.inc }
+  {$R *.dfm}
 {$endif}
 
-//{$i ah_def.inc }
+
+{ TfrmJulian }
 
 procedure TfrmJulian.btnNowClick(Sender: TObject);
 begin
@@ -74,10 +67,8 @@ var
   res: Integer;
   fs: TFormatSettings;
 begin
-  fs := DefaultFormatSettings;
-  fs.DecimalSeparator := '.';
-  if TryStrToFloat(edtJulian.Text, j_date) or
-     TryStrToFloat(edtJulian.Text, j_date, fs) then
+  val(edtJulian.Text, j_date, res);
+  if (res = 0) or TryStrToFloat(edtJulian.Text, j_date) then
   begin
     SetDate(Delphi_Date(j_date));
     valid := true;
@@ -97,19 +88,19 @@ end;
 procedure TfrmJulian.FormShow(Sender: TObject);
 begin
   UpdateStrings;
-  UpdateControls;
+  UpdateValues;
 end;
 
 procedure TfrmJulian.SetDate(AValue: TDateTime);
 begin
   FDate := AValue;
-  UpdateControls;
+  UpdateValues;
 end;
 
-procedure TfrmJulian.UpdateControls;
+procedure TfrmJulian.UpdateLayout;
 begin
-  edtJulian.Text := FloatToStrF(Julian_date(FDate), ffFixed, 12, 5);
-  lblUTC.Caption := DateToString(FDate);
+  edtJulian.Left := lblJulian.Left + lblJulian.Width + 16;
+  edtJulian.Width := grpUTC.Width - edtJulian.Left;
 end;
 
 procedure TfrmJulian.UpdateStrings;
@@ -120,6 +111,14 @@ begin
   grpUTC.Caption := SUTC;
   btnOK.Caption := SOKButton;
   btnCancel.Caption := SCancelButton;
+
+  UpdateLayout;
+end;
+
+procedure TfrmJulian.UpdateValues;
+begin
+  edtJulian.Text := FloatToStrF(Julian_date(FDate), ffFixed, 12, 5);
+  lblUTC.Caption := DateToString(FDate);
 end;
 
 end.

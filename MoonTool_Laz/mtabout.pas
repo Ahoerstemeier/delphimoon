@@ -6,12 +6,7 @@ uses
 {$ifdef fpc}
   LCLIntf, LCLType,
 {$else}
- {$ifdef ver80}
-  WinProcs, WinTypes,
- {$else}
-  Windows,
- {$endif}
-  Messages, Consts, ShellApi,
+  Windows, Messages, Consts, ShellApi,
 {$endif}
   SysUtils, Classes, Graphics, Controls, Forms, Dialogs, StdCtrls, ExtCtrls,
   MoonComp, Moon;

@@ -3,15 +3,8 @@ unit mtUTCForm;
 interface
 
 uses
-{$ifdef fpc}
-  LCLType, LMessages,
-{$else}
- {$ifdef ver80 }
-  winprocs, wintypes,
- {$else }
-  Windows,
- {$endif }
-  Messages, Consts,
+{$ifndef fpc}
+  Windows, Messages, Consts,
 {$endif}
   SysUtils, Classes, Graphics, Controls, Forms, Dialogs, StdCtrls,
   moon, mtMain;
@@ -42,9 +35,12 @@ type
     procedure FormShow(Sender: TObject);
   private
     FDate: TDateTime;
+    FChanging: Integer;
     procedure SetDate(AValue: TDateTime);
-    procedure UpdateControls;
+  protected
+    procedure UpdateLayout;
     procedure UpdateStrings;
+    procedure UpdateValues;
   public
     property Date: TDateTime read FDate write SetDate;
   end;
@@ -56,15 +52,12 @@ var
 implementation
 
 uses
-{$ifdef fpc}
-  mtStrings,
-{$endif}
-  mtConst, mtUtils;
+  mtStrings, mtConst, mtUtils;
 
 {$ifdef fpc}
   {$R *.lfm}
 {$else}
-  {$R *.lfm}
+  {$R *.dfm}
 {$endif}
 
 
@@ -117,30 +110,25 @@ end;
 procedure TfrmUTC.FormShow(Sender: TObject);
 begin
   UpdateStrings;
-  UpdateControls;
+  UpdateValues;
 end;
 
 procedure TfrmUTC.SetDate(AValue: TDateTime);
 begin
+  inc(FChanging);
   FDate := AValue;
-  UpdateControls;
+  UpdateValues;
+  dec(FChanging);
 end;
 
-procedure TfrmUTC.UpdateControls;
-var
-  y,m,d: word;
-  h,min,s,ms: word;
-  dt: TdateTime;
+procedure TfrmUTC.UpdateLayout;
 begin
-  dt := FalsifyTDateTime(FDate);
-  DecodeDate(dt, y, m, d);
-  DecodeTime(dt, h, min, s, ms);
-  edtYear.Text := IntToStr(y);
-  edtDay.Text := IntToStr(d);
-  cbxMonth.ItemIndex := m-1;
-  edtHour.Text := IntToStr(h);
-  edtMin.Text := IntTostr(min);
-  edtSec.Text := IntTostr(s);
+  CenterAboveControl(lblYear, edtYear);
+  CenterAboveControl(lblMonth, cbxMonth);
+  CenterAboveControl(lblDay, edtDay);
+  CenterAboveControl(lblHour, edtHour);
+  CenterAboveControl(lblMin, edtMin);
+  CenterAboveControl(lblSec, edtSec);
 end;
 
 procedure TfrmUTC.UpdateStrings;
@@ -162,7 +150,30 @@ begin
   cbxMonth.Items.Clear;
   for i:=1 to 12 do
     cbxMonth.Items.Add(LocalFormatSettings.LongMonthNames[i]);
+
+  UpdateLayout;
 end;
+
+procedure TfrmUTC.UpdateValues;
+var
+  y,m,d: word;
+  h,min,s,ms: word;
+  dt: TdateTime;
+begin
+  if FChanging <> 0 then
+    exit;
+
+  dt := FalsifyTDateTime(FDate);
+  DecodeDate(dt, y, m, d);
+  DecodeTime(dt, h, min, s, ms);
+  edtYear.Text := IntToStr(y);
+  edtDay.Text := IntToStr(d);
+  cbxMonth.ItemIndex := m-1;
+  edtHour.Text := IntToStr(h);
+  edtMin.Text := IntTostr(min);
+  edtSec.Text := IntTostr(s);
+end;
+
 
 end.
 

@@ -1,11 +1,18 @@
 unit mtStrings;
 
-{$mode objfpc}{$H+}
+{$ifdef fpc}
+ {$mode objfpc}{$H+}
+{$endif}
 
 interface
 
 uses
   Classes, SysUtils;
+
+{$ifndef fpc}
+const
+  LINEENDING = #13#10;
+{$endif}
 
 resourcestring
   SMoontool = 'Moontool';

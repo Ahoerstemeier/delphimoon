@@ -1,6 +1,8 @@
-unit mtConst;
+﻿unit mtConst;
 
-{$mode delphi}
+{$ifdef fpc}
+ {$mode delphi}
+{$endif}
 
 interface
 
@@ -32,10 +34,12 @@ const
   DEG_SYMBOL = '°';
  {$else}
  {$ifdef unicode}
-  DEG = '°';
+  DEG_SYMBOL = '°';
  {$else}
-  DEG = #176:
- {$endif}{$endif}
+  DEG_SYMBOL = #176:
+ {$endif}
+  LineEnding = #13#10;
+ {$endif}
 
 var
   MOONTOOL_INIFILE: string = 'moontool.ini';

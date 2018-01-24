@@ -1,6 +1,8 @@
 unit mtUtils;
 
-{$mode delphi}
+{$ifdef fpc}
+ {$mode delphi}
+{$endif}
 
 interface
 
@@ -26,6 +28,8 @@ implementation
 uses
 {$ifdef fpc}
   LazUTF8,
+{$else}
+  Windows,
 {$endif}
   mtConst, mtStrings;
 
@@ -91,14 +95,28 @@ begin
 end;
 {$endif}
 
-{$ifdef fpc}
 {platform-independent method to read the language of the user interface}
-function GetOSLanguage: string;
+function GetOSLanguage: String;
+{$ifdef fpc}
 var
   l, fbl: string;
 begin
   LazGetLanguageIDs(l, fbl);
   Result := fbl;
+end;
+{$else}
+var
+  Buffer: PChar;
+  size : integer;
+begin
+  size := GetLocaleInfo (LOCALE_USER_DEFAULT, LOCALE_SISO639LANGNAME, nil, 0);
+  GetMem(Buffer, size * SizeOf(char));
+  try
+    GetLocaleInfo (LOCALE_USER_DEFAULT, LOCALE_SISO639LANGNAME, Buffer, Size);
+    Result := StrPas(Buffer);
+  finally
+    FreeMem(Buffer);
+  end;
 end;
 {$endif}
 
@@ -146,7 +164,7 @@ begin
   {$ifdef windows}
   GetLocaleFormatSettings(GetLCIDFromLangCode(ALang),AFormatSettings);
   {$else}
-  AFormatSettings := DefaultFormatSettings;
+  AFormatSettings := FormatSettings;
   {$endif}
 end;
 

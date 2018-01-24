@@ -1086,9 +1086,12 @@ var
   l,b,r: extended;
   rektaszension,declination: extended;
 begin
+ {$ifdef fpc}
   Ignore('Pluto tests are ignored.');
   exit;
-  // !!!!!!!!!!!!!!
+ {$else}
+  exit;
+ {$endif}
 
   date:=encodedate(1992,10,13);
   Planet_coord(date,plPluto,l,b,r);

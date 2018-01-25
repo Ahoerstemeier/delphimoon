@@ -2,6 +2,8 @@ unit mtMain;
 
 interface
 
+{$i ..\ah_def.inc}
+
 {$ifdef fpc}
   {$define use_tray_icon}
 {$else}
@@ -15,15 +17,23 @@ uses
   LCLIntf, LCLType,
 {$else}
   Windows, Messages,
- // {$ifdef d7} xpman, {$endif}
+  {$ifdef delph_7}StoHtmlHelp,{$else}
+  {$ifdef delphi_2007}HtmlHelpViewer,{$endif}{$endif}
 {$endif}
+
   SysUtils, Classes, Graphics, Controls, Forms, Dialogs, ExtCtrls, StdCtrls,
   Menus, Clipbrd, IniFiles,
+
 {$ifdef use_tray_icon}
  {$ifndef fpc}
   trayicon,
  {$endif}
 {$endif}
+
+{$ifdef delphi_7}
+  XPMan,
+{$endif}
+
   Moon, MoonComp;
 
 type
@@ -127,7 +137,9 @@ type
     FTrayIcon: TTrayIcon;
     procedure TrayDblClick(Sender: TObject);
    {$endif}
-    function HelpHandler(Command:word; Data:Longint; var CallHelp:Boolean): Boolean;
+   {$ifdef fpc}
+    function HelpHandler(Command: word; Data:Longint; var CallHelp:Boolean): Boolean;
+    {$endif}
     procedure SelectLanguage(ALang: String);
     procedure UpdateLayout;
     procedure UpdateStrings;
@@ -223,25 +235,20 @@ begin
     Moon.Rotation := rot_180
   else
     Moon.Rotation := rot_none;
-
   mnuRotSouth.Checked := rotate = 180;
   mnuRotNorth.Checked := rotate = 0;
   mnuColorizeMoon.Checked := use_color;
 
   UpdateValues;
-//  Timer.OnTimer(nil);
 
-  (*
   Application.Icon := Moon.Icon;
+  {$ifdef fpc}
   if FileExists(HELPFILENAME) then begin
-    Application.Helpfile := HELPFILENAME;
-    Application.Helpfile := ChangeFileExt(Application.ExeName, '.chm'); //HELPFILENAME;
+    Application.Helpfile := ChangeFileExt(Application.ExeName, '.chm');
     Application.OnHelp := HelpHandler;
   end;
-  {$ifndef fpc}
-  InvalidateRect(Application.Handle, nil, true);
   {$endif}
-    *)
+
   FLastPhaseValue := 199;
   mnuHelpTimezones.Enabled := Application.Helpfile <> '';
   HelpContext := HC_MAINFORM;
@@ -253,23 +260,17 @@ begin
   Timer.Enabled := true;
 end;
 
-function TMainForm.HelpHandler(Command:word; Data:Longint; var CallHelp:Boolean): Boolean;
 // Call online-help
+{$ifdef fpc}
+function TMainForm.HelpHandler(Command:word; Data:Longint; var CallHelp:Boolean): Boolean;
 begin
-(*
-  {$ifdef windows}
+{$ifdef mswindows}
   // Call HTML help (.chm file)
-  htmlHelp.HtmlHelpA(0,
-    PChar(Application.HelpFile),
-    HH_HELP_CONTEXT,
-    Data
-  );
-
-  // Don't call regular help
+  htmlHelp.HtmlHelpA(0, PChar(Application.HelpFile), HH_HELP_CONTEXT, Data);
   CallHelp := False;
-  {$endif}
-  *)
+{$endif}
 end;
+{$endif}
 
 procedure TMainForm.TimerTimer(Sender: TObject);
 begin

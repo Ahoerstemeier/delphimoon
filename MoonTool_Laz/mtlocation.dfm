@@ -10,7 +10,7 @@ object frmLocations: TfrmLocations
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
   Font.Height = -11
-  Font.Name = 'MS Sans Serif'
+  Font.Name = 'Tahoma'
   Font.Style = []
   OldCreateOrder = True
   ShowHint = True
@@ -150,7 +150,7 @@ object frmLocations: TfrmLocations
   object lblLongitude: TLabel
     Left = 8
     Top = 224
-    Width = 50
+    Width = 51
     Height = 13
     Caption = 'Longitude:'
     Color = clBtnFace
@@ -160,7 +160,7 @@ object frmLocations: TfrmLocations
   object lblLatitude: TLabel
     Left = 8
     Top = 251
-    Width = 41
+    Width = 43
     Height = 13
     Caption = 'Latitude:'
     Color = clBtnFace
@@ -212,7 +212,7 @@ object frmLocations: TfrmLocations
   object lblAltitude: TLabel
     Left = 9
     Top = 272
-    Width = 38
+    Width = 41
     Height = 13
     Caption = 'Altitude:'
     Color = clBtnFace
@@ -222,7 +222,7 @@ object frmLocations: TfrmLocations
   object lblLongSec: TLabel
     Left = 269
     Top = 224
-    Width = 17
+    Width = 16
     Height = 13
     Caption = 'sec'
     Color = clBtnFace
@@ -232,7 +232,7 @@ object frmLocations: TfrmLocations
   object lblLatSec: TLabel
     Left = 269
     Top = 251
-    Width = 17
+    Width = 16
     Height = 13
     Caption = 'sec'
     Color = clBtnFace

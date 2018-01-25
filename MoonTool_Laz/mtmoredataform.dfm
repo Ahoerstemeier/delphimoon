@@ -9,7 +9,7 @@ object frmMoreData: TfrmMoreData
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clBlack
   Font.Height = -11
-  Font.Name = 'MS Sans Serif'
+  Font.Name = 'Tahoma'
   Font.Style = []
   OldCreateOrder = True
   OnCreate = FormCreate
@@ -24,7 +24,7 @@ object frmMoreData: TfrmMoreData
     Tag = 1
     Left = 8
     Top = 35
-    Width = 41
+    Width = 43
     Height = 13
     Caption = 'Latitude:'
     Color = clBtnFace
@@ -34,7 +34,7 @@ object frmMoreData: TfrmMoreData
     Tag = 1
     Left = 8
     Top = 54
-    Width = 50
+    Width = 51
     Height = 13
     Caption = 'Longitude:'
     Color = clBtnFace
@@ -93,7 +93,7 @@ object frmMoreData: TfrmMoreData
         Tag = 10
         Left = 4
         Top = 8
-        Width = 41
+        Width = 42
         Height = 13
         Caption = 'Sun rise:'
         Color = clBtnFace
@@ -103,7 +103,7 @@ object frmMoreData: TfrmMoreData
         Tag = 10
         Left = 4
         Top = 24
-        Width = 53
+        Width = 56
         Height = 13
         Caption = 'Sun transit:'
         Color = clBtnFace
@@ -113,7 +113,7 @@ object frmMoreData: TfrmMoreData
         Tag = 10
         Left = 4
         Top = 40
-        Width = 39
+        Width = 40
         Height = 13
         Caption = 'Sun set:'
         Color = clBtnFace
@@ -150,7 +150,7 @@ object frmMoreData: TfrmMoreData
         Tag = 12
         Left = 352
         Top = 24
-        Width = 59
+        Width = 62
         Height = 13
         Caption = 'Next perihel:'
         Color = clBtnFace
@@ -169,7 +169,7 @@ object frmMoreData: TfrmMoreData
         Tag = 12
         Left = 352
         Top = 8
-        Width = 54
+        Width = 56
         Height = 13
         Caption = 'Next aphel:'
         Color = clBtnFace
@@ -188,7 +188,7 @@ object frmMoreData: TfrmMoreData
         Tag = 10
         Left = 4
         Top = 176
-        Width = 81
+        Width = 82
         Height = 13
         Caption = 'Next sun eclipse:'
         Color = clBtnFace
@@ -249,7 +249,7 @@ object frmMoreData: TfrmMoreData
         Tag = 12
         Left = 352
         Top = 116
-        Width = 95
+        Width = 97
         Height = 13
         Caption = 'September Equinox:'
         Color = clBtnFace
@@ -261,7 +261,7 @@ object frmMoreData: TfrmMoreData
         Tag = 12
         Left = 352
         Top = 136
-        Width = 92
+        Width = 91
         Height = 13
         Caption = 'December Solstice:'
         Color = clBtnFace
@@ -365,7 +365,7 @@ object frmMoreData: TfrmMoreData
         Tag = 10
         Left = 4
         Top = 123
-        Width = 36
+        Width = 35
         Height = 13
         Caption = 'Zodiac:'
         Color = clBtnFace
@@ -388,7 +388,7 @@ object frmMoreData: TfrmMoreData
         Tag = 20
         Left = 4
         Top = 8
-        Width = 49
+        Width = 50
         Height = 13
         Caption = 'Moon rise:'
         Color = clBtnFace
@@ -398,7 +398,7 @@ object frmMoreData: TfrmMoreData
         Tag = 20
         Left = 4
         Top = 27
-        Width = 61
+        Width = 64
         Height = 13
         Caption = 'Moon transit:'
         Color = clBtnFace
@@ -408,7 +408,7 @@ object frmMoreData: TfrmMoreData
         Tag = 20
         Left = 4
         Top = 46
-        Width = 47
+        Width = 48
         Height = 13
         Caption = 'Moon set:'
         Color = clBtnFace
@@ -445,7 +445,7 @@ object frmMoreData: TfrmMoreData
         Tag = 20
         Left = 4
         Top = 178
-        Width = 90
+        Width = 91
         Height = 13
         Caption = 'Next moon eclipse:'
         Color = clBtnFace
@@ -576,7 +576,7 @@ object frmMoreData: TfrmMoreData
         Tag = 20
         Left = 4
         Top = 134
-        Width = 33
+        Width = 31
         Height = 13
         Caption = 'Zodiac'
         Color = clBtnFace
@@ -599,7 +599,7 @@ object frmMoreData: TfrmMoreData
         Tag = 30
         Left = 4
         Top = 8
-        Width = 57
+        Width = 60
         Height = 13
         Caption = 'Easter date:'
         Color = clBtnFace
@@ -620,7 +620,7 @@ object frmMoreData: TfrmMoreData
         Tag = 30
         Left = 4
         Top = 46
-        Width = 71
+        Width = 73
         Height = 13
         Caption = 'Passover date:'
         Color = clBtnFace
@@ -662,7 +662,7 @@ object frmMoreData: TfrmMoreData
         Tag = 30
         Left = 4
         Top = 27
-        Width = 103
+        Width = 109
         Height = 13
         Caption = 'Orthodox Easter date:'
         Color = clBtnFace

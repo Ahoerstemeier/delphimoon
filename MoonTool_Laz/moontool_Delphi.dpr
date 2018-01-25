@@ -21,6 +21,7 @@ uses
 
 begin
   Application.Initialize;
+  Application.HelpFile := 'D:\Prog_Lazarus\git\delphimoon\MoonTool_Laz\moontool.chm';
   Application.CreateForm(TMainForm, MainForm);
   Application.CreateForm(TfrmUTC, frmUTC);
   Application.CreateForm(TfrmJewish, frmJewish);

@@ -3,7 +3,6 @@ program moontool;
 uses
   Forms,
   mtmain in 'mtmain.pas' {MainForm},
-  mtabout in 'mtabout.pas' {AboutForm},
   mtConst,
   mtUtils,
   mtStrings,
@@ -11,7 +10,8 @@ uses
   mtJewishForm in 'mtjewishform.pas' {frmJewish},
   mtJulianForm in 'mtjulianform.pas' {frmJulian},
   mtLocation in 'mtlocation.pas' {frmLocations},
-  mtMoreDataForm in 'mtmoredataform.pas' {frmMoreData};
+  mtMoreDataForm in 'mtmoredataform.pas' {frmMoreData},
+  mtAbout in 'mtabout.pas' {frmAbout};
 
 {$ifdef fpc}
   {$R *.res}
@@ -27,5 +27,6 @@ begin
   Application.CreateForm(TfrmJulian, frmJulian);
   Application.CreateForm(TfrmLocations, frmLocations);
   Application.CreateForm(TfrmMoreData, frmMoreData);
+  Application.CreateForm(TfrmAbout, frmAbout);
   Application.Run;
 end.

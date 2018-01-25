@@ -11,7 +11,7 @@ object frmJewish: TfrmJewish
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
   Font.Height = -11
-  Font.Name = 'MS Sans Serif'
+  Font.Name = 'Tahoma'
   Font.Style = []
   OldCreateOrder = True
   OnCreate = FormCreate
@@ -73,6 +73,7 @@ object frmJewish: TfrmJewish
       Width = 129
       Height = 21
       Style = csDropDownList
+      ItemHeight = 13
       TabOrder = 1
       OnChange = christianChange
     end
@@ -187,6 +188,7 @@ object frmJewish: TfrmJewish
       Width = 129
       Height = 21
       Style = csDropDownList
+      ItemHeight = 13
       TabOrder = 1
       OnChange = jewishChange
     end

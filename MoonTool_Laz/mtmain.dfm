@@ -1,10 +1,10 @@
 object MainForm: TMainForm
   Left = 365
   Top = 126
+  Width = 451
+  Height = 357
   BorderIcons = [biSystemMenu, biMinimize]
   Caption = 'Moontool'
-  ClientHeight = 298
-  ClientWidth = 401
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -18,7 +18,7 @@ object MainForm: TMainForm
   OnCreate = FormCreate
   OnShow = FormShow
   DesignSize = (
-    401
+    435
     298)
   PixelsPerInch = 96
   TextHeight = 13

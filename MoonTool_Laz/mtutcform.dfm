@@ -10,7 +10,7 @@ object frmUTC: TfrmUTC
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
   Font.Height = -11
-  Font.Name = 'MS Sans Serif'
+  Font.Name = 'Tahoma'
   Font.Style = []
   OldCreateOrder = True
   OnCreate = FormCreate
@@ -67,7 +67,7 @@ object frmUTC: TfrmUTC
     object lblSec: TLabel
       Left = 218
       Top = 80
-      Width = 37
+      Width = 35
       Height = 13
       Alignment = taCenter
       Caption = 'Second'
@@ -99,6 +99,7 @@ object frmUTC: TfrmUTC
       Width = 129
       Height = 21
       Style = csDropDownList
+      ItemHeight = 13
       TabOrder = 1
       OnChange = anyChange
     end

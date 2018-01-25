@@ -77,6 +77,7 @@
         <DelphiCompile Include="$(MainSource)">
             <MainSource>MainSource</MainSource>
         </DelphiCompile>
+        <DCCReference Include="gnugettext.pas"/>
         <DCCReference Include="mtmain.pas">
             <Form>MainForm</Form>
         </DCCReference>
@@ -85,23 +86,18 @@
         </DCCReference>
         <DCCReference Include="mtutcform.pas">
             <Form>frmUTC</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="mtjewishform.pas">
             <Form>frmJewish</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="mtjulianform.pas">
             <Form>frmJulian</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="mtlocation.pas">
             <Form>frmLocations</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="mtmoredataform.pas">
             <Form>frmMoreData</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <BuildConfiguration Include="Debug">
             <Key>Cfg_2</Key>

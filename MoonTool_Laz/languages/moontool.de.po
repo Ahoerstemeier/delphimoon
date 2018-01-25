@@ -742,8 +742,6 @@ msgid "(c) 1997-2001 Andreas Hörstemeier"
 msgstr "(c) 1997-2001 Andreas Hörstemeier"
 
 #: tfrmabout.lblmain.caption
-#, fuzzy
-#| msgid "Moontool for Windows"
 msgctxt "tfrmabout.lblmain.caption"
 msgid "Moontool"
 msgstr "Mond-Programm"
@@ -936,7 +934,6 @@ msgid "deg"
 msgstr "deg"
 
 #: tfrmlocations.lbllongitude.caption
-#, fuzzy
 msgctxt "tfrmlocations.lbllongitude.caption"
 msgid "Longitude:"
 msgstr "Breitengrad:"
@@ -1368,7 +1365,6 @@ msgid "Julian date"
 msgstr "Julianisches datum"
 
 #: tfrmutc.grputc.caption
-#, fuzzy
 msgctxt "tfrmutc.grputc.caption"
 msgid "Universal time"
 msgstr "Universal-Zeit"
@@ -1618,4 +1614,3 @@ msgstr "Uni&versal-Zeit setzen..."
 msgctxt "tmainform.mnuveryfastmode.caption"
 msgid "&Very fast"
 msgstr "Sehr sch&nell"
-

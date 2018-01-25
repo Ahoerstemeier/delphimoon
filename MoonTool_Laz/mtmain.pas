@@ -29,12 +29,10 @@ uses
 {$endif}
 
 {$ifndef fpc}
- {$ifdef delphi_7}
-  XPMan,
- {$endif}
  {$ifdef delphi_2007}
   HtmlHelpViewer,
  {$endif}
+  XPMan, //gnugettext,
 {$endif}
 
   Moon, MoonComp;
@@ -157,12 +155,10 @@ var
 implementation
 
 uses
-  {$ifdef windows}
-  htmlhelp,
-  {$endif}
-  {$ifdef fpc}
+ {$ifdef fpc}
+  {$ifdef windows} htmlhelp,{$endif}
   Translations,
-  {$endif}
+ {$endif}
   Math, mtStrings, mtConst, mtUtils,
   mtAbout, mtMoreDataForm, mtLocation, mtUTCForm, mtJulianForm, mtJewishForm;
 
@@ -407,14 +403,12 @@ var
   p: Integer;
   lang: String;
 begin
-(*
   if not (Sender is TMenuItem) then
     exit;
   s := TMenuItem(Sender).Caption;
   p := pos('-', s);
   lang := trim(Copy(s, 1, p-1));
   SelectLanguage(lang);
-  *)
 end;
 
 procedure TMainForm.mnuLocationsClick(Sender: TObject);
@@ -503,7 +497,6 @@ var
   langdir: String;
 begin
   Lang := lowercase(ALang);
-  (*
 
   // Update formatsettings (for month names etc)
   GetFormatSettingsFromLangCode(Lang, LocalFormatSettings);
@@ -511,14 +504,15 @@ begin
   // Translate strings
   langdir := IncludeTrailingPathDelimiter(ExtractFilepath(Application.Exename) + LANGUAGE_DIR);
   fn := langdir + ChangeFileExt(ExtractFilename(Application.ExeName), '') + '.' + Lang + '.po';
+  {$ifdef fpc}
   Translations.TranslateResourceStrings(fn);
   //fn := langdir + 'lclstrconsts.' + Lang + '.po';
   // Translations.TranslateResourceStrings(fn);
-*)
+  {$endif}
+
   // Apply strings to form
   UpdateStrings;
   UpdateLayout;
-  (*
 
   // Select the new language in the language menu
   for i:=0 to mnuLanguage.Count-1 do begin
@@ -531,7 +525,6 @@ begin
     s := lowercase(copy(s, 1, p-1));
     mnuLanguage.Items[i].Checked := (s = Lang);
   end;
-  *)
 end;
 
 {$ifdef use_tray_icon}
@@ -761,11 +754,12 @@ begin
   new_phase := round(Current_Phase(jetzt) * 100);
   valPhase.Caption := IntToStr(new_phase) + '% ' + SPhaseHint;
 
-  Str(moon_diameter(jetzt)/3600:6:4, s);
-  valMoonSubtend.Caption := s + DEG_SYMBOL;
+//  Str(moon_diameter(jetzt)/3600:6:4, s);
+  valMoonSubtend.Caption := Format('%.4f%s', [Moon_Diameter(jetzt)/3600, DEG_SYMBOL]);
 
-  Str(sun_diameter(jetzt)/3600:6:4, s);
-  valSunSubtend.Caption := s + DEG_SYMBOL;
+  valSunSubtend.Caption := Format('%.4f%s', [Sun_Diameter(jetzt)/3600, DEG_SYMBOL]);
+//  Str(sun_diameter(jetzt)/3600:6:4, s);
+//  valSunSubtend.Caption := s + DEG_SYMBOL;
 
   if new_phase <> FLastPhaseValue then begin
     Moon.Date := jetzt;

@@ -1,6 +1,7 @@
 program moontool;
 
 uses
+  gnugettext in 'gnugettext.pas',
   Forms,
   mtmain in 'mtmain.pas' {MainForm},
   mtabout in 'mtabout.pas' {AboutForm},
@@ -20,6 +21,11 @@ uses
 {$endif}
 
 begin
+  // Add extra domain for runtime library translations
+  AddDomainForResourceString('default');
+  // Force program to use
+  UseLanguage('en');
+
   Application.Initialize;
   Application.HelpFile := '';
   Application.CreateForm(TMainForm, MainForm);

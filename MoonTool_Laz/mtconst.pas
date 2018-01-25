@@ -34,7 +34,7 @@ const
   DEG_SYMBOL: string = '°';
  {$else}
  {$ifdef unicode}
-  DEG_SYMBOL: widestring = '°';
+  DEG_SYMBOL: widestring = #176; //'°';
  {$else}
   DEG_SYMBOL: char = #176;
  {$endif}

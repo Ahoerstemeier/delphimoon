@@ -2,7 +2,6 @@ program moontool;
 
 uses
   Forms,
-  mtmain in 'mtmain.pas' {MainForm},
   mtConst,
   mtUtils,
   mtStrings,
@@ -11,7 +10,8 @@ uses
   mtJulianForm in 'mtjulianform.pas' {frmJulian},
   mtLocation in 'mtlocation.pas' {frmLocations},
   mtMoreDataForm in 'mtmoredataform.pas' {frmMoreData},
-  mtAbout in 'mtabout.pas' {frmAbout};
+  mtAbout in 'mtabout.pas' {frmAbout},
+  mtMain in 'mtmain.pas' {MainForm};
 
 {$ifdef fpc}
   {$R *.res}

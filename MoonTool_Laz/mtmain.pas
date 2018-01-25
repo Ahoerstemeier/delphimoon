@@ -6,10 +6,11 @@ interface
 
 {$ifdef fpc}
   {$define use_tray_icon}
+  {$define use_html_help_handler}
 {$else}
-  {$ifdef ver230}
-    {$define d7}
-  {$endif}
+ {$ifdef delphi_7}
+  {$define use_html_help_handler}
+ {$endif}
 {$endif}
 
 uses
@@ -17,10 +18,7 @@ uses
   LCLIntf, LCLType,
 {$else}
   Windows, Messages,
-  {$ifdef delph_7}StoHtmlHelp,{$else}
-  {$ifdef delphi_2007}HtmlHelpViewer,{$endif}{$endif}
 {$endif}
-
   SysUtils, Classes, Graphics, Controls, Forms, Dialogs, ExtCtrls, StdCtrls,
   Menus, Clipbrd, IniFiles,
 
@@ -30,8 +28,13 @@ uses
  {$endif}
 {$endif}
 
-{$ifdef delphi_7}
+{$ifndef fpc}
+ {$ifdef delphi_7}
   XPMan,
+ {$endif}
+ {$ifdef delphi_2007}
+  HtmlHelpViewer,
+ {$endif}
 {$endif}
 
   Moon, MoonComp;
@@ -137,9 +140,9 @@ type
     FTrayIcon: TTrayIcon;
     procedure TrayDblClick(Sender: TObject);
    {$endif}
-   {$ifdef fpc}
-    function HelpHandler(Command: word; Data:Longint; var CallHelp:Boolean): Boolean;
-    {$endif}
+   {$ifdef use_html_help_handler}
+   function HtmlHelpHandler(Command: word; Data:Longint; var CallHelp:Boolean): Boolean;
+   {$endif}
     procedure SelectLanguage(ALang: String);
     procedure UpdateLayout;
     procedure UpdateStrings;
@@ -167,6 +170,17 @@ uses
   {$R *.lfm}
 {$else}
   {$R *.dfm}
+{$endif}
+
+{$ifdef delphi_7}
+ const
+   hhctrlLib = 'hhctrl.ocx';
+   HH_DISPLAY_TOPIC = $0000;
+   HH_HELP_CONTEXT = $000F;
+   HH_CLOSE_ALL  = $0012;
+
+function HtmlHelpA(hwndCaller: HWND; pszFile: PChar;
+  uCommand: UINT; dwData: DWORD): HWND; stdcall; external hhctrlLib Name 'HtmlHelpA';
 {$endif}
 
 procedure LoadSettings(var rotate: integer; var color:boolean);
@@ -242,12 +256,12 @@ begin
   UpdateValues;
 
   Application.Icon := Moon.Icon;
-  {$ifdef fpc}
   if FileExists(HELPFILENAME) then begin
-    Application.Helpfile := ChangeFileExt(Application.ExeName, '.chm');
-    Application.OnHelp := HelpHandler;
+    Application.Helpfile := ExtractFilePath(Application.ExeName) + HELPFILENAME;
+   {$ifdef use_html_help_handler}
+    Application.OnHelp := HtmlHelpHandler;
+   {$endif}
   end;
-  {$endif}
 
   FLastPhaseValue := 199;
   mnuHelpTimezones.Enabled := Application.Helpfile <> '';
@@ -261,12 +275,21 @@ begin
 end;
 
 // Call online-help
-{$ifdef fpc}
-function TMainForm.HelpHandler(Command:word; Data:Longint; var CallHelp:Boolean): Boolean;
+{$ifdef use_html_help_handler}
+function TMainForm.HtmlHelpHandler(Command:word; Data:Longint; var CallHelp:Boolean): Boolean;
+var
+  res: Integer;
 begin
 {$ifdef mswindows}
+ {$ifdef fpc}
   // Call HTML help (.chm file)
-  htmlHelp.HtmlHelpA(0, PChar(Application.HelpFile), HH_HELP_CONTEXT, Data);
+  res := htmlHelp.HtmlHelpA(0, PChar(Application.HelpFile), HH_HELP_CONTEXT, Data);
+ {$endif}
+ {$ifdef delphi_7}
+  //Result :=
+  res := HTMLHelpA(0, PChar(Application.HelpFile), HH_HELP_CONTEXT, Data);
+ {$endif}
+  Result := res <> 0;
   CallHelp := False;
 {$endif}
 end;

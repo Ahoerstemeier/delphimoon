@@ -31,12 +31,12 @@ const
   DROPDOWN_COUNT = 24;
 
  {$ifdef fpc}
-  DEG_SYMBOL = '°';
+  DEG_SYMBOL: string = '°';
  {$else}
  {$ifdef unicode}
-  DEG_SYMBOL = '°';
+  DEG_SYMBOL: widestring = '°';
  {$else}
-  DEG_SYMBOL = #176;
+  DEG_SYMBOL: char = #176;
  {$endif}
   LineEnding = #13#10;
  {$endif}

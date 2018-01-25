@@ -525,14 +525,17 @@ end;
 
 procedure TMainForm.UpdateLayout;
 const
-{$ifdef fpc}
+//{$ifdef fpc}
   OFFSET = 8;
-{$else}
-  OFFSET = 16;
-{$endif}
+//{$else}
+//  OFFSET = 16;
+//{$endif}
   MOON_SIZE = 80;
+  ROW_DISTANCE = 2;
+  BLOCK_DISTANCE = 8;
 var
   i: integer;
+  y: Integer;
   labelPos, valuePos: Integer;
   labelWidth: Integer;
   valueWidth_Moon: Integer;
@@ -586,7 +589,27 @@ begin
       6: Controls[i].Left := lunationPos + OFFSET + lunationLabelWidth;
     end;
 
-  // Form width
+  y := 4;
+  ArrangeInRow(y, ROW_DISTANCE, [lblJulian, valJulian]);
+  ArrangeInRow(y, ROW_DISTANCE, [lblUTC, valUTC]);
+  ArrangeInRow(y, ROW_DISTANCE, [lblLocal, valLocal]);
+  inc(y, BLOCK_DISTANCE);
+  ArrangeInRow(y, ROW_DISTANCE, [lblAgeOfMoon, valAgeOfMoon]);
+  ArrangeInRow(y, ROW_DISTANCE, [lblPhase, valPhase]);
+  ArrangeInRow(y, ROW_DISTANCE, [lblMoonDistance, valMoonDistance]);
+  ArrangeInRow(y, ROW_DISTANCE, [lblMoonSubtend, valMoonSubtend]);
+  inc(y, BLOCK_DISTANCE);
+  ArrangeInRow(y, ROW_DISTANCE, [lblSunDistance, valSunDistance]);
+  ArrangeInRow(y, ROW_DISTANCE, [lblSunSubtend, valSunSubtend]);
+  inc(y, BLOCK_DISTANCE);
+  ArrangeInRow(y, ROW_DISTANCE, [lblLastNew, valNewMoon, lblLastLunation, valLastLunation]);
+  ArrangeInRow(y, ROW_DISTANCE, [lblFirstQuart, valFirstQuart]);
+  ArrangeInRow(y, ROW_DISTANCE, [lblFullMoon, valFullMoon]);
+  ArrangeInRow(y, ROW_DISTANCE, [lblLastQuart, valLastQuart]);
+  ArrangeInRow(y, ROW_DISTANCE, [lblNextNewMoon, valNextNewMoon, lblNextLunation, valNextLunation]);
+
+
+  // Form size
   labelPos := labelPos + OFFSET + labelWidth;  // badly named: it is the x where the values start
   ClientWidth := Max(Max(
         labelPos + valueWidth_Moon + 2*OFFSET + MOON_SIZE,

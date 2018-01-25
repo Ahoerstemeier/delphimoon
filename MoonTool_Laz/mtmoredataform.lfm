@@ -1,11 +1,11 @@
 object frmMoreData: TfrmMoreData
   Left = 363
-  Height = 389
+  Height = 554
   Top = 118
   Width = 643
   BorderIcons = [biSystemMenu, biMinimize]
   Caption = 'More Data'
-  ClientHeight = 389
+  ClientHeight = 554
   ClientWidth = 643
   Color = clBtnFace
   Font.Color = clBlack
@@ -91,21 +91,21 @@ object frmMoreData: TfrmMoreData
     AnchorSideTop.Control = lblLongitude
     AnchorSideTop.Side = asrBottom
     Left = 8
-    Height = 306
+    Height = 471
     Top = 77
     Width = 630
-    ActivePage = pgMoon
+    ActivePage = pgSun
     Anchors = [akTop, akLeft, akRight, akBottom]
     BorderSpacing.Top = 8
-    TabIndex = 1
+    TabIndex = 0
     TabOrder = 1
     OnChange = PageControlChange
     object pgSun: TTabSheet
       Caption = 'Sun'
-      ClientHeight = 278
+      ClientHeight = 443
       ClientWidth = 622
       object lblSunRise: TLabel
-        Tag = 3
+        Tag = 10
         Left = 4
         Height = 15
         Top = 8
@@ -116,28 +116,28 @@ object frmMoreData: TfrmMoreData
         ParentColor = False
       end
       object lblSunTransit: TLabel
-        Tag = 3
+        Tag = 10
         Left = 4
         Height = 15
-        Top = 27
+        Top = 24
         Width = 59
         BorderSpacing.Top = 4
         Caption = 'Sun transit:'
         ParentColor = False
       end
       object lblSunSet: TLabel
-        Tag = 3
+        Tag = 10
         Left = 4
         Height = 15
-        Top = 46
+        Top = 40
         Width = 41
         BorderSpacing.Top = 4
         Caption = 'Sun set:'
         ParentColor = False
       end
       object valSunRise: TLabel
-        Tag = 4
-        Left = 100
+        Tag = 11
+        Left = 200
         Height = 1
         Top = 8
         Width = 1
@@ -145,41 +145,41 @@ object frmMoreData: TfrmMoreData
         ParentColor = False
       end
       object valSunTransit: TLabel
-        Tag = 4
-        Left = 100
+        Tag = 11
+        Left = 200
         Height = 1
         Top = 27
         Width = 1
         ParentColor = False
       end
       object valSunSet: TLabel
-        Tag = 4
-        Left = 100
+        Tag = 11
+        Left = 200
         Height = 1
         Top = 46
         Width = 1
         ParentColor = False
       end
       object lblPerihel: TLabel
-        Tag = 5
-        Left = 125
+        Tag = 12
+        Left = 352
         Height = 15
-        Top = 27
+        Top = 24
         Width = 66
         Caption = 'Next perihel:'
         ParentColor = False
       end
       object valPerihel: TLabel
-        Tag = 6
-        Left = 238
+        Tag = 13
+        Left = 500
         Height = 1
         Top = 27
         Width = 1
         ParentColor = False
       end
       object lblAphel: TLabel
-        Tag = 5
-        Left = 125
+        Tag = 12
+        Left = 352
         Height = 15
         Top = 8
         Width = 59
@@ -188,8 +188,8 @@ object frmMoreData: TfrmMoreData
         ParentColor = False
       end
       object valAphel: TLabel
-        Tag = 6
-        Left = 238
+        Tag = 13
+        Left = 500
         Height = 1
         Top = 8
         Width = 1
@@ -197,17 +197,17 @@ object frmMoreData: TfrmMoreData
         ParentColor = False
       end
       object lblSunEclipse: TLabel
-        Tag = 3
+        Tag = 10
         Left = 4
         Height = 15
-        Top = 158
+        Top = 176
         Width = 88
         Caption = 'Next sun eclipse:'
         ParentColor = False
       end
       object valSunEclipse: TLabel
-        Tag = 4
-        Left = 100
+        Tag = 11
+        Left = 200
         Height = 1
         Top = 158
         Width = 1
@@ -215,8 +215,8 @@ object frmMoreData: TfrmMoreData
         ParentColor = False
       end
       object typSunEclipse: TLabel
-        Tag = 4
-        Left = 100
+        Tag = 11
+        Left = 200
         Height = 1
         Top = 161
         Width = 1
@@ -224,8 +224,8 @@ object frmMoreData: TfrmMoreData
         ParentColor = False
       end
       object sarosSunEclipse: TLabel
-        Tag = 4
-        Left = 100
+        Tag = 11
+        Left = 200
         Height = 1
         Top = 164
         Width = 1
@@ -233,10 +233,10 @@ object frmMoreData: TfrmMoreData
         ParentColor = False
       end
       object lblSpring: TLabel
-        Tag = 5
-        Left = 272
+        Tag = 12
+        Left = 352
         Height = 15
-        Top = 56
+        Top = 77
         Width = 82
         Caption = 'March Equinox:'
         ParentColor = False
@@ -244,10 +244,10 @@ object frmMoreData: TfrmMoreData
         ShowHint = True
       end
       object lblSummer: TLabel
-        Tag = 5
-        Left = 312
+        Tag = 12
+        Left = 352
         Height = 15
-        Top = 77
+        Top = 96
         Width = 70
         BorderSpacing.Top = 4
         Caption = 'June Solstice:'
@@ -256,10 +256,10 @@ object frmMoreData: TfrmMoreData
         ShowHint = True
       end
       object lblAutumn: TLabel
-        Tag = 5
-        Left = 296
+        Tag = 12
+        Left = 352
         Height = 15
-        Top = 104
+        Top = 116
         Width = 105
         BorderSpacing.Top = 4
         Caption = 'September Equinox:'
@@ -268,10 +268,10 @@ object frmMoreData: TfrmMoreData
         ShowHint = True
       end
       object lblWinter: TLabel
-        Tag = 5
-        Left = 312
+        Tag = 12
+        Left = 352
         Height = 15
-        Top = 127
+        Top = 136
         Width = 100
         BorderSpacing.Top = 4
         Caption = 'December Solstice:'
@@ -280,39 +280,39 @@ object frmMoreData: TfrmMoreData
         ShowHint = True
       end
       object valSpring: TLabel
-        Tag = 6
-        Left = 238
+        Tag = 13
+        Left = 500
         Height = 1
         Top = 77
         Width = 1
         ParentColor = False
       end
       object valSummer: TLabel
-        Tag = 6
-        Left = 238
+        Tag = 13
+        Left = 500
         Height = 1
         Top = 82
         Width = 1
         ParentColor = False
       end
       object valAutumn: TLabel
-        Tag = 6
-        Left = 238
+        Tag = 13
+        Left = 500
         Height = 1
         Top = 87
         Width = 1
         ParentColor = False
       end
       object valWinter: TLabel
-        Tag = 6
-        Left = 238
+        Tag = 13
+        Left = 500
         Height = 1
         Top = 92
         Width = 1
         ParentColor = False
       end
       object lblSunRektaszension: TLabel
-        Tag = 3
+        Tag = 10
         Left = 4
         Height = 15
         Top = 77
@@ -322,15 +322,15 @@ object frmMoreData: TfrmMoreData
         ParentColor = False
       end
       object valSunRektaszension: TLabel
-        Tag = 4
-        Left = 100
+        Tag = 11
+        Left = 200
         Height = 1
         Top = 77
         Width = 1
         ParentColor = False
       end
       object lblSunDeclination: TLabel
-        Tag = 3
+        Tag = 10
         Left = 4
         Height = 15
         Top = 96
@@ -340,18 +340,18 @@ object frmMoreData: TfrmMoreData
         ParentColor = False
       end
       object valSunDeclination: TLabel
-        Tag = 4
-        Left = 100
+        Tag = 11
+        Left = 200
         Height = 1
         Top = 96
         Width = 1
         ParentColor = False
       end
       object valSunZodiac: TLabel
-        Tag = 4
-        Left = 100
+        Tag = 11
+        Left = 200
         Height = 23
-        Top = 127
+        Top = 136
         Width = 24
         BorderSpacing.Top = 3
         Caption = '^'
@@ -364,6 +364,7 @@ object frmMoreData: TfrmMoreData
         ShowHint = True
       end
       object lblSunZodiac: TLabel
+        Tag = 10
         Left = 4
         Height = 15
         Top = 123
@@ -373,7 +374,8 @@ object frmMoreData: TfrmMoreData
         ParentColor = False
       end
       object valSunZodiacname: TLabel
-        Left = 100
+        Tag = 11
+        Left = 200
         Height = 1
         Top = 123
         Width = 1
@@ -382,11 +384,11 @@ object frmMoreData: TfrmMoreData
     end
     object pgMoon: TTabSheet
       Caption = 'Moon'
-      ClientHeight = 278
+      ClientHeight = 443
       ClientWidth = 622
       ImageIndex = 1
       object lblMoonRise: TLabel
-        Tag = 3
+        Tag = 20
         Left = 4
         Height = 15
         Top = 8
@@ -397,7 +399,7 @@ object frmMoreData: TfrmMoreData
         ParentColor = False
       end
       object lblMoonTransit: TLabel
-        Tag = 3
+        Tag = 20
         Left = 4
         Height = 15
         Top = 27
@@ -407,7 +409,7 @@ object frmMoreData: TfrmMoreData
         ParentColor = False
       end
       object lblMoonSet: TLabel
-        Tag = 3
+        Tag = 20
         Left = 4
         Height = 15
         Top = 46
@@ -417,7 +419,7 @@ object frmMoreData: TfrmMoreData
         ParentColor = False
       end
       object valMoonRise: TLabel
-        Tag = 4
+        Tag = 21
         Left = 113
         Height = 1
         Top = 8
@@ -426,7 +428,7 @@ object frmMoreData: TfrmMoreData
         ParentColor = False
       end
       object valMoonTransit: TLabel
-        Tag = 4
+        Tag = 21
         Left = 113
         Height = 1
         Top = 27
@@ -434,7 +436,7 @@ object frmMoreData: TfrmMoreData
         ParentColor = False
       end
       object valMoonSet: TLabel
-        Tag = 4
+        Tag = 21
         Left = 113
         Height = 1
         Top = 46
@@ -442,7 +444,7 @@ object frmMoreData: TfrmMoreData
         ParentColor = False
       end
       object lblMoonEclipse: TLabel
-        Tag = 3
+        Tag = 20
         Left = 4
         Height = 15
         Top = 178
@@ -451,7 +453,7 @@ object frmMoreData: TfrmMoreData
         ParentColor = False
       end
       object valMoonEclipse: TLabel
-        Tag = 4
+        Tag = 21
         Left = 113
         Height = 1
         Top = 178
@@ -460,7 +462,7 @@ object frmMoreData: TfrmMoreData
         ParentColor = False
       end
       object typMoonEclipse: TLabel
-        Tag = 4
+        Tag = 21
         Left = 113
         Height = 1
         Top = 183
@@ -469,8 +471,8 @@ object frmMoreData: TfrmMoreData
         ParentColor = False
       end
       object lblPerigee: TLabel
-        Tag = 5
-        Left = 138
+        Tag = 22
+        Left = 304
         Height = 15
         Top = 27
         Width = 52
@@ -479,16 +481,16 @@ object frmMoreData: TfrmMoreData
         ParentColor = False
       end
       object valPerigee: TLabel
-        Tag = 6
-        Left = 198
+        Tag = 23
+        Left = 380
         Height = 1
         Top = 27
         Width = 1
         ParentColor = False
       end
       object lblApogee: TLabel
-        Tag = 5
-        Left = 138
+        Tag = 22
+        Left = 304
         Height = 15
         Top = 8
         Width = 54
@@ -497,8 +499,8 @@ object frmMoreData: TfrmMoreData
         ParentColor = False
       end
       object valApogee: TLabel
-        Tag = 6
-        Left = 198
+        Tag = 23
+        Left = 380
         Height = 1
         Top = 8
         Width = 1
@@ -506,7 +508,7 @@ object frmMoreData: TfrmMoreData
         ParentColor = False
       end
       object sarosMoonEclipse: TLabel
-        Tag = 4
+        Tag = 21
         Left = 113
         Height = 1
         Top = 188
@@ -515,7 +517,7 @@ object frmMoreData: TfrmMoreData
         ParentColor = False
       end
       object lblMoonRektaszension: TLabel
-        Tag = 3
+        Tag = 20
         Left = 4
         Height = 15
         Top = 77
@@ -525,7 +527,7 @@ object frmMoreData: TfrmMoreData
         ParentColor = False
       end
       object lblMoonDeclination: TLabel
-        Tag = 3
+        Tag = 20
         Left = 4
         Height = 15
         Top = 96
@@ -535,7 +537,7 @@ object frmMoreData: TfrmMoreData
         ParentColor = False
       end
       object valMoonRektaszension: TLabel
-        Tag = 4
+        Tag = 21
         Left = 113
         Height = 1
         Top = 77
@@ -543,7 +545,7 @@ object frmMoreData: TfrmMoreData
         ParentColor = False
       end
       object valMoonDeclination: TLabel
-        Tag = 4
+        Tag = 21
         Left = 113
         Height = 1
         Top = 96
@@ -551,7 +553,7 @@ object frmMoreData: TfrmMoreData
         ParentColor = False
       end
       object valMoonZodiac: TLabel
-        Tag = 4
+        Tag = 21
         Left = 144
         Height = 23
         Top = 139
@@ -567,6 +569,7 @@ object frmMoreData: TfrmMoreData
         ShowHint = True
       end
       object lblMoonZodiac: TLabel
+        Tag = 20
         Left = 4
         Height = 15
         Top = 134
@@ -576,6 +579,7 @@ object frmMoreData: TfrmMoreData
         ParentColor = False
       end
       object valMoonZodiac_name: TLabel
+        Tag = 21
         Left = 113
         Height = 1
         Top = 134
@@ -585,11 +589,11 @@ object frmMoreData: TfrmMoreData
     end
     object pgCalendar: TTabSheet
       Caption = 'Calendar'
-      ClientHeight = 278
+      ClientHeight = 443
       ClientWidth = 622
       ImageIndex = 2
       object lblEaster: TLabel
-        Tag = 3
+        Tag = 30
         Left = 4
         Height = 15
         Top = 8
@@ -602,7 +606,7 @@ object frmMoreData: TfrmMoreData
         ShowHint = True
       end
       object valEaster: TLabel
-        Tag = 4
+        Tag = 31
         Left = 141
         Height = 1
         Top = 8
@@ -611,7 +615,7 @@ object frmMoreData: TfrmMoreData
         ParentColor = False
       end
       object lblPesach: TLabel
-        Tag = 3
+        Tag = 30
         AnchorSideTop.Side = asrBottom
         Left = 4
         Height = 15
@@ -624,7 +628,7 @@ object frmMoreData: TfrmMoreData
         ShowHint = True
       end
       object valPesach: TLabel
-        Tag = 4
+        Tag = 31
         Left = 141
         Height = 1
         Top = 46
@@ -632,7 +636,7 @@ object frmMoreData: TfrmMoreData
         ParentColor = False
       end
       object lblChinese: TLabel
-        Tag = 3
+        Tag = 30
         AnchorSideTop.Side = asrBottom
         Left = 4
         Height = 15
@@ -645,7 +649,7 @@ object frmMoreData: TfrmMoreData
         ShowHint = True
       end
       object valChinese: TLabel
-        Tag = 4
+        Tag = 31
         Left = 141
         Height = 1
         Top = 65
@@ -653,7 +657,7 @@ object frmMoreData: TfrmMoreData
         ParentColor = False
       end
       object lblEasterJulian: TLabel
-        Tag = 3
+        Tag = 30
         AnchorSideTop.Side = asrBottom
         Left = 4
         Height = 15
@@ -666,7 +670,7 @@ object frmMoreData: TfrmMoreData
         ShowHint = True
       end
       object valEasterJulian: TLabel
-        Tag = 4
+        Tag = 31
         Left = 141
         Height = 1
         Top = 27

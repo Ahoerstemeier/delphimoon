@@ -163,7 +163,7 @@ end;
 
 procedure TfrmMoreData.PageControlChange(Sender: TObject);
 begin
-//  UpdateLayout;
+  UpdateLayout;
 end;
 
 procedure TfrmMoreData.SetStartTime(AValue: TDateTime);
@@ -172,52 +172,76 @@ begin
 end;
 
 procedure TfrmMoreData.UpdateLayout;
-begin
-end;
-
-(*
-
-  function FindAnchorControl(AParent: TWinControl; ALeft: Integer): TControl;
-  var
-    i: Integer;
-    w, wmax: Integer;
-  begin
-    Result := nil;
-    wmax := 0;
-    for i := 0 to AParent.ControlCount-1 do begin
-      if AParent.Controls[i].Left = ALeft then begin
-        w := AParent.Controls[i].Width;
-        if w > wmax then begin
-          wmax := w;
-          Result := AParent.Controls[i];
-        end;
-      end;
-    end;
-  end;
-
+const
+  MARGIN = 4;
+  DISTANCE = 8;
+  LARGE_DISTANCE = 24;
+  ROW_DISTANCE = 2;
 var
-  wSun, wMoon, wCalendar: Integer;
-  c: TControl;
+  x, y: Integer;
+  pageWidthSun, pageWidthMoon, pageHeight: Integer;
+  P: TPoint;
 begin
-  valSunRise.AnchorSideLeft.Control := FindAnchorControl(PgSun, lblSunRise.Left);
-  lblAphel.AnchorSideLeft.Control := FindAnchorControl(PgSun, valSunRise.Left);
-  valAphel.AnchorSideLeft.Control := FindAnchorControl(PgSun, lblAphel.Left);
-  c := FindAnchorControl(PgSun, valAphel.Left);
-  wSun := c.Left + c.Width + lblSunRise.Left;
+  //  page 1: Sun
+  x := MARGIN;
+  ArrangeInColumns(x, pgSun, 10, 11, DISTANCE);
+  inc(x, LARGE_DISTANCE);
+  ArrangeInColumns(x, pgSun, 12, 13, DISTANCE);
+  pageWidthSun := x + MARGIN;
 
-  valMoonRise.AnchorSideLeft.Control := FindAnchorControl(PgMoon, lblMoonRise.Left);
-  lblApogee.AnchorSideLeft.Control := FindAnchorControl(PgMoon, valMoonRise.Left);
-  valApogee.AnchorSideLeft.control := FindAnchorControl(PgMoon, lblApogee.Left);
-  c := FindAnchorControl(PgMoon, valApogee.Left);
-  wMoon := c.Left + c.Width + lblMoonRise.Left;
+  y := MARGIN;
+  ArrangeInRow(y, ROW_DISTANCE, [lblSunRise, valSunRise, lblAphel, valAphel]);
+  ArrangeInRow(y, ROW_DISTANCE, [lblSunTransit, valSunTransit, lblPerihel, valPerihel]);
+  ArrangeInRow(y, ROW_DISTANCE, [lblSunSet, valSunSet]);
+  inc(y, DISTANCE);
+  ArrangeInRow(y, ROW_DISTANCE, [lblSunRektaszension, valSunRektaszension, lblSpring, valSpring]);
+  ArrangeInRow(y, ROW_DISTANCE, [lblSunDeclination, valSunDeclination, lblSummer, valSummer]);
+  ArrangeInRow(y, ROW_DISTANCE, [lblAutumn, valAutumn]);
+  ArrangeInRow(y, ROW_DISTANCE, [lblWinter, valWinter]);
+  inc(y, DISTANCE);
+  ArrangeInRow(y, ROW_DISTANCE, [lblSunZodiac, valSunZodiacName]);
+  ArrangeInRow(y, ROW_DISTANCE, [valSunZodiac]);
+  inc(y, DISTANCE);
+  ArrangeInRow(y, ROW_DISTANCE, [lblSunEclipse, valSunEclipse]);
+  ArrangeInRow(y, ROW_DISTANCE, [sarosSunEclipse]);
+  ArrangeInRow(y, ROW_DISTANCE, [typSunEclipse]);
+  pageHeight := y;
 
-  valEaster.AnchorSideLeft.Control := FindAnchorControl(PgCalendar, lblEaster.Left);
-  c := FindAnchorControl(PgCalendar, valEaster.Left);
-  wCalendar := c.Left + c.Width + lblEaster.Left;
+  //  page 2: Moon
+  x := MARGIN;
+  ArrangeInColumns(x, pgMoon, 20, 21, DISTANCE);
+  inc(x, LARGE_DISTANCE);
+  ArrangeInColumns(x, pgMoon, 22, 23, DISTANCE);
+  pageWidthMoon := x + MARGIN;
 
-  Width := MaxValue([wSun, wMoon, wCalendar]) + 2*PageControl.Left;
+  y := MARGIN;
+  ArrangeInRow(y, ROW_DISTANCE, [lblMoonRise, valMoonRise, lblApogee, valApogee]);
+  ArrangeInRow(y, ROW_DISTANCE, [lblMoonTransit, valMoonTransit, lblPerigee, valPerigee]);
+  ArrangeInRow(y, ROW_DISTANCE, [lblMoonSet, valMoonSet]);
+  inc(y, DISTANCE);
+  ArrangeInRow(y, ROW_DISTANCE, [lblMoonRektaszension, valMoonRektaszension]);
+  ArrangeInRow(y, ROW_DISTANCE, [lblMoonDeclination, valMoonDeclination]);
+  inc(y, DISTANCE);
+  ArrangeInRow(y, ROW_DISTANCE, [lblMoonZodiac, valMoonZodiac_Name]);
+  ArrangeInRow(y, ROW_DISTANCE, [valMoonZodiac]);
+  inc(y, DISTANCE);
+  ArrangeInRow(y, ROW_DISTANCE, [lblMoonEclipse, valMoonEclipse]);
+  ArrangeInRow(y, ROW_DISTANCE, [sarosMoonEclipse]);
+  ArrangeInRow(y, ROW_DISTANCE, [typMoonEclipse]);
+
+  // page 3: Calendar
+  x := MARGIN;
+  ArrangeInColumns(x, pgCalendar, 30, 31, DISTANCE);
+  y := MARGIN;
+  ArrangeInRow(y, ROW_DISTANCE, [lblEaster, valEaster]);
+  ArrangeInRow(y, ROW_DISTANCE, [lblPesach, valPesach]);
+  ArrangeInRow(y, ROW_DISTANCE, [lblEasterJulian, valEasterJulian]);
+  ArrangeInRow(y, ROW_DISTANCE, [lblChinese, valChinese]);
+
+  P := PgSun.ClientToParent(Point(Max(pageWidthSun, pageWidthMoon), pageHeight), self);
+  ClientWidth := P.X + 2*MARGIN;
+  ClientHeight := P.Y + 2*MARGIN;
 end;
-          *)
 
 procedure TfrmMoreData.UpdateStrings;
 var
@@ -421,6 +445,7 @@ begin
   except
   end;
 
+  // Moon zodiac
   z := MoonZodiac(dt);
   valMoonZodiac.Caption := char(ord('^') + ord(z));
   valMoonZodiac.Hint := GetZodiacName(z);
@@ -429,11 +454,14 @@ begin
   valMoonDeclination.Caption := DegreeToString(declination);
   valMoonRektaszension.Caption := RektaszensionToString(rektaszension);
 
+  // Sun zodiac
   z := SunZodiac(dt);
   valSunZodiac.Caption := char(ord('^') + ord(z));
   Sun_Position_Equatorial(dt, rektaszension, declination);
   valSunZodiac.Hint := GetZodiacName(z);
   valSunZodiacName.Caption := GetZodiacName(z);
+
+  // Sun rektaszension and declination
   valSunDeclination.Caption := DegreeToString(declination);
   valSunRektaszension.Caption := RektaszensionToString(rektaszension);
   try
@@ -469,6 +497,7 @@ begin
   except
   end;
 
+  UpdateLayout;
 end;
 
 end.

@@ -23,6 +23,9 @@ function GetOSLanguage: String;
 function GetMoonName(AMoon: TMoonName): String;
 function GetZodiacName(AZodiac: TZodiac): String;
 
+procedure ArrangeInColumns(var APos: Integer; AParent: TWinControl;
+  ALabelTag, AValueTag, ATagValueDistance: Integer);
+procedure ArrangeInRow(var APos: Integer; ARowDistance: Integer; ALabels: Array of TLabel);
 procedure CenterAboveControl(ALabel: TLabel; AControl: TWinControl);
 
 implementation
@@ -33,6 +36,7 @@ uses
 {$else}
   Windows,
 {$endif}
+  Math,
   mtConst, mtStrings;
 
 function DateToString(ADateTime: TDateTime): string;
@@ -205,6 +209,48 @@ begin
   end;
 end;
 
+
+procedure ArrangeInColumns(var APos: Integer; AParent: TWinControl;
+  ALabelTag, AValueTag: Integer; ATagValueDistance: Integer);
+var
+  i: Integer;
+  labelWidth: Integer;
+  valueWidth: Integer;
+  C: TControl;
+begin
+  // Measure column widths
+  labelWidth := 0;
+  valueWidth := 0;
+  for i:=0 to AParent.ControlCount-1 do begin
+    C := AParent.Controls[i];
+    if C.Tag = ALabelTag then
+      labelWidth := Max(labelWidth, C.Width)
+    else if C.Tag = AValueTag then
+      valueWidth := Max(valueWidth, C.Width);
+  end;
+
+  // Position controls
+  for i:=0 to AParent.ControlCount-1 do begin
+    C := AParent.Controls[i];
+    if C.Tag = ALabelTag then
+      C.Left := APos
+    else if C.Tag = AValueTag then
+      C.Left := APos + labelWidth + ATagValueDistance;
+  end;
+
+  // Return APos as the end of the value column
+  APos := APos + labelWidth + ATagValueDistance + valueWidth;
+end;
+
+procedure ArrangeInRow(var APos: Integer; ARowDistance: Integer;
+  ALabels: Array of TLabel);
+var
+  i: Integer;
+begin
+  for i:=0 to High(ALabels) do
+    ALabels[i].Top := APos;
+  APos := APos + ALabels[0].Height + ARowDistance;
+end;
 
 procedure CenterAboveControl(ALabel: TLabel; AControl: TWinControl);
 begin

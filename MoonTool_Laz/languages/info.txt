@@ -1,0 +1,6 @@
+Use poedit or another po translation tool to translate each language file.
+
+For usage in Delphi:
+- Copy the mo files to the folders "locale/xx/LC_MESSAGES" (where xx is the 
+  language code in the mo file name in "moontool.xx.po")
+- Rename the file in each of the LC_MESSAGES folder to "default.mo".

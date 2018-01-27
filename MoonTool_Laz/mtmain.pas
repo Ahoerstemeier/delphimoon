@@ -32,7 +32,7 @@ uses
  {$ifdef delphi_2007}
   HtmlHelpViewer,
  {$endif}
-  XPMan, //gnugettext,
+  XPMan, gnugettext,
 {$endif}
 
   Moon, MoonComp;
@@ -134,6 +134,7 @@ type
     FFirstNow: TDateTime;
     FSpeed: Integer;
     FStartTime: TDateTime;
+    FTranslated: Boolean;
    {$ifdef use_tray_icon}
     FTrayIcon: TTrayIcon;
     procedure TrayDblClick(Sender: TObject);
@@ -291,11 +292,6 @@ begin
 {$endif}
 end;
 {$endif}
-
-procedure TMainForm.TimerTimer(Sender: TObject);
-begin
-  UpdateValues;
-end;
 
 procedure TMainForm.mnuStopClick(Sender: TObject);
 begin
@@ -492,28 +488,39 @@ end;
 procedure TMainForm.SelectLanguage(ALang: string; AUpdateSize:Boolean);
 var
   s: String;
-  i: Integer;
+  i, j: Integer;
   p: Integer;
   fn: String;
   langdir: String;
   langfile: String;
 begin
-  Lang := lowercase(ALang);
+  Lang := '';
+  for i:=1 to Length(ALang) do begin
+    if ALang[i] = '&' then continue;
+    Lang := Lang + lowercase(ALang[i]);
+  end;
 
   // Update formatsettings (for month names etc)
   GetFormatSettingsFromLangCode(Lang, LocalFormatSettings);
 
   // Translate strings
+ {$ifdef fpc}
   langdir := IncludeTrailingPathDelimiter(ExtractFilepath(Application.Exename) + LANGUAGE_DIR);
   langfile := Format('%s.%s.po', [
     ChangeFileExt(ExtractFileName(Application.ExeName), ''), Lang
   ]);
   fn := langdir + langfile;
-  {$ifdef fpc}
   Translations.TranslateResourceStrings(fn);
   //fn := langdir + 'lclstrconsts.' + Lang + '.po';
   // Translations.TranslateResourceStrings(fn);
-  {$endif}
+ {$else}
+  UseLanguage(Lang);
+  if not FTranslated then
+    TranslateComponent(self)
+  else
+    RetranslateComponent(self);
+  FTranslated := true;
+ {$endif}
 
   // Apply strings to form and update layout
   UpdateStrings;
@@ -545,6 +552,11 @@ begin
   {$endif}
 end;
 {$endif}
+
+procedure TMainForm.TimerTimer(Sender: TObject);
+begin
+  UpdateValues;
+end;
 
 procedure TMainForm.UpdateLayout;
 const
@@ -636,7 +648,12 @@ begin
         lunationPos + lunationValueWidth)
     + OFFSET;
   h := lblNextNewMoon.Top + lblNextNewMoon.Height + OFFSET;
+  {$ifdef fpc}
   SetBounds(Left, Top, w, h);
+  {$else}
+  ClientWidth := w;
+  ClientHeight := h;
+  {$endif}
 
   // Moon icon
   Moon.Top := LblJulian.Top;
@@ -645,12 +662,11 @@ end;
 
 procedure TMainForm.UpdateStrings;
 var
-  i, w: Integer;
-  maxwidth:Integer;
-  C: TControl;
+  s: String;
 begin
   Caption := SMoontool;
   lblAgeOfMoon.Caption := SAgeOfMoon;
+  s := SAgeOfMoon;
   lblFirstQuart.Caption := SFirstQuarter;
   lblfullMoon.Caption := SFullMoon;
   lblJulian.Caption := SJuliandate;
@@ -757,8 +773,8 @@ begin
   new_phase := round(Current_Phase(jetzt) * 100);
   valPhase.Caption := IntToStr(new_phase) + '% ' + SPhaseHint;
 
-  valMoonSubtend.Caption := Format('%.4f%s', [Moon_Diameter(jetzt)/3600, DEG_SYMBOL]);
-  valSunSubtend.Caption := Format('%.4f%s', [Sun_Diameter(jetzt)/3600, DEG_SYMBOL]);
+  valMoonSubtend.Caption := Format('%.4f%s', [Moon_Diameter(jetzt)/3600, DEG_SYMBOL], LocalFormatSettings);
+  valSunSubtend.Caption := Format('%.4f%s', [Sun_Diameter(jetzt)/3600, DEG_SYMBOL], LocalFormatSettings);
 
   if new_phase <> FLastPhaseValue then begin
     Moon.Date := jetzt;

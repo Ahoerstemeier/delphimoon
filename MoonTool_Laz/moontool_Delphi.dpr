@@ -4,7 +4,6 @@ uses
   gnugettext in 'gnugettext.pas',
   Forms,
   mtmain in 'mtmain.pas' {MainForm},
-  mtabout in 'mtabout.pas' {AboutForm},
   mtConst,
   mtUtils,
   mtStrings,
@@ -12,7 +11,8 @@ uses
   mtjewishform in 'mtjewishform.pas' {frmJewish},
   mtjulianform in 'mtjulianform.pas' {frmJulian},
   mtlocation in 'mtlocation.pas' {frmLocations},
-  mtmoredataform in 'mtmoredataform.pas' {frmMoreData};
+  mtmoredataform in 'mtmoredataform.pas' {frmMoreData},
+  mtabout in 'mtabout.pas' {frmAbout};
 
 {$ifdef fpc}
   {$R *.res}
@@ -21,11 +21,6 @@ uses
 {$endif}
 
 begin
-  // Add extra domain for runtime library translations
-  AddDomainForResourceString('default');
-  // Force program to use
-  UseLanguage('en');
-
   Application.Initialize;
   Application.HelpFile := '';
   Application.CreateForm(TMainForm, MainForm);

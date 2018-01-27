@@ -17,7 +17,7 @@
     <i18n>
       <EnableI18N Value="True"/>
       <OutDir Value="languages"/>
-      <ExcludedIdentifiers Count="125">
+      <ExcludedIdentifiers Count="127">
         <Item1 Value="tfrmabout.lblmain.caption"/>
         <Item2 Value="tfrmabout.lblref.caption"/>
         <Item3 Value="tfrmjewish.caption"/>
@@ -133,17 +133,22 @@
         <Item113 Value="tmainform.mnuhelpitem.caption"/>
         <Item114 Value="tmainform.mnuhelptimezones.caption"/>
         <Item115 Value="tmainform.mnujulian.caption"/>
-        <Item116 Value="tmainform.mnulocations.caption"/>
-        <Item117 Value="tmainform.mnumoredata.caption"/>
-        <Item118 Value="tmainform.mnumenuabout.caption"/>
-        <Item119 Value="tmainform.mnunormalspeed.caption"/>
-        <Item120 Value="tmainform.mnuoptions.caption"/>
-        <Item121 Value="tmainform.mnurotate.caption"/>
-        <Item122 Value="tmainform.mnurotsouth.caption"/>
-        <Item123 Value="tmainform.mnustop.caption"/>
-        <Item124 Value="tmainform.mnuutc.caption"/>
-        <Item125 Value="tmainform.mnuveryfastmode.caption"/>
+        <Item116 Value="tmainform.mnulanguagede.caption"/>
+        <Item117 Value="tmainform.mnulanguageen.caption"/>
+        <Item118 Value="tmainform.mnulocations.caption"/>
+        <Item119 Value="tmainform.mnumenuabout.caption"/>
+        <Item120 Value="tmainform.mnumoredata.caption"/>
+        <Item121 Value="tmainform.mnunormalspeed.caption"/>
+        <Item122 Value="tmainform.mnuoptions.caption"/>
+        <Item123 Value="tmainform.mnurotate.caption"/>
+        <Item124 Value="tmainform.mnurotsouth.caption"/>
+        <Item125 Value="tmainform.mnustop.caption"/>
+        <Item126 Value="tmainform.mnuutc.caption"/>
+        <Item127 Value="tmainform.mnuveryfastmode.caption"/>
       </ExcludedIdentifiers>
+      <ExcludedOriginals Count="1">
+        <Item1 Value="-"/>
+      </ExcludedOriginals>
     </i18n>
     <BuildModes Count="1">
       <Item1 Name="Default" Default="True"/>
@@ -227,8 +232,9 @@
         <UnitName Value="mtJewishForm"/>
       </Unit7>
       <Unit8>
-        <Filename Value="mtConst.pas"/>
+        <Filename Value="mtconst.pas"/>
         <IsPartOfProject Value="True"/>
+        <UnitName Value="mtConst"/>
       </Unit8>
       <Unit9>
         <Filename Value="mtutils.pas"/>

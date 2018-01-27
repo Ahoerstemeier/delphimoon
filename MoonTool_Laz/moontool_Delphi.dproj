@@ -81,9 +81,6 @@
         <DCCReference Include="mtmain.pas">
             <Form>MainForm</Form>
         </DCCReference>
-        <DCCReference Include="mtabout.pas">
-            <Form>AboutForm</Form>
-        </DCCReference>
         <DCCReference Include="mtutcform.pas">
             <Form>frmUTC</Form>
         </DCCReference>
@@ -98,6 +95,10 @@
         </DCCReference>
         <DCCReference Include="mtmoredataform.pas">
             <Form>frmMoreData</Form>
+        </DCCReference>
+        <DCCReference Include="mtabout.pas">
+            <Form>frmAbout</Form>
+            <FormType>dfm</FormType>
         </DCCReference>
         <BuildConfiguration Include="Debug">
             <Key>Cfg_2</Key>

@@ -12,22 +12,18 @@ msgstr ""
 "X-Generator: Poedit 2.0.6\n"
 
 #: mtstrings.saboutbox
-msgctxt "mtstrings.saboutbox"
 msgid "About Moontool"
 msgstr "About Moontool"
 
 #: mtstrings.sageofmoon
-msgctxt "mtstrings.sageofmoon"
 msgid "Age of the moon:"
 msgstr "Age of the moon:"
 
 #: mtstrings.sageofmoonvalue
-#| msgid "%1% days, %2% hours, %3% minutes"
 msgid "%0:d days, %1:d hours, %2:d minutes"
 msgstr "%0:d days, %1:d hours, %2:d minutes"
 
 #: mtstrings.saltitude
-msgctxt "mtstrings.saltitude"
 msgid "Altitude:"
 msgstr "Altitude:"
 
@@ -40,7 +36,6 @@ msgid "Next aphelion:"
 msgstr "Next aphelion:"
 
 #: mtstrings.sapogee
-msgctxt "mtstrings.sapogee"
 msgid "Next apogee:"
 msgstr "Next apogee:"
 
@@ -57,8 +52,6 @@ msgid "astronomical units"
 msgstr "astronomical units"
 
 #: mtstrings.sautumn
-#| msgid "September Equinox:"
-msgctxt "mtstrings.sautumn"
 msgid "September equinox:"
 msgstr "September equinox:"
 
@@ -67,7 +60,6 @@ msgid "Begin of autumn"
 msgstr "Begin of autumn"
 
 #: mtstrings.sbasedupon
-msgctxt "mtstrings.sbasedupon"
 msgid ""
 "based upon the program\n"
 "by John Walker\n"
@@ -76,12 +68,10 @@ msgstr ""
 "by John Walker\n"
 
 #: mtstrings.scalendar
-msgctxt "mtstrings.scalendar"
 msgid "Calendar"
 msgstr "Calendar"
 
 #: mtstrings.scancelbutton
-msgctxt "mtstrings.scancelbutton"
 msgid "Cancel"
 msgstr "Cancel"
 
@@ -94,7 +84,6 @@ msgid "Capricorn"
 msgstr "Capricorn"
 
 #: mtstrings.schinesenewyear
-msgctxt "mtstrings.schinesenewyear"
 msgid "Chinese New Year:"
 msgstr "Chinese New Year:"
 
@@ -147,12 +136,10 @@ msgid "Tiger"
 msgstr "Tiger"
 
 #: mtstrings.schristiandate
-msgctxt "mtstrings.schristiandate"
 msgid "Christian date"
 msgstr "Christian date"
 
 #: mtstrings.sday
-msgctxt "mtstrings.sday"
 msgid "Day"
 msgstr "Day"
 
@@ -161,7 +148,6 @@ msgid "Declination:"
 msgstr "Declination:"
 
 #: mtstrings.sdegreeabbrev
-msgctxt "mtstrings.sdegreeabbrev"
 msgid "deg"
 msgstr "deg"
 
@@ -178,12 +164,10 @@ msgid "East"
 msgstr "East"
 
 #: mtstrings.seasterdate
-msgctxt "mtstrings.seasterdate"
 msgid "Easter date:"
 msgstr "Easter date:"
 
 #: mtstrings.seasterdateorthodox
-msgctxt "mtstrings.seasterdateorthodox"
 msgid "Orthodox Easter date:"
 msgstr "Orthodox Easter date:"
 
@@ -220,12 +204,10 @@ msgid "Edit locations"
 msgstr "Edit locations"
 
 #: mtstrings.sfirstquarter
-msgctxt "mtstrings.sfirstquarter"
 msgid "First quarter:"
 msgstr "First quarter:"
 
 #: mtstrings.sfullmoon
-msgctxt "mtstrings.sfullmoon"
 msgid "Full moon:"
 msgstr "Full moon:"
 
@@ -234,7 +216,6 @@ msgid "Gemini"
 msgstr "Gemini"
 
 #: mtstrings.shour
-msgctxt "mtstrings.shour"
 msgid "Hour"
 msgstr "Hour"
 
@@ -243,12 +224,10 @@ msgid "Invalid"
 msgstr "Invalid"
 
 #: mtstrings.sjewishdate
-msgctxt "mtstrings.sjewishdate"
 msgid "Jewish date"
 msgstr "Jewish date"
 
 #: mtstrings.sjuliandate
-msgctxt "mtstrings.sjuliandate"
 msgid "Julian date:"
 msgstr "Julian date:"
 
@@ -257,17 +236,14 @@ msgid "km"
 msgstr "km"
 
 #: mtstrings.slastnewmoon
-msgctxt "mtstrings.slastnewmoon"
 msgid "Last new moon:"
 msgstr "Last new moon:"
 
 #: mtstrings.slastquarter
-msgctxt "mtstrings.slastquarter"
 msgid "Last quarter:"
 msgstr "Last quarter:"
 
 #: mtstrings.slatitude
-msgctxt "mtstrings.slatitude"
 msgid "Latitude:"
 msgstr "Latitude:"
 
@@ -284,17 +260,14 @@ msgid "Libra"
 msgstr "Libra"
 
 #: mtstrings.slocaltime
-msgctxt "mtstrings.slocaltime"
 msgid "Local time:"
 msgstr "Local time:"
 
 #: mtstrings.slocation
-msgctxt "mtstrings.slocation"
 msgid "Location:"
 msgstr "Location:"
 
 #: mtstrings.slongitude
-msgctxt "mtstrings.slongitude"
 msgid "Longitude:"
 msgstr "Longitude:"
 
@@ -307,45 +280,34 @@ msgid "Lunation:"
 msgstr "Lunation:"
 
 #: mtstrings.smenuabout
-#| msgid "&About"
-msgctxt "mtstrings.smenuabout"
 msgid "&About..."
 msgstr "&About..."
 
 #: mtstrings.smenucolormoon
-#| msgid "&Colorize Moon"
-msgctxt "mtstrings.smenucolormoon"
 msgid "&Colorize moon"
 msgstr "&Colorize moon"
 
 #: mtstrings.smenucopy
-msgctxt "mtstrings.smenucopy"
 msgid "&Copy"
 msgstr "&Copy"
 
 #: mtstrings.smenuedit
-msgctxt "mtstrings.smenuedit"
 msgid "&Edit"
 msgstr "&Edit"
 
 #: mtstrings.smenuexit
-msgctxt "mtstrings.smenuexit"
 msgid "E&xit"
 msgstr "E&xit"
 
 #: mtstrings.smenufast
-#| msgid "&Fast mode"
-msgctxt "mtstrings.smenufast"
 msgid "&Fast"
 msgstr "&Fast"
 
 #: mtstrings.smenufile
-msgctxt "mtstrings.smenufile"
 msgid "&File"
 msgstr "&File"
 
 #: mtstrings.smenuhelp
-msgctxt "mtstrings.smenuhelp"
 msgid "&Help"
 msgstr "&Help"
 
@@ -366,41 +328,30 @@ msgid "&Language"
 msgstr "&Language"
 
 #: mtstrings.smenulocation
-#| msgid "Edit &locations..."
-msgctxt "mtstrings.smenulocation"
 msgid "&Locations..."
 msgstr "&Locations..."
 
 #: mtstrings.smenumore
-#| msgid "&More Data"
-msgctxt "mtstrings.smenumore"
 msgid "&More data..."
 msgstr "&More data..."
 
 #: mtstrings.smenunormalspeed
-msgctxt "mtstrings.smenunormalspeed"
 msgid "&Normal"
 msgstr "&Normal"
 
 #: mtstrings.smenuoptions
-msgctxt "mtstrings.smenuoptions"
 msgid "&Options"
 msgstr "&Options"
 
 #: mtstrings.smenurotate
-#| msgid "&Rotate Moon"
-msgctxt "mtstrings.smenurotate"
 msgid "&Rotate moon"
 msgstr "&Rotate moon"
 
 #: mtstrings.smenurotatenorth
-#| msgid "&Northern Hemisphere"
 msgid "&Northern hemisphere"
 msgstr "&Northern hemisphere"
 
 #: mtstrings.smenurotatesouth
-#| msgid "&Southern Hemisphere"
-msgctxt "mtstrings.smenurotatesouth"
 msgid "&Southern hemisphere"
 msgstr "&Southern hemisphere"
 
@@ -413,12 +364,10 @@ msgid "&Speed"
 msgstr "&Speed"
 
 #: mtstrings.smenustop
-msgctxt "mtstrings.smenustop"
 msgid "&Stop"
 msgstr "&Stop"
 
 #: mtstrings.smenutimezones
-msgctxt "mtstrings.smenutimezones"
 msgid "Time zones..."
 msgstr "Time zones..."
 
@@ -427,7 +376,6 @@ msgid "&Universal time..."
 msgstr "&Universal time..."
 
 #: mtstrings.smenuveryfast
-msgctxt "mtstrings.smenuveryfast"
 msgid "&Very fast"
 msgstr "&Very fast"
 
@@ -440,32 +388,26 @@ msgid "Minimize to Tray"
 msgstr "Minimize to Tray"
 
 #: mtstrings.sminute
-msgctxt "mtstrings.sminute"
 msgid "Minute"
 msgstr "Minute"
 
 #: mtstrings.smonth
-msgctxt "mtstrings.smonth"
 msgid "Month"
 msgstr "Month"
 
 #: mtstrings.smoon
-msgctxt "mtstrings.smoon"
 msgid "Moon"
 msgstr "Moon"
 
 #: mtstrings.smoondistance
-msgctxt "mtstrings.smoondistance"
 msgid "Moon's distance:"
 msgstr "Moon's distance:"
 
 #: mtstrings.smooneclipse
-msgctxt "mtstrings.smooneclipse"
 msgid "Next moon eclipse:"
 msgstr "Next moon eclipse:"
 
 #: mtstrings.smoonnamebeaver
-#| msgid "Beaver Moon\""
 msgid "Beaver Moon"
 msgstr "Beaver Moon"
 
@@ -518,43 +460,34 @@ msgid "Worm Moon"
 msgstr "Worm Moon"
 
 #: mtstrings.smoonphase
-msgctxt "mtstrings.smoonphase"
 msgid "Moon phase:"
 msgstr "Moon phase:"
 
 #: mtstrings.smoonrise
-msgctxt "mtstrings.smoonrise"
 msgid "Moon rise:"
 msgstr "Moon rise:"
 
 #: mtstrings.smoonset
-msgctxt "mtstrings.smoonset"
 msgid "Moon set:"
 msgstr "Moon set:"
 
 #: mtstrings.smoonsize
-msgctxt "mtstrings.smoonsize"
 msgid "Moon subtends:"
 msgstr "Moon subtends:"
 
 #: mtstrings.smoontool
-msgctxt "mtstrings.smoontool"
 msgid "Moontool"
 msgstr "Moontool"
 
 #: mtstrings.smoontoolabout
-msgctxt "mtstrings.smoontoolabout"
 msgid "Moontool for Windows"
 msgstr "Moontool for Windows"
 
 #: mtstrings.smoontransit
-msgctxt "mtstrings.smoontransit"
 msgid "Moon transit:"
 msgstr "Moon transit:"
 
 #: mtstrings.smoredata
-#| msgid "More Data"
-msgctxt "mtstrings.smoredata"
 msgid "More data"
 msgstr "More data"
 
@@ -567,12 +500,10 @@ msgid "Move up"
 msgstr "Move up"
 
 #: mtstrings.snewlocation
-#| msgid "New Location"
 msgid "New location"
 msgstr "New location"
 
 #: mtstrings.snextnewmoon
-msgctxt "mtstrings.snextnewmoon"
 msgid "Next new moon:"
 msgstr "Next new moon:"
 
@@ -581,12 +512,10 @@ msgid "North"
 msgstr "North"
 
 #: mtstrings.snow
-msgctxt "mtstrings.snow"
 msgid "&Now"
 msgstr "&Now"
 
 #: mtstrings.sokbutton
-msgctxt "mtstrings.sokbutton"
 msgid "OK"
 msgstr "OK"
 
@@ -595,7 +524,6 @@ msgid "Out of algorithm range"
 msgstr "Out of algorithm range"
 
 #: mtstrings.sperigee
-msgctxt "mtstrings.sperigee"
 msgid "Next perigee:"
 msgstr "Next perigee:"
 
@@ -604,20 +532,18 @@ msgid "Next perihelion:"
 msgstr "Next perihelion:"
 
 #: mtstrings.spesachdate
-msgctxt "mtstrings.spesachdate"
 msgid "Passover date:"
 msgstr "Passover date:"
 
 #: mtstrings.sphasehint
 msgid "(0% = New, 100% = Full)"
-msgstr "(0% = New, 100% = Full)"
+msgstr "(0% = new, 100% = full)"
 
 #: mtstrings.spisces
 msgid "Pisces"
 msgstr "Pisces"
 
 #: mtstrings.srektaszension
-msgctxt "mtstrings.srektaszension"
 msgid "Rektaszension:"
 msgstr "Rektaszension:"
 
@@ -626,7 +552,6 @@ msgid "Sagittarius"
 msgstr "Sagittarius"
 
 #: mtstrings.ssaros
-#| msgid "#%3% of Saros cycle %1%, Inex cycle %2%"
 msgid "#%2:d of Saros cycle %0:d, Inex cycle %1:d"
 msgstr "#%2:d of Saros cycle %0:d, Inex cycle %1:d"
 
@@ -635,22 +560,18 @@ msgid "Scorpio"
 msgstr "Scorpio"
 
 #: mtstrings.ssecabbrev
-msgctxt "mtstrings.ssecabbrev"
 msgid "sec"
 msgstr "sec"
 
 #: mtstrings.ssecond
-msgctxt "mtstrings.ssecond"
 msgid "Second"
 msgstr "Second"
 
 #: mtstrings.ssetjulian
-#| msgid "Set Julian tate"
 msgid "Set Julian date"
 msgstr "Set Julian date"
 
 #: mtstrings.ssetutc
-#| msgid "Set Universal Time"
 msgid "Set Universal time"
 msgstr "Set Universal time"
 
@@ -663,8 +584,6 @@ msgid "South"
 msgstr "South"
 
 #: mtstrings.sspring
-#| msgid "March Equinox:"
-msgctxt "mtstrings.sspring"
 msgid "March equinox:"
 msgstr "March equinox:"
 
@@ -673,43 +592,34 @@ msgid "Begin of spring"
 msgstr "Begin of spring"
 
 #: mtstrings.ssummer
-#| msgid "June Solstice:"
-msgctxt "mtstrings.ssummer"
 msgid "June solstice:"
 msgstr "June solstice:"
 
 #: mtstrings.ssun
-msgctxt "mtstrings.ssun"
 msgid "Sun"
 msgstr "Sun"
 
 #: mtstrings.ssundistance
-msgctxt "mtstrings.ssundistance"
 msgid "Sun's distance:"
 msgstr "Sun's distance:"
 
 #: mtstrings.ssuneclipse
-msgctxt "mtstrings.ssuneclipse"
 msgid "Next sun eclipse:"
 msgstr "Next sun eclipse:"
 
 #: mtstrings.ssunrise
-msgctxt "mtstrings.ssunrise"
 msgid "Sun rise:"
 msgstr "Sun rise:"
 
 #: mtstrings.ssunset
-msgctxt "mtstrings.ssunset"
 msgid "Sun set:"
 msgstr "Sun set:"
 
 #: mtstrings.ssunsize
-msgctxt "mtstrings.ssunsize"
 msgid "Sun subtends:"
 msgstr "Sun subtends:"
 
 #: mtstrings.ssuntransit
-msgctxt "mtstrings.ssuntransit"
 msgid "Sun transit:"
 msgstr "Sun transit:"
 
@@ -718,7 +628,6 @@ msgid "Taurus"
 msgstr "Taurus"
 
 #: mtstrings.sutc
-msgctxt "mtstrings.sutc"
 msgid "Universal time:"
 msgstr "Universal time:"
 
@@ -731,8 +640,6 @@ msgid "West"
 msgstr "West"
 
 #: mtstrings.swinter
-#| msgid "December Solstice:"
-msgctxt "mtstrings.swinter"
 msgid "December solstice:"
 msgstr "December solstice:"
 
@@ -741,88 +648,9 @@ msgid "Begin of winter"
 msgstr "Begin of winter"
 
 #: mtstrings.syear
-msgctxt "mtstrings.syear"
 msgid "Year"
 msgstr "Year"
 
 #: mtstrings.szodiac
-msgctxt "mtstrings.szodiac"
 msgid "Zodiac"
 msgstr "Zodiac"
-
-#: tfrmabout.btnok.caption
-msgid "&OK"
-msgstr "&OK"
-
-#: tfrmabout.lblcopyright.caption
-msgid "(c) 1997-2001 Andreas Hörstemeier"
-msgstr "(c) 1997-2001 Andreas Hörstemeier"
-
-#: tfrmabout.lblurl.caption
-msgid "http://www.hoerstemeier.com"
-msgstr "http://www.hoerstemeier.com"
-
-#: tfrmjulian.caption
-msgid "Set julian date"
-msgstr "Set julian date"
-
-#: tfrmlocations.btnimport.caption
-msgid "Import"
-msgstr "Import"
-
-#: tfrmlocations.caption
-msgid "Locations"
-msgstr "Locations"
-
-#: tfrmlocations.edtaltitude.text
-msgid "   0"
-msgstr ""
-
-#: tfrmlocations.lblaltitudeunit.caption
-msgid "m"
-msgstr "m"
-
-#: tfrmlocations.lblname.caption
-msgid "Name:"
-msgstr "Name:"
-
-#: tfrmutc.caption
-msgid "Set universal time"
-msgstr ""
-
-#: tmainform.lbllastlunation.caption
-msgid "Last lunation:"
-msgstr "Last lunation:"
-
-#: tmainform.lblnextlunation.caption
-msgid "Next lunation:"
-msgstr "Next lunation:"
-
-#: tmainform.mnlanguagede.caption
-msgid "de - Deutsch"
-msgstr "de - Deutsch"
-
-#: tmainform.mnujewish.caption
-msgid "Je&wish Calendar..."
-msgstr "Je&wish Calendar..."
-
-#: tmainform.mnulanguage.caption
-msgid "Language"
-msgstr "Language"
-
-#: tmainform.mnulanguageen.caption
-msgid "en - English"
-msgstr "en - English"
-
-#: tmainform.mnurotnorth.caption
-msgid "&Northern Hemisphere"
-msgstr "&Northern Hemisphere"
-
-#: tmainform.mnuspeed.caption
-msgid "Speed"
-msgstr "Speed"
-
-#: tmainform.mnutray.caption
-msgid "&Minimize to Tray"
-msgstr "&Minimize to Tray"
-

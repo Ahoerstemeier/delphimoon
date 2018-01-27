@@ -1,6 +1,7 @@
 program moontool;
 
 uses
+  gnugettext in 'gnugettext.pas',
   Forms,
   mtConst,
   mtUtils,
@@ -27,6 +28,5 @@ begin
   Application.CreateForm(TfrmJulian, frmJulian);
   Application.CreateForm(TfrmLocations, frmLocations);
   Application.CreateForm(TfrmMoreData, frmMoreData);
-  Application.CreateForm(TfrmAbout, frmAbout);
   Application.Run;
 end.

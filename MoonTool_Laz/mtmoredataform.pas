@@ -144,9 +144,6 @@ var
   L, T: Integer;
 begin
   UpdateStrings;
-  L := Application.MainForm.Left + (Application.MainForm.Width - Width) div 2;
-  T := Application.MainForm.Top + (Application.MainForm.Height - Height) div 2;
-  SetBounds(L, T, Width, Height);
 
   LoadLocations(moontool_inifile, FLocations, current);
   cbxLocation.Items.BeginUpdate;
@@ -159,16 +156,20 @@ begin
   end;
   cbxLocation.Itemindex := current;
   LocationChange(NIL);
+
+  L := Application.MainForm.Left + (Application.MainForm.Width - Width) div 2;
+  T := Application.MainForm.Top + (Application.MainForm.Height - Height) div 2;
+  SetBounds(L, T, Width, Height);
 end;
 
-procedure TfrmMoreData.locationChange(Sender: TObject);
+procedure TfrmMoreData.LocationChange(Sender: TObject);
 begin
   UpdateValues;
 end;
 
 procedure TfrmMoreData.PageControlChange(Sender: TObject);
 begin
-  UpdateLayout;
+  //UpdateLayout;
 end;
 
 procedure TfrmMoreData.SetStartTime(AValue: TDateTime);

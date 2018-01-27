@@ -13,7 +13,6 @@ object frmAbout: TfrmAbout
   Font.Style = []
   OldCreateOrder = True
   Position = poMainFormCenter
-  OnCreate = FormCreate
   OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 13
@@ -38,9 +37,9 @@ object frmAbout: TfrmAbout
   object lblCopyright: TLabel
     Left = 96
     Top = 40
-    Width = 172
+    Width = 178
     Height = 13
-    Caption = '(c) 1997-2001 Andreas H'#246'rstemeier'
+    Caption = '(c) 1997-2001 Andreas Hoerstemeier'
     Color = clBtnFace
     ParentColor = False
     Transparent = False

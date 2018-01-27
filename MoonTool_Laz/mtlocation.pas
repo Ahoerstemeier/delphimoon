@@ -434,9 +434,13 @@ end;
 procedure TfrmLocations.FormShow(Sender: TObject);
 var
   current, i: integer;
+  L, T: Integer;
 begin
   UpdateStrings;
   UpdateLayout;
+  L := Application.MainForm.Left + (Application.MainForm.Width - Width) div 2;
+  T := Application.MainForm.Top + (Application.MainForm.Height - Height) div 2;
+  SetBounds(L, T, Width, Height);
 
   FreeLocations(FLocations);
   LoadLocations(MOONTOOL_INIFILE, FLocations, current);

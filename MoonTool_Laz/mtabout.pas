@@ -21,11 +21,8 @@ type
     lblRef: TLabel;
     lblURL: TLabel;
     Moon: TMoon;
-    procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure lblURLClick(Sender: TObject);
-    procedure lblURLMouseEnter(Sender: TObject);
-    procedure lblURLMouseLeave(Sender: TObject);
   private
     procedure UpdateLayout;
   public
@@ -49,18 +46,16 @@ uses
 
 { TfrmAbout }
 
-procedure TfrmAbout.FormCreate(Sender: TObject);
-begin
- {$ifdef fpc}
-  lblURL.OnMouseLeave := lblURLMouseLeave;
-  lblURL.OnMouseEnter := lblURLMouseEnter;
- {$endif}
-end;
-
 procedure TfrmAbout.FormShow(Sender: TObject);
+var
+  L, T: Integer;
 begin
-  UpdateStrings;
   Moon.Date := now;
+
+  UpdateStrings;
+  L := Application.MainForm.Left + (Application.MainForm.Width - Width) div 2;
+  T := Application.MainForm.Top + (Application.MainForm.Height - Height) div 2;
+  SetBounds(L, T, Width, Height);
 end;
 
 procedure TfrmAbout.lblURLClick(Sender: TObject);
@@ -70,20 +65,6 @@ begin
  {$else}
   ShellExecute(Application.Handle,PChar('open'),'http://www.hoerstemeier.com',PChar(''),nil,SW_NORMAL);
  {$endif}
-end;
-
-procedure TfrmAbout.lblURLMouseEnter(Sender: TObject);
-begin
-//  lblURL.Font.Color := clBlue;
-//  lblURL.Font.Style := [fsUnderline];
-//  lblURL.Cursor := crHandPoint;
-end;
-
-procedure TfrmAbout.lblURLMouseLeave(Sender: TObject);
-begin
-// lblURL.Font.Color := clBlack;
-// lblURL.Font.Style := [];
-// lblURL.cursor := crDefault;
 end;
 
 procedure TfrmAbout.UpdateLayout;

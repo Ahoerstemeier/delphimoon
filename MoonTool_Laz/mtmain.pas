@@ -141,7 +141,7 @@ type
    {$ifdef use_html_help_handler}
    function HtmlHelpHandler(Command: word; Data:Longint; var CallHelp:Boolean): Boolean;
    {$endif}
-    procedure SelectLanguage(ALang: String);
+    procedure SelectLanguage(ALang: String; AUpdateSize: Boolean);
     procedure UpdateLayout;
     procedure UpdateStrings;
     procedure UpdateValues;
@@ -226,6 +226,7 @@ var
 begin
   Timer.Enabled := false;
   Lang := GetOSLanguage;
+  SelectLanguage(Lang, false);
 
   FFirstNow := now;
   FStartTime := now;
@@ -266,7 +267,7 @@ end;
 
 procedure TMainForm.FormShow(Sender: TObject);
 begin
-  SelectLanguage(Lang);
+  SelectLanguage(Lang, true);
   Timer.Enabled := true;
 end;
 
@@ -408,7 +409,7 @@ begin
   s := TMenuItem(Sender).Caption;
   p := pos('-', s);
   lang := trim(Copy(s, 1, p-1));
-  SelectLanguage(lang);
+  SelectLanguage(lang, true);
 end;
 
 procedure TMainForm.mnuLocationsClick(Sender: TObject);
@@ -488,13 +489,14 @@ begin
   end;
 end;
 
-procedure TMainForm.SelectLanguage(ALang: string);
+procedure TMainForm.SelectLanguage(ALang: string; AUpdateSize:Boolean);
 var
   s: String;
   i: Integer;
   p: Integer;
   fn: String;
   langdir: String;
+  langfile: String;
 begin
   Lang := lowercase(ALang);
 
@@ -503,15 +505,19 @@ begin
 
   // Translate strings
   langdir := IncludeTrailingPathDelimiter(ExtractFilepath(Application.Exename) + LANGUAGE_DIR);
-  fn := langdir + ChangeFileExt(ExtractFilename(Application.ExeName), '') + '.' + Lang + '.po';
+  langfile := Format('%s.%s.po', [
+    ChangeFileExt(ExtractFileName(Application.ExeName), ''), Lang
+  ]);
+  fn := langdir + langfile;
   {$ifdef fpc}
   Translations.TranslateResourceStrings(fn);
   //fn := langdir + 'lclstrconsts.' + Lang + '.po';
   // Translations.TranslateResourceStrings(fn);
   {$endif}
 
-  // Apply strings to form
+  // Apply strings to form and update layout
   UpdateStrings;
+  UpdateValues;
   UpdateLayout;
 
   // Select the new language in the language menu
@@ -542,11 +548,7 @@ end;
 
 procedure TMainForm.UpdateLayout;
 const
-//{$ifdef fpc}
   OFFSET = 8;
-//{$else}
-//  OFFSET = 16;
-//{$endif}
   MOON_SIZE = 80;
   ROW_DISTANCE = 2;
   BLOCK_DISTANCE = 8;
@@ -561,6 +563,7 @@ var
   lunationPos: Integer;
   lunationLabelWidth: Integer;
   lunationValueWidth: Integer;
+  w, h: Integer;
 begin
   // Calc max width of first column and lunation columns
   labelWidth := 0;
@@ -625,15 +628,15 @@ begin
   ArrangeInRow(y, ROW_DISTANCE, [lblLastQuart, valLastQuart]);
   ArrangeInRow(y, ROW_DISTANCE, [lblNextNewMoon, valNextNewMoon, lblNextLunation, valNextLunation]);
 
-
   // Form size
   labelPos := labelPos + OFFSET + labelWidth;  // badly named: it is the x where the values start
-  ClientWidth := Max(Max(
+  w := Max(Max(
         labelPos + valueWidth_Moon + 2*OFFSET + MOON_SIZE,
         labelPos + valueWidth_NoMoon),
         lunationPos + lunationValueWidth)
     + OFFSET;
-  ClientHeight := lblNextNewMoon.Top + lblNextNewMoon.Height + OFFSET;
+  h := lblNextNewMoon.Top + lblNextNewMoon.Height + OFFSET;
+  SetBounds(Left, Top, w, h);
 
   // Moon icon
   Moon.Top := LblJulian.Top;
@@ -754,12 +757,8 @@ begin
   new_phase := round(Current_Phase(jetzt) * 100);
   valPhase.Caption := IntToStr(new_phase) + '% ' + SPhaseHint;
 
-//  Str(moon_diameter(jetzt)/3600:6:4, s);
   valMoonSubtend.Caption := Format('%.4f%s', [Moon_Diameter(jetzt)/3600, DEG_SYMBOL]);
-
   valSunSubtend.Caption := Format('%.4f%s', [Sun_Diameter(jetzt)/3600, DEG_SYMBOL]);
-//  Str(sun_diameter(jetzt)/3600:6:4, s);
-//  valSunSubtend.Caption := s + DEG_SYMBOL;
 
   if new_phase <> FLastPhaseValue then begin
     Moon.Date := jetzt;

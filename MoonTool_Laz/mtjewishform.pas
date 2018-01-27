@@ -4,7 +4,7 @@ interface
 
 uses
 {$ifdef fpc}
-  LCLIntf, LCLType, LMessages,
+  LCLIntf, LCLType,
 {$else}
   Windows, Messages, Consts,
 {$endif}
@@ -97,9 +97,14 @@ begin
 end;
 
 procedure TfrmJewish.FormShow(Sender: TObject);
+var
+  L, T: Integer;
 begin
   UpdateStrings;
   UpdateValues;
+  L := Application.MainForm.Left + (Application.MainForm.Width - Width) div 2;
+  T := Application.MainForm.Top + (Application.MainForm.Height - Height) div 2;
+  SetBounds(L, T, Width, Height);
 end;
 
 procedure TfrmJewish.JewishChange(Sender: TObject);

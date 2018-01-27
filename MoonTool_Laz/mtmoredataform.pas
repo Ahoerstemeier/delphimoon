@@ -141,8 +141,13 @@ end;
 procedure TfrmMoreData.FormShow(Sender: TObject);
 var
   current, i: integer;
+  L, T: Integer;
 begin
   UpdateStrings;
+  L := Application.MainForm.Left + (Application.MainForm.Width - Width) div 2;
+  T := Application.MainForm.Top + (Application.MainForm.Height - Height) div 2;
+  SetBounds(L, T, Width, Height);
+
   LoadLocations(moontool_inifile, FLocations, current);
   cbxLocation.Items.BeginUpdate;
   try

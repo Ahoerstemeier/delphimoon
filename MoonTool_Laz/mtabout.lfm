@@ -9,7 +9,6 @@ object frmAbout: TfrmAbout
   ClientWidth = 425
   Color = clBtnFace
   Font.Color = clWindowText
-  OnCreate = FormCreate
   OnShow = FormShow
   Position = poMainFormCenter
   LCLVersion = '1.9.0.0'

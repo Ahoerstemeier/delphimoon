@@ -1,0 +1,20 @@
+{"version":1,"strings":[
+{"hash":167143077,"name":"tfrmjewish.caption","sourcebytes":[74,101,119,105,115,104,32,100,97,116,101],"value":"Jewish date"},
+{"hash":160827077,"name":"tfrmjewish.grpgregorian.caption","sourcebytes":[67,104,114,105,115,116,105,97,110,32,100,97,116,101],"value":"Christian date"},
+{"hash":392066,"name":"tfrmjewish.lblyear.caption","sourcebytes":[89,101,97,114],"value":"Year"},
+{"hash":5531048,"name":"tfrmjewish.lblmonth.caption","sourcebytes":[77,111,110,116,104],"value":"Month"},
+{"hash":19081,"name":"tfrmjewish.lblday.caption","sourcebytes":[68,97,121],"value":"Day"},
+{"hash":217904,"name":"tfrmjewish.edtyear.text","sourcebytes":[50,48,48,48],"value":"2000"},
+{"hash":49,"name":"tfrmjewish.edtday.text","sourcebytes":[49],"value":"1"},
+{"hash":139946581,"name":"tfrmjewish.grpjulian.caption","sourcebytes":[74,117,108,105,97,110,32,100,97,116,101],"value":"Julian date"},
+{"hash":139815509,"name":"tfrmjewish.lbljulian.caption","sourcebytes":[74,117,108,105,97,110,32,68,97,116,101],"value":"Julian Date"},
+{"hash":177511,"name":"tfrmjewish.btnnow.caption","sourcebytes":[38,78,111,119],"value":"&Now"},
+{"hash":1339,"name":"tfrmjewish.btnok.caption","sourcebytes":[79,75],"value":"OK"},
+{"hash":77089212,"name":"tfrmjewish.btncancel.caption","sourcebytes":[67,97,110,99,101,108],"value":"Cancel"},
+{"hash":167143077,"name":"tfrmjewish.grpjewish.caption","sourcebytes":[74,101,119,105,115,104,32,100,97,116,101],"value":"Jewish date"},
+{"hash":392066,"name":"tfrmjewish.lblyearjewish.caption","sourcebytes":[89,101,97,114],"value":"Year"},
+{"hash":5531048,"name":"tfrmjewish.lblmonthjewish.caption","sourcebytes":[77,111,110,116,104],"value":"Month"},
+{"hash":19081,"name":"tfrmjewish.lbldayjewish.caption","sourcebytes":[68,97,121],"value":"Day"},
+{"hash":217904,"name":"tfrmjewish.edtyearjewish.text","sourcebytes":[50,48,48,48],"value":"2000"},
+{"hash":49,"name":"tfrmjewish.edtdayjewish.text","sourcebytes":[49],"value":"1"}
+]}

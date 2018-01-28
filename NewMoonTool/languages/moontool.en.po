@@ -139,6 +139,10 @@ msgstr "Tiger"
 msgid "Christian date"
 msgstr "Christian date"
 
+#: mtstrings.sdatetime
+msgid "Date/time"
+msgstr "Time / date"
+
 #: mtstrings.sday
 msgid "Day"
 msgstr "Day"
@@ -199,6 +203,10 @@ msgstr "Partial"
 msgid "Total"
 msgstr "Total"
 
+#: mtstrings.seclipsetype
+msgid "Eclipse type"
+msgstr "Eclipse type"
+
 #: mtstrings.seditlocation
 msgid "Edit locations"
 msgstr "Edit locations"
@@ -206,6 +214,10 @@ msgstr "Edit locations"
 #: mtstrings.sfirstquarter
 msgid "First quarter:"
 msgstr "First quarter:"
+
+#: mtstrings.sfrom
+msgid "From:"
+msgstr "From:"
 
 #: mtstrings.sfullmoon
 msgid "Full moon:"
@@ -275,6 +287,10 @@ msgstr "Longitude:"
 msgid "Positive numbers are western longitude"
 msgstr "Positive numbers are western longitude"
 
+#: mtstrings.slunareclipses
+msgid "Lunar eclipses"
+msgstr "Lunar eclipses"
+
 #: mtstrings.slunation
 msgid "Lunation:"
 msgstr "Lunation:"
@@ -290,6 +306,10 @@ msgstr "&Colorize moon"
 #: mtstrings.smenucopy
 msgid "&Copy"
 msgstr "&Copy"
+
+#: mtstrings.smenueclipses
+msgid "E&clipses..."
+msgstr "E&clipses..."
 
 #: mtstrings.smenuedit
 msgid "&Edit"
@@ -559,6 +579,10 @@ msgstr "#%2:d of Saros cycle %0:d, Inex cycle %1:d"
 msgid "Scorpio"
 msgstr "Scorpio"
 
+#: mtstrings.ssearch
+msgid "Search"
+msgstr "Search"
+
 #: mtstrings.ssecabbrev
 msgid "sec"
 msgstr "sec"
@@ -574,6 +598,14 @@ msgstr "Set Julian date"
 #: mtstrings.ssetutc
 msgid "Set Universal time"
 msgstr "Set Universal time"
+
+#: mtstrings.ssolarandlunareclipses
+msgid "Solar and lunar eclipses"
+msgstr "Solar and lunar eclipses"
+
+#: mtstrings.ssolareclipses
+msgid "Solar eclipses"
+msgstr "Solar eclipses"
 
 #: mtstrings.ssommerhint
 msgid "Begin of sommer"
@@ -627,6 +659,10 @@ msgstr "Sun transit:"
 msgid "Taurus"
 msgstr "Taurus"
 
+#: mtstrings.sto
+msgid "To:"
+msgstr "To:"
+
 #: mtstrings.sutc
 msgid "Universal time:"
 msgstr "Universal time:"
@@ -654,3 +690,35 @@ msgstr "Year"
 #: mtstrings.szodiac
 msgid "Zodiac"
 msgstr "Zodiac"
+
+#: tfrmeclipses.caption
+msgid "Solar and Lunar eclipses"
+msgstr "Solar and Lunar eclipses"
+
+#: tmainform.lbllastlunation.caption
+msgid "Last lunation:"
+msgstr "Last lunation:"
+
+#: tmainform.lblnextlunation.caption
+msgid "Next lunation:"
+msgstr "Next lunation:"
+
+#: tmainform.mnujewish.caption
+msgid "Je&wish Calendar..."
+msgstr "Je&wish Calendar..."
+
+#: tmainform.mnulanguage.caption
+msgid "Language"
+msgstr "Language"
+
+#: tmainform.mnurotnorth.caption
+msgid "&Northern Hemisphere"
+msgstr "&Northern Hemisphere"
+
+#: tmainform.mnuspeed.caption
+msgid "Speed"
+msgstr "Speed"
+
+#: tmainform.mnutray.caption
+msgid "&Minimize to Tray"
+msgstr "&Minimize to Tray"

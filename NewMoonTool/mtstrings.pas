@@ -56,6 +56,7 @@ resourcestring
   SMenuColorMoon = '&Colorize moon';
   SMenuLocation = '&Locations...';
   SEditLocation = 'Edit locations';
+  SMenuEclipses = 'E&clipses...';
   SMenuMore = '&More data...';
   SMenuHelp = '&Help';
   SMenuAbout = '&About...';
@@ -179,6 +180,15 @@ resourcestring
 
   SOKButton = 'OK';
   SCancelButton = 'Cancel';
+
+  SDateTime = 'Date/time';
+  SEclipseType = 'Eclipse type';
+  SSolarAndLunarEclipses = 'Solar and lunar eclipses';
+  SSolarEclipses = 'Solar eclipses';
+  SLunarEclipses = 'Lunar eclipses';
+  SSearch = 'Search';
+  SFrom = 'From:';
+  STo = 'To:';
 
 implementation
 

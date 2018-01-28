@@ -12,7 +12,8 @@ uses
   mtLocation in 'mtlocation.pas' {frmLocations},
   mtMoreDataForm in 'mtmoredataform.pas' {frmMoreData},
   mtAbout in 'mtabout.pas' {frmAbout},
-  mtMain in 'mtmain.pas' {MainForm};
+  mtMain in 'mtmain.pas' {MainForm},
+  mtEclipsesForm in 'mteclipsesform.pas' {frmEclipses};
 
 {$ifdef fpc}
   {$R *.res}
@@ -28,5 +29,6 @@ begin
   Application.CreateForm(TfrmJulian, frmJulian);
   Application.CreateForm(TfrmLocations, frmLocations);
   Application.CreateForm(TfrmMoreData, frmMoreData);
+  Application.CreateForm(TfrmEclipses, frmEclipses);
   Application.Run;
 end.

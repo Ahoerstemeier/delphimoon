@@ -139,6 +139,10 @@ msgstr "Tiger"
 msgid "Christian date"
 msgstr "Christliches Datum"
 
+#: mtstrings.sdatetime
+msgid "Date/time"
+msgstr "Zeit / Datum"
+
 #: mtstrings.sday
 msgid "Day"
 msgstr "Tag"
@@ -202,6 +206,10 @@ msgstr "Partiell"
 msgid "Total"
 msgstr "Total"
 
+#: mtstrings.seclipsetype
+msgid "Eclipse type"
+msgstr "Typ"
+
 #: mtstrings.seditlocation
 msgid "Edit locations"
 msgstr "Orte bearbeiten"
@@ -209,6 +217,10 @@ msgstr "Orte bearbeiten"
 #: mtstrings.sfirstquarter
 msgid "First quarter:"
 msgstr "Erstes Viertel:"
+
+#: mtstrings.sfrom
+msgid "From:"
+msgstr "Von:"
 
 #: mtstrings.sfullmoon
 msgid "Full moon:"
@@ -278,6 +290,10 @@ msgstr "Längengrad:"
 msgid "Positive numbers are western longitude"
 msgstr "Positive Zahlen beziehen sich auf die westliche Halbkugel"
 
+#: mtstrings.slunareclipses
+msgid "Lunar eclipses"
+msgstr "Mondfinsternisse"
+
 #: mtstrings.slunation
 msgid "Lunation:"
 msgstr "Lunation:"
@@ -293,6 +309,10 @@ msgstr "Mond ein&färben"
 #: mtstrings.smenucopy
 msgid "&Copy"
 msgstr "&Kopieren"
+
+#: mtstrings.smenueclipses
+msgid "E&clipses..."
+msgstr "Sonnen-/Mondfinsternisse..."
 
 #: mtstrings.smenuedit
 msgid "&Edit"
@@ -562,6 +582,10 @@ msgstr "#%2:d des Saros-Zylus %0:d, Inex-Zyklus %1:d"
 msgid "Scorpio"
 msgstr "Skorpion"
 
+#: mtstrings.ssearch
+msgid "Search"
+msgstr "Suchen"
+
 #: mtstrings.ssecabbrev
 msgid "sec"
 msgstr "sek"
@@ -577,6 +601,14 @@ msgstr "Julianisches Datum setzen"
 #: mtstrings.ssetutc
 msgid "Set Universal time"
 msgstr "Universal-Zeit setzen"
+
+#: mtstrings.ssolarandlunareclipses
+msgid "Solar and lunar eclipses"
+msgstr "Sonnen- und Mondfinsternisse"
+
+#: mtstrings.ssolareclipses
+msgid "Solar eclipses"
+msgstr "Sonnenfinsternisse"
 
 #: mtstrings.ssommerhint
 msgid "Begin of sommer"
@@ -630,6 +662,10 @@ msgstr "Sonnentransit:"
 msgid "Taurus"
 msgstr "Stsier"
 
+#: mtstrings.sto
+msgid "To:"
+msgstr "Bis:"
+
 #: mtstrings.sutc
 msgid "Universal time:"
 msgstr "Universal-Zeit:"
@@ -657,3 +693,35 @@ msgstr "Jahr"
 #: mtstrings.szodiac
 msgid "Zodiac"
 msgstr "Tierkreiszeichen"
+
+#: tfrmeclipses.caption
+msgid "Solar and Lunar eclipses"
+msgstr "Sonnen- und Mondfinsternisse"
+
+#: tmainform.lbllastlunation.caption
+msgid "Last lunation:"
+msgstr "Letzte Lunation"
+
+#: tmainform.lblnextlunation.caption
+msgid "Next lunation:"
+msgstr "Nächste Lunation:"
+
+#: tmainform.mnujewish.caption
+msgid "Je&wish Calendar..."
+msgstr "Jü&discher Kalender:"
+
+#: tmainform.mnulanguage.caption
+msgid "Language"
+msgstr "Sprache"
+
+#: tmainform.mnurotnorth.caption
+msgid "&Northern Hemisphere"
+msgstr "&Nordhalbkugel"
+
+#: tmainform.mnuspeed.caption
+msgid "Speed"
+msgstr "Geschwindigkeit"
+
+#: tmainform.mnutray.caption
+msgid "&Minimize to Tray"
+msgstr "In die Taskleiste minimieren"

@@ -1,10 +1,11 @@
 object MainForm: TMainForm
   Left = 365
   Top = 126
-  Width = 468
-  Height = 357
   BorderIcons = [biSystemMenu, biMinimize]
+  BorderStyle = bsSingle
   Caption = 'Moontool'
+  ClientHeight = 304
+  ClientWidth = 377
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -13,14 +14,13 @@ object MainForm: TMainForm
   Font.Style = []
   Menu = MainMenu
   OldCreateOrder = True
-  Position = poScreenCenter
   ShowHint = True
   OnClose = FormClose
   OnCreate = FormCreate
   OnShow = FormShow
   DesignSize = (
-    452
-    298)
+    377
+    304)
   PixelsPerInch = 96
   TextHeight = 13
   object lblJulian: TLabel
@@ -328,7 +328,7 @@ object MainForm: TMainForm
     ParentColor = False
   end
   object Moon: TMoon
-    Left = 309
+    Left = 302
     Top = 8
     Width = 64
     Height = 64
@@ -380,7 +380,7 @@ object MainForm: TMainForm
           Caption = 'en - English'
           OnClick = mnuLanguageClick
         end
-        object mnLanguageDE: TMenuItem
+        object mnuLanguageDE: TMenuItem
           Caption = 'de - Deutsch'
           OnClick = mnuLanguageClick
         end
@@ -463,6 +463,10 @@ object MainForm: TMainForm
         Caption = '&More Data...'
         HelpContext = 1012
         OnClick = mnuMoreDataClick
+      end
+      object mnuEclipses: TMenuItem
+        Caption = 'Eclipses...'
+        OnClick = mnuEclipsesClick
       end
     end
     object mnuHelp: TMenuItem

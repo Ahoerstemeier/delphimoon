@@ -2,11 +2,11 @@ object frmAbout: TfrmAbout
   Left = 250
   Height = 185
   Top = 186
-  Width = 425
+  Width = 332
   BorderIcons = [biSystemMenu]
   BorderStyle = bsDialog
   ClientHeight = 185
-  ClientWidth = 425
+  ClientWidth = 332
   Color = clBtnFace
   Font.Color = clWindowText
   OnShow = FormShow

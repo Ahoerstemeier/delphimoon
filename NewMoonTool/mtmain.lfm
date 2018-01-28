@@ -375,7 +375,7 @@ object MainForm: TMainForm
           Caption = 'en - English'
           OnClick = mnuLanguageClick
         end
-        object mnLanguageDE: TMenuItem
+        object mnuLanguageDE: TMenuItem
           Caption = 'de - Deutsch'
           OnClick = mnuLanguageClick
         end
@@ -458,6 +458,10 @@ object MainForm: TMainForm
         Caption = '&More Data...'
         HelpContext = 1012
         OnClick = mnuMoreDataClick
+      end
+      object mnuEclipses: TMenuItem
+        Caption = 'Eclipses...'
+        OnClick = mnuEclipsesClick
       end
     end
     object mnuHelp: TMenuItem

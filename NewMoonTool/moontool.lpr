@@ -11,7 +11,7 @@ uses
   mtJulianForm in 'julian.pas' {frm_julian},
   mtUTCForm in 'utc.pas' {frm_utc},
   mtLocation in 'location.pas' {frm_locations},
-  mtJewishForm in 'jewish.pas', mtConst, mtUtils, mtStrings {frm_jewish};
+  mtJewishForm, mtConst, mtUtils, mtStrings, mtEclipsesForm;
 
 {$ifdef fpc}
   {$R *.res}
@@ -33,5 +33,6 @@ begin
   Application.CreateForm(TfrmUTC, frmUTC);
   Application.CreateForm(TfrmLocations, frmLocations);
   Application.CreateForm(TfrmJewish, frmJewish);
+  Application.CreateForm(TfrmEclipses, frmEclipses);
   Application.Run;
 end.

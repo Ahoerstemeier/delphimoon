@@ -1,0 +1,7 @@
+{"version":1,"strings":[
+{"hash":94079128,"name":"tfrmeclipses.btnsearch.caption","sourcebytes":[83,101,97,114,99,104],"value":"Search"},
+{"hash":5084682,"name":"tfrmeclipses.lblfrom.caption","sourcebytes":[70,114,111,109,58],"value":"From:"},
+{"hash":23338,"name":"tfrmeclipses.lblto.caption","sourcebytes":[84,111,58],"value":"To:"},
+{"hash":200574723,"name":"tfrmeclipses.rblunareclipses.caption","sourcebytes":[114,98,76,117,110,97,114,69,99,108,105,112,115,101,115],"value":"rbLunarEclipses"},
+{"hash":72517379,"name":"tfrmeclipses.rbsolareclipses.caption","sourcebytes":[114,98,83,111,108,97,114,69,99,108,105,112,115,101,115],"value":"rbSolarEclipses"}
+]}

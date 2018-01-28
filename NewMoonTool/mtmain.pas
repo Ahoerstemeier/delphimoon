@@ -59,13 +59,6 @@ type
     lblUTC: TLabel;
     MenuItem1: TMenuItem;
     MenuItem2: TMenuItem;
-    mnuVeryFastMode: TMenuItem;
-    mnuFastMode: TMenuItem;
-    mnuNormalSpeed: TMenuItem;
-    mnuSpeed: TMenuItem;
-    mnLanguageDE: TMenuItem;
-    mnuLanguageEN: TMenuItem;
-    mnuLanguage: TMenuItem;
     Moon: TMoon;
     valAgeOfMoon: TLabel;
     valFirstQuart: TLabel;
@@ -91,6 +84,13 @@ type
     mnuEdit: TMenuItem;
       mnuCopy: TMenuItem;
     mnuOptions: TMenuItem;
+      mnuLanguage: TMenuItem;
+        mnuLanguageEN: TMenuItem;
+        mnuLanguageDE: TMenuItem;
+      mnuSpeed: TMenuItem;
+        mnuNormalSpeed: TMenuItem;
+        mnuFastMode: TMenuItem;
+        mnuVeryFastMode: TMenuItem;
       mnuStop: TMenuItem;
       mnuline1: TMenuItem;
       mnuJulian: TMenuItem;
@@ -104,6 +104,7 @@ type
       mnuLine4: TMenuItem;
       mnuLocations: TMenuItem;
       mnuMoreData: TMenuItem;
+      mnuEclipses: TMenuItem;
     mnuHelp: TMenuItem;
       mnuMenuAbout: TMenuItem;
       mnuLine2: TMenuItem;
@@ -114,6 +115,7 @@ type
     procedure FormShow(Sender: TObject);
     procedure mnuColorizeMoonClick(Sender: TObject);
     procedure mnuCopyClick(Sender: TObject);
+    procedure mnuEclipsesClick(Sender: TObject);
     procedure mnuExitClick(Sender: TObject);
     procedure mnuHelpItemClick(Sender: TObject);
     procedure mnuJewishClick(Sender: TObject);
@@ -161,7 +163,8 @@ uses
   Translations,
  {$endif}
   Math, mtStrings, mtConst, mtUtils,
-  mtAbout, mtMoreDataForm, mtLocation, mtUTCForm, mtJulianForm, mtJewishForm;
+  mtAbout, mtMoreDataForm, mtEclipsesForm, mtLocation,
+  mtUTCForm, mtJulianForm, mtJewishForm;
 
 {$ifdef fpc}
   {$R *.lfm}
@@ -350,6 +353,11 @@ begin
   end;
 end;
 
+procedure TMainForm.mnuEclipsesClick(Sender: TObject);
+begin
+  frmEclipses.Show;
+end;
+
 procedure TMainForm.mnuHelpItemClick(Sender: TObject);
 begin
   Application.HelpContext(HC_MAIN);
@@ -490,9 +498,11 @@ var
   s: String;
   i, j: Integer;
   p: Integer;
+  {$ifdef fpc}
   fn: String;
   langdir: String;
   langfile: String;
+  {$endif}
 begin
   Lang := '';
   for i:=1 to Length(ALang) do begin
@@ -704,6 +714,7 @@ begin
   mnuRotSouth.Caption := SMenuRotateSouth;
   mnuColorizeMoon.Caption := SMenuColorMoon;
   mnuMoreData.Caption := SMenuMore;
+  mnuEclipses.Caption := SMenuEclipses;
   mnuHelp.Caption := SMenuHelp;
   mnuHelpItem.Caption := SMenuHelpItem;
   mnuMenuAbout.Caption := SMenuAbout;
@@ -713,10 +724,9 @@ end;
 
 procedure TMainForm.UpdateValues;
 var
-  jetzt, jetztUTC: TDateTime;
+  jetzt: TDateTime;
   temp: TDateTime;
   dist,age: extended;
-  s:string;
   h,m,sec,ms: word;
   bias: integer;
   new_phase: integer;
@@ -727,6 +737,7 @@ begin
     0: jetzt := (now - FFirstNow) + FStartTime;
     1: jetzt := (now - FFirstNow) * 3600 + FStartTime;       // 1 hour per second
     2: jetzt := (now - FFirstNow) * 3600 * 24 + FStartTime;  // 1 day per second
+    else raise Exception.Create('Invalid speed specification.');
   end;
   if FSpeed = 0 then
     valLocal.Caption := DateToString(jetzt)

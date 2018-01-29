@@ -658,12 +658,8 @@ begin
         lunationPos + lunationValueWidth)
     + OFFSET;
   h := lblNextNewMoon.Top + lblNextNewMoon.Height + OFFSET;
-  {$ifdef fpc}
-  SetBounds(Left, Top, w, h);
-  {$else}
   ClientWidth := w;
   ClientHeight := h;
-  {$endif}
 
   // Moon icon
   Moon.Top := LblJulian.Top;

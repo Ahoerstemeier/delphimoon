@@ -42,7 +42,7 @@
         <IsPartOfProject Value="True"/>
       </Unit0>
       <Unit1>
-        <Filename Value="..\..\moontest.pas"/>
+        <Filename Value="moontest.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="MoonTest"/>
       </Unit1>
@@ -56,7 +56,7 @@
     </Target>
     <SearchPaths>
       <IncludeFiles Value="$(ProjOutDir)"/>
-      <OtherUnitFiles Value="..\.."/>
+      <OtherUnitFiles Value=".."/>
       <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
     </SearchPaths>
     <Linking>

@@ -439,6 +439,7 @@ begin
 {@/// destructor TMoon.Destroy;}
 destructor TMoon.Destroy;
 begin
+  FLocation.Free;
   FBMP.free;
   ficon.free;
   inherited destroy;

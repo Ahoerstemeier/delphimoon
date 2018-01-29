@@ -5,11 +5,15 @@ unit moonres;
    resource is included twice :-(                                }
 interface
 
-(*$ifdef delphi_1 *)
+{$ifdef fpc}
+  {$r moonpng.res}
+{$else}
+{$ifdef delphi_1}
   {$r moon.d16 }            { The File containing the bitmap }
-(*$else *)
+{$else}
   {$r moon.d32 }            { The File containing the bitmap }
-(*$endif *)
+{$endif}
+{$endif}
 implementation
 (*$ifdef support_warnings *) (*$warnings off *) (*$endif *)
 end.

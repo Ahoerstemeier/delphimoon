@@ -1,0 +1,487 @@
+object MainForm: TMainForm
+  Left = 365
+  Height = 324
+  Top = 126
+  Width = 377
+  BorderIcons = [biSystemMenu, biMinimize]
+  BorderStyle = bsSingle
+  Caption = 'Moontool'
+  ClientHeight = 304
+  ClientWidth = 377
+  Color = clBtnFace
+  Font.Color = clWindowText
+  Menu = MainMenu
+  OnClose = FormClose
+  OnCreate = FormCreate
+  OnShow = FormShow
+  ShowHint = True
+  LCLVersion = '1.9.0.0'
+  object lblJulian: TLabel
+    Tag = 1
+    Left = 8
+    Height = 15
+    Top = 8
+    Width = 59
+    BorderSpacing.Left = 8
+    Caption = 'Julian date:'
+    ParentColor = False
+  end
+  object valJulian: TLabel
+    Tag = 2
+    AnchorSideLeft.Side = asrBottom
+    Left = 110
+    Height = 1
+    Top = 8
+    Width = 1
+    BorderSpacing.Left = 16
+    ParentColor = False
+  end
+  object lblUTC: TLabel
+    Tag = 1
+    AnchorSideTop.Side = asrBottom
+    Left = 8
+    Height = 15
+    Top = 25
+    Width = 78
+    Caption = 'Universal time:'
+    ParentColor = False
+  end
+  object valUTC: TLabel
+    Tag = 2
+    Left = 110
+    Height = 1
+    Top = 25
+    Width = 1
+    ParentColor = False
+  end
+  object lblLocal: TLabel
+    Tag = 1
+    AnchorSideTop.Side = asrBottom
+    Left = 8
+    Height = 15
+    Top = 42
+    Width = 58
+    Caption = 'Local time:'
+    ParentColor = False
+  end
+  object valLocal: TLabel
+    Tag = 2
+    Left = 110
+    Height = 1
+    Top = 42
+    Width = 1
+    ParentColor = False
+  end
+  object lblAgeOfMoon: TLabel
+    Tag = 1
+    AnchorSideTop.Side = asrBottom
+    Left = 8
+    Height = 15
+    Top = 73
+    Width = 93
+    Caption = 'Age of the moon:'
+    ParentColor = False
+  end
+  object valAgeOfMoon: TLabel
+    Tag = 2
+    Left = 110
+    Height = 1
+    Top = 73
+    Width = 1
+    ParentColor = False
+  end
+  object lblPhase: TLabel
+    Tag = 1
+    AnchorSideTop.Side = asrBottom
+    Left = 8
+    Height = 15
+    Top = 90
+    Width = 69
+    Caption = 'Moon phase:'
+    ParentColor = False
+  end
+  object valPhase: TLabel
+    Tag = 3
+    Left = 110
+    Height = 1
+    Top = 90
+    Width = 1
+    ParentColor = False
+  end
+  object lblMoonDistance: TLabel
+    Tag = 1
+    AnchorSideTop.Side = asrBottom
+    Left = 8
+    Height = 15
+    Top = 107
+    Width = 90
+    Caption = 'Moon''s distance:'
+    ParentColor = False
+  end
+  object valMoonDistance: TLabel
+    Tag = 3
+    Left = 110
+    Height = 1
+    Top = 107
+    Width = 1
+    ParentColor = False
+  end
+  object lblMoonSubtend: TLabel
+    Tag = 1
+    AnchorSideTop.Side = asrBottom
+    Left = 8
+    Height = 15
+    Top = 124
+    Width = 86
+    Caption = 'Moon subtends:'
+    ParentColor = False
+  end
+  object valMoonSubtend: TLabel
+    Tag = 3
+    Left = 110
+    Height = 1
+    Top = 124
+    Width = 1
+    ParentColor = False
+  end
+  object lblSunDistance: TLabel
+    Tag = 1
+    AnchorSideTop.Side = asrBottom
+    Left = 8
+    Height = 15
+    Top = 155
+    Width = 78
+    Caption = 'Sun''s distance:'
+    ParentColor = False
+  end
+  object valSunDistance: TLabel
+    Tag = 3
+    Left = 110
+    Height = 1
+    Top = 155
+    Width = 1
+    ParentColor = False
+  end
+  object lblSunSubtend: TLabel
+    Tag = 1
+    AnchorSideTop.Side = asrBottom
+    Left = 8
+    Height = 15
+    Top = 172
+    Width = 74
+    Caption = 'Sun subtends:'
+    ParentColor = False
+  end
+  object valSunSubtend: TLabel
+    Tag = 3
+    Left = 110
+    Height = 1
+    Top = 172
+    Width = 1
+    ParentColor = False
+  end
+  object lblLastNew: TLabel
+    Tag = 1
+    AnchorSideTop.Side = asrBottom
+    Left = 8
+    Height = 15
+    Top = 203
+    Width = 84
+    Caption = 'Last new moon:'
+    ParentColor = False
+  end
+  object valNewMoon: TLabel
+    Tag = 4
+    Left = 110
+    Height = 1
+    Top = 203
+    Width = 1
+    ParentColor = False
+  end
+  object lblFirstQuart: TLabel
+    Tag = 1
+    AnchorSideTop.Side = asrBottom
+    Left = 8
+    Height = 15
+    Top = 220
+    Width = 66
+    Caption = 'First quarter:'
+    ParentColor = False
+  end
+  object lblfullMoon: TLabel
+    Tag = 1
+    AnchorSideTop.Side = asrBottom
+    Left = 8
+    Height = 15
+    Top = 237
+    Width = 57
+    Caption = 'Full moon:'
+    ParentColor = False
+  end
+  object lblLastQuart: TLabel
+    Tag = 1
+    AnchorSideTop.Side = asrBottom
+    Left = 8
+    Height = 15
+    Top = 254
+    Width = 65
+    Caption = 'Last quarter:'
+    ParentColor = False
+  end
+  object lblNextNewMoon: TLabel
+    Tag = 1
+    AnchorSideTop.Side = asrBottom
+    Left = 8
+    Height = 15
+    Top = 271
+    Width = 87
+    BorderSpacing.Bottom = 8
+    Caption = 'Next new moon:'
+    ParentColor = False
+  end
+  object valFirstQuart: TLabel
+    Tag = 4
+    Left = 110
+    Height = 1
+    Top = 220
+    Width = 1
+    ParentColor = False
+  end
+  object valFullMoon: TLabel
+    Tag = 4
+    Left = 110
+    Height = 1
+    Top = 237
+    Width = 1
+    ParentColor = False
+  end
+  object valLastQuart: TLabel
+    Tag = 4
+    Left = 110
+    Height = 1
+    Top = 254
+    Width = 1
+    ParentColor = False
+  end
+  object valNextNewMoon: TLabel
+    Tag = 4
+    Left = 110
+    Height = 1
+    Top = 271
+    Width = 1
+    ParentColor = False
+  end
+  object lblLastLunation: TLabel
+    Tag = 5
+    AnchorSideLeft.Side = asrBottom
+    Left = 143
+    Height = 15
+    Top = 203
+    Width = 71
+    BorderSpacing.Left = 32
+    BorderSpacing.Right = 32
+    Caption = 'Last lunation:'
+    ParentColor = False
+  end
+  object valLastLunation: TLabel
+    Tag = 6
+    AnchorSideLeft.Side = asrBottom
+    Left = 246
+    Height = 1
+    Top = 203
+    Width = 1
+    BorderSpacing.Left = 8
+    BorderSpacing.Right = 8
+    ParentColor = False
+  end
+  object lblNextLunation: TLabel
+    Tag = 5
+    Left = 143
+    Height = 15
+    Top = 271
+    Width = 74
+    Caption = 'Next lunation:'
+    ParentColor = False
+  end
+  object valNextLunation: TLabel
+    Tag = 6
+    Left = 246
+    Height = 1
+    Top = 271
+    Width = 1
+    BorderSpacing.Right = 8
+    ParentColor = False
+  end
+  object Moon: TMoon
+    AnchorSideLeft.Control = valUTC
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideRight.Side = asrBottom
+    Left = 302
+    Height = 64
+    Top = 8
+    Width = 64
+    MoonSize = ms64
+    Rotation = rot_none
+    ShowApollo11 = True
+    MoonStyle = msClassic
+    Transparent = False
+    Color = clBlack
+    MoonColor = clBlack
+    RotationAngle = 0
+    Location.Latitude = 0
+    Location.Longitude = 0
+    ParentColor = False
+    Anchors = [akTop, akRight]
+    BorderSpacing.Left = 32
+    Constraints.MaxHeight = 64
+    Constraints.MaxWidth = 64
+    Constraints.MinHeight = 64
+    Constraints.MinWidth = 64
+  end
+  object Timer: TTimer
+    Enabled = False
+    OnTimer = TimerTimer
+    left = 208
+  end
+  object MainMenu: TMainMenu
+    left = 208
+    top = 56
+    object mnuFile: TMenuItem
+      Caption = '&File'
+      object mnuTray: TMenuItem
+        Caption = '&Minimize to Tray'
+        HelpContext = 1050
+        Visible = False
+        OnClick = mnuTrayClick
+      end
+      object mnuExit: TMenuItem
+        Caption = 'E&xit'
+        OnClick = mnuExitClick
+      end
+    end
+    object mnuEdit: TMenuItem
+      Caption = '&Edit'
+      object mnuCopy: TMenuItem
+        Caption = '&Copy'
+        HelpContext = 1040
+        OnClick = mnuCopyClick
+      end
+    end
+    object mnuOptions: TMenuItem
+      Caption = '&Options'
+      object mnuLanguage: TMenuItem
+        Caption = 'Language'
+        object mnuLanguageEN: TMenuItem
+          Caption = 'en - English'
+          OnClick = mnuLanguageClick
+        end
+        object mnuLanguageDE: TMenuItem
+          Caption = 'de - Deutsch'
+          OnClick = mnuLanguageClick
+        end
+      end
+      object MenuItem1: TMenuItem
+        Caption = '-'
+      end
+      object mnuSpeed: TMenuItem
+        Caption = 'Speed'
+        object mnuNormalSpeed: TMenuItem
+          Tag = 10
+          Caption = '&Normal'
+          Checked = True
+          OnClick = mnuSpeedUpClick
+        end
+        object mnuFastMode: TMenuItem
+          Tag = 11
+          Caption = '&Fast'
+          OnClick = mnuSpeedUpClick
+        end
+        object mnuVeryFastMode: TMenuItem
+          Tag = 12
+          Caption = '&Very fast'
+          OnClick = mnuSpeedUpClick
+        end
+      end
+      object mnuStop: TMenuItem
+        Caption = '&Stop'
+        OnClick = mnuStopClick
+      end
+      object mnuline1: TMenuItem
+        Caption = '-'
+      end
+      object mnuJulian: TMenuItem
+        Caption = '&Julian Date...'
+        HelpContext = 1030
+        OnClick = mnuJulianClick
+      end
+      object mnuUTC: TMenuItem
+        Caption = '&Universal Time...'
+        HelpContext = 1040
+        OnClick = mnuUTCClick
+      end
+      object mnuJewish: TMenuItem
+        Caption = 'Je&wish Calendar...'
+        HelpContext = 1035
+        OnClick = mnuJewishClick
+      end
+      object mnuLine3: TMenuItem
+        Caption = '-'
+      end
+      object mnuRotate: TMenuItem
+        Caption = '&Rotate Moon'
+        object mnuRotNorth: TMenuItem
+          Caption = '&Northern Hemisphere'
+          Checked = True
+          OnClick = mnuRotateClick
+        end
+        object mnuRotSouth: TMenuItem
+          Caption = '&Southern Hemisphere'
+          OnClick = mnuRotateClick
+        end
+      end
+      object mnuColorizeMoon: TMenuItem
+        Caption = '&Colorize Moon'
+        OnClick = mnuColorizeMoonClick
+      end
+      object mnuLine4: TMenuItem
+        Caption = '-'
+      end
+      object mnuLocations: TMenuItem
+        Caption = '&Locations...'
+        HelpContext = 1038
+        OnClick = mnuLocationsClick
+      end
+      object MenuItem2: TMenuItem
+        Caption = '-'
+      end
+      object mnuMoreData: TMenuItem
+        Caption = '&More Data...'
+        HelpContext = 1012
+        OnClick = mnuMoreDataClick
+      end
+      object mnuEclipses: TMenuItem
+        Caption = 'Eclipses...'
+        OnClick = mnuEclipsesClick
+      end
+    end
+    object mnuHelp: TMenuItem
+      Caption = '&Help'
+      object mnuMenuAbout: TMenuItem
+        Caption = '&About...'
+        OnClick = mnuMenuAboutClick
+      end
+      object mnuHelpItem: TMenuItem
+        Caption = '&Help'
+        OnClick = mnuHelpItemClick
+      end
+      object mnuLine2: TMenuItem
+        Caption = '-'
+      end
+      object mnuHelpTimezones: TMenuItem
+        Caption = 'Time zones...'
+        HelpContext = 1055
+        OnClick = mnuHelpTimezonesClick
+      end
+    end
+  end
+end

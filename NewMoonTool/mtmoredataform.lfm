@@ -1,0 +1,688 @@
+object frmMoreData: TfrmMoreData
+  Left = 363
+  Height = 554
+  Top = 118
+  Width = 643
+  BorderIcons = [biSystemMenu, biMinimize]
+  Caption = 'More Data'
+  ClientHeight = 554
+  ClientWidth = 643
+  Color = clBtnFace
+  Font.Color = clBlack
+  OnCreate = FormCreate
+  OnHide = FormHide
+  OnShow = FormShow
+  LCLVersion = '1.9.0.0'
+  object lblLatitude: TLabel
+    Tag = 1
+    AnchorSideLeft.Control = lblLocation
+    AnchorSideTop.Control = cbxLocation
+    AnchorSideTop.Side = asrBottom
+    Left = 8
+    Height = 15
+    Top = 35
+    Width = 46
+    BorderSpacing.Top = 4
+    Caption = 'Latitude:'
+    ParentColor = False
+  end
+  object lblLongitude: TLabel
+    Tag = 1
+    AnchorSideLeft.Control = lblLocation
+    AnchorSideTop.Control = lblLatitude
+    AnchorSideTop.Side = asrBottom
+    Left = 8
+    Height = 15
+    Top = 54
+    Width = 57
+    BorderSpacing.Top = 4
+    Caption = 'Longitude:'
+    ParentColor = False
+  end
+  object lblLocation: TLabel
+    Tag = 1
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = cbxLocation
+    AnchorSideTop.Side = asrCenter
+    Left = 8
+    Height = 15
+    Top = 12
+    Width = 49
+    BorderSpacing.Left = 8
+    Caption = 'Location:'
+    ParentColor = False
+  end
+  object valLatitude: TLabel
+    Tag = 2
+    AnchorSideLeft.Control = cbxLocation
+    AnchorSideTop.Control = lblLatitude
+    Left = 89
+    Height = 1
+    Top = 35
+    Width = 1
+    ParentColor = False
+  end
+  object valLongitude: TLabel
+    Tag = 2
+    AnchorSideLeft.Control = cbxLocation
+    AnchorSideTop.Control = lblLongitude
+    Left = 89
+    Height = 1
+    Top = 54
+    Width = 1
+    ParentColor = False
+  end
+  object cbxLocation: TComboBox
+    Tag = 2
+    AnchorSideLeft.Control = lblLongitude
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = Owner
+    Left = 89
+    Height = 23
+    Top = 8
+    Width = 209
+    BorderSpacing.Left = 24
+    BorderSpacing.Top = 8
+    ItemHeight = 15
+    OnChange = LocationChange
+    TabOrder = 0
+  end
+  object PageControl: TPageControl
+    AnchorSideTop.Control = lblLongitude
+    AnchorSideTop.Side = asrBottom
+    Left = 8
+    Height = 471
+    Top = 77
+    Width = 630
+    ActivePage = pgSun
+    Anchors = [akTop, akLeft, akRight, akBottom]
+    BorderSpacing.Top = 8
+    TabIndex = 0
+    TabOrder = 1
+    OnChange = PageControlChange
+    object pgSun: TTabSheet
+      Caption = 'Sun'
+      ClientHeight = 443
+      ClientWidth = 622
+      object lblSunRise: TLabel
+        Tag = 10
+        Left = 4
+        Height = 15
+        Top = 8
+        Width = 44
+        BorderSpacing.Left = 4
+        BorderSpacing.Top = 8
+        Caption = 'Sun rise:'
+        ParentColor = False
+      end
+      object lblSunTransit: TLabel
+        Tag = 10
+        Left = 4
+        Height = 15
+        Top = 24
+        Width = 59
+        BorderSpacing.Top = 4
+        Caption = 'Sun transit:'
+        ParentColor = False
+      end
+      object lblSunSet: TLabel
+        Tag = 10
+        Left = 4
+        Height = 15
+        Top = 40
+        Width = 41
+        BorderSpacing.Top = 4
+        Caption = 'Sun set:'
+        ParentColor = False
+      end
+      object valSunRise: TLabel
+        Tag = 11
+        Left = 200
+        Height = 1
+        Top = 8
+        Width = 1
+        BorderSpacing.Left = 8
+        ParentColor = False
+      end
+      object valSunTransit: TLabel
+        Tag = 11
+        Left = 200
+        Height = 1
+        Top = 27
+        Width = 1
+        ParentColor = False
+      end
+      object valSunSet: TLabel
+        Tag = 11
+        Left = 200
+        Height = 1
+        Top = 46
+        Width = 1
+        ParentColor = False
+      end
+      object lblPerihel: TLabel
+        Tag = 12
+        Left = 352
+        Height = 15
+        Top = 24
+        Width = 66
+        Caption = 'Next perihel:'
+        ParentColor = False
+      end
+      object valPerihel: TLabel
+        Tag = 13
+        Left = 500
+        Height = 1
+        Top = 27
+        Width = 1
+        ParentColor = False
+      end
+      object lblAphel: TLabel
+        Tag = 12
+        Left = 352
+        Height = 15
+        Top = 8
+        Width = 59
+        BorderSpacing.Left = 24
+        Caption = 'Next aphel:'
+        ParentColor = False
+      end
+      object valAphel: TLabel
+        Tag = 13
+        Left = 500
+        Height = 1
+        Top = 8
+        Width = 1
+        BorderSpacing.Left = 8
+        ParentColor = False
+      end
+      object lblSunEclipse: TLabel
+        Tag = 10
+        Left = 4
+        Height = 15
+        Top = 176
+        Width = 88
+        Caption = 'Next sun eclipse:'
+        ParentColor = False
+      end
+      object valSunEclipse: TLabel
+        Tag = 11
+        Left = 200
+        Height = 1
+        Top = 158
+        Width = 1
+        BorderSpacing.Top = 8
+        ParentColor = False
+      end
+      object typSunEclipse: TLabel
+        Tag = 11
+        Left = 200
+        Height = 1
+        Top = 161
+        Width = 1
+        BorderSpacing.Top = 2
+        ParentColor = False
+      end
+      object sarosSunEclipse: TLabel
+        Tag = 11
+        Left = 200
+        Height = 1
+        Top = 164
+        Width = 1
+        BorderSpacing.Top = 2
+        ParentColor = False
+      end
+      object lblSpring: TLabel
+        Tag = 12
+        Left = 352
+        Height = 15
+        Top = 77
+        Width = 82
+        Caption = 'March Equinox:'
+        ParentColor = False
+        ParentShowHint = False
+        ShowHint = True
+      end
+      object lblSummer: TLabel
+        Tag = 12
+        Left = 352
+        Height = 15
+        Top = 96
+        Width = 70
+        BorderSpacing.Top = 4
+        Caption = 'June Solstice:'
+        ParentColor = False
+        ParentShowHint = False
+        ShowHint = True
+      end
+      object lblAutumn: TLabel
+        Tag = 12
+        Left = 352
+        Height = 15
+        Top = 116
+        Width = 105
+        BorderSpacing.Top = 4
+        Caption = 'September Equinox:'
+        ParentColor = False
+        ParentShowHint = False
+        ShowHint = True
+      end
+      object lblWinter: TLabel
+        Tag = 12
+        Left = 352
+        Height = 15
+        Top = 136
+        Width = 100
+        BorderSpacing.Top = 4
+        Caption = 'December Solstice:'
+        ParentColor = False
+        ParentShowHint = False
+        ShowHint = True
+      end
+      object valSpring: TLabel
+        Tag = 13
+        Left = 500
+        Height = 1
+        Top = 77
+        Width = 1
+        ParentColor = False
+      end
+      object valSummer: TLabel
+        Tag = 13
+        Left = 500
+        Height = 1
+        Top = 82
+        Width = 1
+        ParentColor = False
+      end
+      object valAutumn: TLabel
+        Tag = 13
+        Left = 500
+        Height = 1
+        Top = 87
+        Width = 1
+        ParentColor = False
+      end
+      object valWinter: TLabel
+        Tag = 13
+        Left = 500
+        Height = 1
+        Top = 92
+        Width = 1
+        ParentColor = False
+      end
+      object lblSunRektaszension: TLabel
+        Tag = 10
+        Left = 4
+        Height = 15
+        Top = 77
+        Width = 77
+        BorderSpacing.Top = 16
+        Caption = 'Rektaszension:'
+        ParentColor = False
+      end
+      object valSunRektaszension: TLabel
+        Tag = 11
+        Left = 200
+        Height = 1
+        Top = 77
+        Width = 1
+        ParentColor = False
+      end
+      object lblSunDeclination: TLabel
+        Tag = 10
+        Left = 4
+        Height = 15
+        Top = 96
+        Width = 63
+        BorderSpacing.Top = 4
+        Caption = 'Deklination:'
+        ParentColor = False
+      end
+      object valSunDeclination: TLabel
+        Tag = 11
+        Left = 200
+        Height = 1
+        Top = 96
+        Width = 1
+        ParentColor = False
+      end
+      object valSunZodiac: TLabel
+        Tag = 11
+        Left = 200
+        Height = 23
+        Top = 136
+        Width = 24
+        BorderSpacing.Top = 3
+        Caption = '^'
+        Font.Color = clBlack
+        Font.Height = -21
+        Font.Name = 'Wingdings'
+        ParentColor = False
+        ParentFont = False
+        ParentShowHint = False
+        ShowHint = True
+      end
+      object lblSunZodiac: TLabel
+        Tag = 10
+        Left = 4
+        Height = 15
+        Top = 123
+        Width = 39
+        BorderSpacing.Top = 16
+        Caption = 'Zodiac:'
+        ParentColor = False
+      end
+      object valSunZodiacname: TLabel
+        Tag = 11
+        Left = 200
+        Height = 1
+        Top = 123
+        Width = 1
+        ParentColor = False
+      end
+    end
+    object pgMoon: TTabSheet
+      Caption = 'Moon'
+      ClientHeight = 443
+      ClientWidth = 622
+      ImageIndex = 1
+      object lblMoonRise: TLabel
+        Tag = 20
+        Left = 4
+        Height = 15
+        Top = 8
+        Width = 56
+        BorderSpacing.Left = 4
+        BorderSpacing.Top = 8
+        Caption = 'Moon rise:'
+        ParentColor = False
+      end
+      object lblMoonTransit: TLabel
+        Tag = 20
+        Left = 4
+        Height = 15
+        Top = 27
+        Width = 71
+        BorderSpacing.Top = 4
+        Caption = 'Moon transit:'
+        ParentColor = False
+      end
+      object lblMoonSet: TLabel
+        Tag = 20
+        Left = 4
+        Height = 15
+        Top = 46
+        Width = 53
+        BorderSpacing.Top = 4
+        Caption = 'Moon set:'
+        ParentColor = False
+      end
+      object valMoonRise: TLabel
+        Tag = 21
+        Left = 113
+        Height = 1
+        Top = 8
+        Width = 1
+        BorderSpacing.Left = 8
+        ParentColor = False
+      end
+      object valMoonTransit: TLabel
+        Tag = 21
+        Left = 113
+        Height = 1
+        Top = 27
+        Width = 1
+        ParentColor = False
+      end
+      object valMoonSet: TLabel
+        Tag = 21
+        Left = 113
+        Height = 1
+        Top = 46
+        Width = 1
+        ParentColor = False
+      end
+      object lblMoonEclipse: TLabel
+        Tag = 20
+        Left = 4
+        Height = 15
+        Top = 178
+        Width = 101
+        Caption = 'Next moon eclipse:'
+        ParentColor = False
+      end
+      object valMoonEclipse: TLabel
+        Tag = 21
+        Left = 113
+        Height = 1
+        Top = 178
+        Width = 1
+        BorderSpacing.Top = 16
+        ParentColor = False
+      end
+      object typMoonEclipse: TLabel
+        Tag = 21
+        Left = 113
+        Height = 1
+        Top = 183
+        Width = 1
+        BorderSpacing.Top = 4
+        ParentColor = False
+      end
+      object lblPerigee: TLabel
+        Tag = 22
+        Left = 304
+        Height = 15
+        Top = 27
+        Width = 52
+        BorderSpacing.Top = 4
+        Caption = 'lblPerigee'
+        ParentColor = False
+      end
+      object valPerigee: TLabel
+        Tag = 23
+        Left = 380
+        Height = 1
+        Top = 27
+        Width = 1
+        ParentColor = False
+      end
+      object lblApogee: TLabel
+        Tag = 22
+        Left = 304
+        Height = 15
+        Top = 8
+        Width = 54
+        BorderSpacing.Left = 24
+        Caption = 'lblApogee'
+        ParentColor = False
+      end
+      object valApogee: TLabel
+        Tag = 23
+        Left = 380
+        Height = 1
+        Top = 8
+        Width = 1
+        BorderSpacing.Left = 8
+        ParentColor = False
+      end
+      object sarosMoonEclipse: TLabel
+        Tag = 21
+        Left = 113
+        Height = 1
+        Top = 188
+        Width = 1
+        BorderSpacing.Top = 4
+        ParentColor = False
+      end
+      object lblMoonRektaszension: TLabel
+        Tag = 20
+        Left = 4
+        Height = 15
+        Top = 77
+        Width = 77
+        BorderSpacing.Top = 16
+        Caption = 'Rektaszension:'
+        ParentColor = False
+      end
+      object lblMoonDeclination: TLabel
+        Tag = 20
+        Left = 4
+        Height = 15
+        Top = 96
+        Width = 63
+        BorderSpacing.Top = 4
+        Caption = 'Deklination:'
+        ParentColor = False
+      end
+      object valMoonRektaszension: TLabel
+        Tag = 21
+        Left = 113
+        Height = 1
+        Top = 77
+        Width = 1
+        ParentColor = False
+      end
+      object valMoonDeclination: TLabel
+        Tag = 21
+        Left = 113
+        Height = 1
+        Top = 96
+        Width = 1
+        ParentColor = False
+      end
+      object valMoonZodiac: TLabel
+        Tag = 21
+        Left = 144
+        Height = 23
+        Top = 139
+        Width = 23
+        BorderSpacing.Top = 4
+        Caption = 'a'
+        Font.Color = clBlack
+        Font.Height = -21
+        Font.Name = 'Wingdings'
+        ParentColor = False
+        ParentFont = False
+        ParentShowHint = False
+        ShowHint = True
+      end
+      object lblMoonZodiac: TLabel
+        Tag = 20
+        Left = 4
+        Height = 15
+        Top = 134
+        Width = 36
+        BorderSpacing.Top = 23
+        Caption = 'Zodiac'
+        ParentColor = False
+      end
+      object valMoonZodiac_name: TLabel
+        Tag = 21
+        Left = 113
+        Height = 1
+        Top = 134
+        Width = 1
+        ParentColor = False
+      end
+    end
+    object pgCalendar: TTabSheet
+      Caption = 'Calendar'
+      ClientHeight = 443
+      ClientWidth = 622
+      ImageIndex = 2
+      object lblEaster: TLabel
+        Tag = 30
+        Left = 4
+        Height = 15
+        Top = 8
+        Width = 60
+        BorderSpacing.Left = 4
+        BorderSpacing.Top = 8
+        Caption = 'Easter date:'
+        ParentColor = False
+        ParentShowHint = False
+        ShowHint = True
+      end
+      object valEaster: TLabel
+        Tag = 31
+        Left = 141
+        Height = 1
+        Top = 8
+        Width = 1
+        BorderSpacing.Left = 24
+        ParentColor = False
+      end
+      object lblPesach: TLabel
+        Tag = 30
+        AnchorSideTop.Side = asrBottom
+        Left = 4
+        Height = 15
+        Top = 46
+        Width = 75
+        BorderSpacing.Top = 4
+        Caption = 'Passover date:'
+        ParentColor = False
+        ParentShowHint = False
+        ShowHint = True
+      end
+      object valPesach: TLabel
+        Tag = 31
+        Left = 141
+        Height = 1
+        Top = 46
+        Width = 1
+        ParentColor = False
+      end
+      object lblChinese: TLabel
+        Tag = 30
+        AnchorSideTop.Side = asrBottom
+        Left = 4
+        Height = 15
+        Top = 65
+        Width = 97
+        BorderSpacing.Top = 4
+        Caption = 'Chinese New Year:'
+        ParentColor = False
+        ParentShowHint = False
+        ShowHint = True
+      end
+      object valChinese: TLabel
+        Tag = 31
+        Left = 141
+        Height = 1
+        Top = 65
+        Width = 1
+        ParentColor = False
+      end
+      object lblEasterJulian: TLabel
+        Tag = 30
+        AnchorSideTop.Side = asrBottom
+        Left = 4
+        Height = 15
+        Top = 27
+        Width = 113
+        BorderSpacing.Top = 4
+        Caption = 'Orthodox Easter date:'
+        ParentColor = False
+        ParentShowHint = False
+        ShowHint = True
+      end
+      object valEasterJulian: TLabel
+        Tag = 31
+        Left = 141
+        Height = 1
+        Top = 27
+        Width = 1
+        ParentColor = False
+      end
+    end
+  end
+  object Timer: TTimer
+    Interval = 65535
+    OnTimer = LocationChange
+    left = 256
+    top = 32
+  end
+end

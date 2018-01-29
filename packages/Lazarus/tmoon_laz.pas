@@ -4,11 +4,13 @@
 
 unit tmoon_laz;
 
+{$warn 5023 off : no warning about unused units}
 interface
 
 uses
   ah_math, moon_elp, vsop, moon, mooncomp, ah_ide, moon_reg, moon_aux, 
-  LazarusPackageIntf;
+  planets, pluto, vsop_jup, vsop_mar, vsop_mer, vsop_nep, vsop_sat, vsop_ura, 
+  vsop_ven, LazarusPackageIntf;
 
 implementation
 

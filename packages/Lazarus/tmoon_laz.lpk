@@ -25,7 +25,7 @@
 For documentation, contact information etc. read the help file supplied with the component.
 "/>
     <Version Major="2" Minor="1"/>
-    <Files Count="10">
+    <Files Count="19">
       <Item1>
         <Filename Value="..\..\ah_def.inc"/>
         <Type Value="Include"/>
@@ -67,6 +67,42 @@ For documentation, contact information etc. read the help file supplied with the
         <Filename Value="..\..\moon_aux.pas"/>
         <UnitName Value="moon_aux"/>
       </Item10>
+      <Item11>
+        <Filename Value="..\..\planets.pas"/>
+        <UnitName Value="planets"/>
+      </Item11>
+      <Item12>
+        <Filename Value="..\..\pluto.pas"/>
+        <UnitName Value="pluto"/>
+      </Item12>
+      <Item13>
+        <Filename Value="..\..\vsop_jup.pas"/>
+        <UnitName Value="vsop_jup"/>
+      </Item13>
+      <Item14>
+        <Filename Value="..\..\vsop_mar.pas"/>
+        <UnitName Value="vsop_mar"/>
+      </Item14>
+      <Item15>
+        <Filename Value="..\..\vsop_mer.pas"/>
+        <UnitName Value="vsop_mer"/>
+      </Item15>
+      <Item16>
+        <Filename Value="..\..\vsop_nep.pas"/>
+        <UnitName Value="vsop_nep"/>
+      </Item16>
+      <Item17>
+        <Filename Value="..\..\vsop_sat.pas"/>
+        <UnitName Value="vsop_sat"/>
+      </Item17>
+      <Item18>
+        <Filename Value="..\..\vsop_ura.pas"/>
+        <UnitName Value="vsop_ura"/>
+      </Item18>
+      <Item19>
+        <Filename Value="..\..\vsop_ven.pas"/>
+        <UnitName Value="vsop_ven"/>
+      </Item19>
     </Files>
     <RequiredPkgs Count="3">
       <Item1>

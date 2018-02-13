@@ -5,7 +5,7 @@ package tmoon_dnew;
 {$ALIGN 8}
 {$ASSERTIONS ON}
 {$BOOLEVAL OFF}
-{$DEBUGINFO ON}
+{$DEBUGINFO OFF}
 {$EXTENDEDSYNTAX ON}
 {$IMPORTEDDATA ON}
 {$IOCHECKS ON}
@@ -46,6 +46,15 @@ contains
   mooncomp in '..\..\mooncomp.pas',
   moonmini in '..\..\moonmini.pas',
   moonres in '..\..\moonres.pas',
-  vsop in '..\..\vsop.pas';
+  vsop in '..\..\vsop.pas',
+  planets in '..\..\planets.pas',
+  pluto in '..\..\pluto.pas',
+  vsop_jup in '..\..\vsop_jup.pas',
+  vsop_mar in '..\..\vsop_mar.pas',
+  vsop_mer in '..\..\vsop_mer.pas',
+  vsop_nep in '..\..\vsop_nep.pas',
+  vsop_sat in '..\..\vsop_sat.pas',
+  vsop_ura in '..\..\vsop_ura.pas',
+  vsop_ven in '..\..\vsop_ven.pas';
 
 end.

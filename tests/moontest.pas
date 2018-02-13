@@ -215,16 +215,20 @@ var
   y: integer;
   n: integer;
   d: TDateTime;
+  shortdayname: String;
 begin
   for y:=1990 to 2020 do begin
     d:=EncodeDate(y,1,1);
     n:=WeekNumber(d);
+    {$ifdef delphi_7}
+    shortdayname := ShortDayNames[DayOfWeek(d)];
+    {$else}
+    shortdayname := FormatSettings.ShortDayNames[DayOfWeek(d)];
+    {$endif}
     if DayOfWeek(d) in [2,3,4,5] then
-      Check(n=1,inttostr(y)+'-1-1 ('+ShortDayNames[DayOfWeek(d)]+') '+
-                'is in week '+inttostr(n)+' instead of week 1')
+      Check(n=1,inttostr(y)+'-1-1 ('+shortdayname+') is in week '+inttostr(n)+' instead of week 1')
     else
-      Check(n>=52,inttostr(y)+'-1-1 ('+ShortDayNames[DayOfWeek(d)]+') '+
-                  'is in week '+inttostr(n)+' instead of week 52 or 53');
+      Check(n>=52,inttostr(y)+'-1-1 ('+shortdayname+') is in week '+inttostr(n)+' instead of week 52 or 53');
     end;
   end;
 {@\\\0000000A20}

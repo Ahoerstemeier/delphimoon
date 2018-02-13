@@ -1,9 +1,9 @@
-program moontests;
+program moontestsgui_laz;
 
 {$mode delphi}
 
 uses
-  Interfaces, Forms, GuiTestRunner, MoonTest;
+  Interfaces, Forms, GuiTestRunner, moontest;
 
 {$R *.res}
 

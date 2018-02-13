@@ -169,7 +169,7 @@ end;
 
 procedure TfrmMoreData.PageControlChange(Sender: TObject);
 begin
-  //UpdateLayout;
+  UpdateLayout;
 end;
 
 procedure TfrmMoreData.SetStartTime(AValue: TDateTime);
